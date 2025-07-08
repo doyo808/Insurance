@@ -44,6 +44,7 @@ public class Product extends JFrame {
 		JButton btnNewButton = new JButton("New button");
 		panel.add(btnNewButton);
 
+		
 	}
 
 }
