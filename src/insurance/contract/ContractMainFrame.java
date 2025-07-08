@@ -1,11 +1,11 @@
-package insurance.contracts;
+package insurance.contract;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
-public class ContractsMainFrame extends JFrame {
-	public ContractsMainFrame() {
+public class ContractMainFrame extends JFrame {
+	public ContractMainFrame() {
 		init();
 		
 		
