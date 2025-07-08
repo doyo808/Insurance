@@ -1,4 +1,4 @@
-package insurance.contract;
+package insurance.contracts;
 
 import javax.swing.JFrame;
 
