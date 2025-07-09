@@ -28,7 +28,7 @@ import java.awt.Panel;
 import java.awt.List;
 import javax.swing.table.DefaultTableModel;
 
-public class Product extends JFrame {
+public class ProductModel extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -42,7 +42,7 @@ public class Product extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Product frame = new Product();
+					ProductModel frame = new ProductModel();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class Product extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Product() {
+	public ProductModel() {
 		setBounds(new Rectangle(5, 5, 1440, 1024));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
