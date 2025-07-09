@@ -22,17 +22,17 @@ public class ClaimMainFrame extends JFrame {
       ClaimCategoryPanel 청구유형선택패널 = new ClaimCategoryPanel(카드패널);
       ClaimSituationPanel 청구상황선택패널 = new ClaimSituationPanel(카드패널);
       
-//      전체적인 연결 확인하려면 주석 해제!
-//      카드패널.add(메인패널, "ClaimMainPanel");
-//      카드패널.add(청구대상패널, "ClaimTargetPanel");
-//      카드패널.add(사고일선택패널, "AccidentDatePanel");
-//      카드패널.add(청구유형선택패널, "ClaimCategoryPanel");
+//      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
+      카드패널.add(메인패널, "ClaimMainPanel");
+      카드패널.add(청구대상패널, "ClaimTargetPanel");
+      카드패널.add(사고일선택패널, "AccidentDatePanel");
+      카드패널.add(청구유형선택패널, "ClaimCategoryPanel");
       카드패널.add(청구상황선택패널, "ClaimSituationPanel");
       
       // 첫페이지에 보여지기 위함
       CardLayout cl = (CardLayout) 카드패널.getLayout();
-//      cl.show(카드패널, "ClaimMainPanel");
-      cl.show(카드패널, "ClaimSituationPanel");
+      cl.show(카드패널, "ClaimMainPanel");
+//      cl.show(카드패널, "ClaimSituationPanel");
       
       setVisible(true);
 
