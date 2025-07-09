@@ -22,8 +22,7 @@ public class Inquire {
 					System.out.println("구분\t보험상품\t납입월분\t입금일자\t납입횟수\t대상보험료\t실입금액\t입금방법");
 					int count = 1;
 					while (rs.next()) {
-						System.out.printf("%d\t%s\t%s\t%s\t%d\t%d\t%d\t%s", 
-								count++,
+						System.out.printf("%d\t%s\t%s\t%s\t%d\t%d\t%d\t%s"
 								
 								
 								);
