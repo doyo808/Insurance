@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-public class PasswordEncrypt {
+public class PasswordEncryptor {
 	// SHA-256 + Salt 방식으로 암호화
 	// 입력받은 비밀번호를 바로 해시화하면 무차별공격에 취약하다
 	// 따라서 무작위 문자열을 첨가하는데 이를 salt라 부른다

@@ -49,11 +49,12 @@ public class CustomerModel {
 			this.password_salt = rs.getString("password_salt");
 		}
 		
-		public CustomerModel(String customer_name, String personal_id, String login_id,
+		public CustomerModel(String customer_name, String personal_id, String phone_number, String login_id,
 				String password_hash, String password_salt) {
 			super();
 			this.customer_name = customer_name;
 			this.personal_id = personal_id;
+			this.phone_number = phone_number;
 			this.login_id = login_id;
 			this.password_hash = password_hash;
 			this.password_salt = password_salt;

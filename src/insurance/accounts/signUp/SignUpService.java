@@ -1,5 +1,9 @@
 package insurance.accounts.signUp;
 
+import java.sql.SQLException;
+
+import insurance.model.CustomerModel;
+
 public class SignUpService {
 	// 1. 아이디를 입력받는다 -> 아이디가 db에 있는지 확인한다
 	// 2. 없다면 비밀번호를 입력받는다. -> 비밀번호가 유효한 비밀번호인지 확인받는다(ex> 알파벳 + 숫자 10글자 이상 20글자 이하)
@@ -25,24 +29,30 @@ public class SignUpService {
 	}
 	
 	public void registerUser() {
-		boolean isAgreed = AgreementManager.getAuthTerms();
-		/// TODO: AgreementManager에서 선택항목도 구현해야함
 		
-		if (isAgreed) {
-			
+		/// TODO: 선택항목도 구현해야함
+		if (!AgreementManager.getAuthTerms()) {
+			return;
 		}
-//		public boolean authenticate() {
-//	        // 본인 인증 처리
-//	    }
-//
-//	    public boolean validateId(String id) {
-//	        // 아이디 검증
-//	    }
-//
-//	    public boolean validatePassword(String pw) {
-//	        // 비밀번호 검증
-//	    }
-//
+		
+		/// TODO: 주민등록번호 암호화 필요
+		String[] info = AuthenticationManager.getAuthentication();
+		if (info[0] == null) {
+			System.out.println("본인인증이 실패하였습니다.");
+			return;
+		}
+		
+		String login_id = null;
+		try {
+			login_id = LoginIdValidator.getVerifiedLoginId();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		String password = PasswordValidator.validatePassword(login_id);
+		
+		
+		
 //	    public String encryptPassword(String pw) {
 //	        // 암호화
 //	    }
@@ -51,6 +61,8 @@ public class SignUpService {
 //	        // DB 저장
 //		}
 	    
+//		CustomerModel c = new CustomerModel();
+		
 	}
 }
 

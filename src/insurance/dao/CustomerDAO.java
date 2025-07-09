@@ -65,15 +65,16 @@ public class CustomerDAO {
 	public static int addCustomer(CustomerModel c, Connection conn) {
 
 		String query = "INSERT INTO CUSTOMERS(customer_id, customer_name"
-				+ ", personal_id, login_id, password_hash, password_salt) "
+				+ ", personal_id, phone_number, login_id, password_hash, password_salt) "
 				+ "VALUES(SEQ_CUSTOMER_ID.nextval, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setString(1, c.getCustomer_name());
 			pstmt.setString(2, c.getPersonal_id());
-			pstmt.setString(3, c.getLogin_id());
-			pstmt.setString(4, c.getPassword_hash());
-			pstmt.setString(5, c.getPassword_salt());
+			pstmt.setString(3, c.getPhone_number());
+			pstmt.setString(4, c.getLogin_id());
+			pstmt.setString(5, c.getPassword_hash());
+			pstmt.setString(6, c.getPassword_salt());
 			
 			return pstmt.executeUpdate();
 			
