@@ -16,15 +16,17 @@ public class Inquire {
 	public static void inquire(String customer_id, Date start, Date end) {
 		try (Connection conn = InsuranceDBConnector.getConnection();) // test DB임
 		{
-			String sql = "SELECT * FROM payments WHERE customer_id = " + customer_id;
+			String sql = "SELECT * FROM payments INNER JOIN contracts USING(customer_id) WHERE customer_id = " + customer_id;
 			try (PreparedStatement pstmt = conn.prepareStatement(sql);) {
 				try (ResultSet rs = pstmt.executeQuery();) {
 					System.out.println("구분\t보험상품\t납입월분\t입금일자\t납입횟수\t대상보험료\t실입금액\t입금방법");
 					int count = 1;
 					while (rs.next()) {
-//						System.out.printf("%d\t%s\t%s\t%s\t%d\t%d\t%d\t%s", 
-//								count++,
-//								);
+						System.out.printf("%d\t%s\t%s\t%s\t%d\t%d\t%d\t%s", 
+								count++,
+								
+								
+								);
 					}
 				}
 			}
