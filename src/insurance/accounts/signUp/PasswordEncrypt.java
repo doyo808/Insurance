@@ -1,4 +1,4 @@
-package insurance.accounts;
+package insurance.accounts.signUp;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
