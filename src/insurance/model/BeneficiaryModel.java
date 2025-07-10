@@ -95,12 +95,12 @@ public class BeneficiaryModel {
     public String toString() {
         return "BeneficiaryModel{" +
                 "beneficiary_id=" + beneficiary_id +
-                ", beneficiary_name='" + beneficiary_name + ''' +
-                ", personal_id='" + personal_id + ''' +
-                ", relationship='" + relationship + ''' +
-                ", phone_number='" + phone_number + ''' +
-                ", bank_account='" + bank_account + ''' +
-                ", bank_name='" + bank_name + ''' +
+                ", beneficiary_name='" + beneficiary_name + "'" +
+                ", personal_id='" + personal_id + "'" +
+                ", relationship='" + relationship + "'" +
+                ", phone_number='" + phone_number + "'" +
+                ", bank_account='" + bank_account + "'" +
+                ", bank_name='" + bank_name + "'" +
                 '}';
     }
 }
