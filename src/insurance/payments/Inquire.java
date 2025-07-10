@@ -1,63 +1,55 @@
 package insurance.payments;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import insurance.InsuranceTeamConnector;
+import insurance.dao.PaymentDAO;
+import insurance.dao.ProductDAO;
+import insurance.model.PaymentModel;
 
 
 public class Inquire {
 	public static void main(String[] args) {
 		
 	}
-	// 납입내역 조회기능(유저, 보고싶은 시작일, 종료일) 
-	public static void inquire(String customer_id, Date start, Date end) {
-		try (Connection conn = InsuranceDBConnector.getConnection();) // test DB임
+	// 
+	// 납입내역 조회기능(유저, 보고싶은 시작일, 종료일) 현재 customer_id로 조회중 나중에 User class가 생기면 변경 가능성 있음
+	/**
+	 * 납입내역 조회기능입니다.
+	 * (결제 내역과는 표시되는 컬럼이 약간 상이)
+	 * @param customer_Id
+	 * @param start 조회 시작일
+	 * @param end 조회 종료일
+	 */
+	
+	public static void inquire(Integer customer_id, Integer product_id, Date start, Date end) {
+		String product_name = "";
+		List<PaymentModel> inquiredList = new ArrayList<PaymentModel>();
+		int count = 0;
+		try (Connection conn = InsuranceTeamConnector.getConnection())
 		{
-			String sql = "SELECT * FROM payments WHERE customer_id = " + customer_id;
-			try (PreparedStatement pstmt = conn.prepareStatement(sql);) {
-				try (ResultSet rs = pstmt.executeQuery();) {
-					System.out.println("구분\t보험상품\t납입월분\t입금일자\t납입횟수\t대상보험료\t실입금액\t입금방법");
-					int count = 1;
-					while (rs.next()) {
-//						System.out.printf("%d\t%s\t%s\t%s\t%d\t%d\t%d\t%s", 
-//								count++,
-//								);
-					}
-				}
-			}
+			// 조회할 내용 리스트 결제 내역 
+			inquiredList = PaymentDAO.getInquireList(customer_id, product_id, conn, start, end);
+			// 조회할 상품이름
+			product_name = ProductDAO.getProductName(product_id, conn);
+			// 납부 횟수
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("서버를 찾을 수 없습니다");
 		}
 		
+		// 기본 출력
+		System.out.println("구분\t상품이름\t납입월분\t입금일자\t납입횟수\t대상보험료\t실입금액\t입금방법");
+		
+		System.out.printf("%d\t%s\t");
 		
 		
 		
 	}
 }
 
-// 제 테스트용 로컬 DB입니다
-class InsuranceDBConnector {
-	static String drivePath = "oracle.jdbc.driver.OracleDriver";
-	static String url = "jdbc:oracle:thin:@localhost:1521:XE";
-	static String user = "insurancectr";
-	static String password = "insurance@1234";
-	
-	// static 블록은 이 클래스가 최초로 호출될 때 딱 한 번 실행된다
-	static {
-		try {
-			Class.forName(drivePath);
-			System.out.println("드라이버 로드 성공...");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(url, user, password);		
-	}
-
-}
