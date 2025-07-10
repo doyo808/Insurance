@@ -14,8 +14,21 @@ import common.database.model.CustomerModel;
 
 public class CustomerDAO {
 	
+	// 주민등록번호로 아이디로 고객 조회
+		public static CustomerModel getCustomerByPersonalId(String personal_id, Connection conn) throws SQLException {
+			String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				pstmt.setString(1, personal_id);
+				
+				try (ResultSet rs = pstmt.executeQuery()) {
+					return rs.next() ? new CustomerModel(rs) : null;
+				}
+			} 
+		}
+		
+	
 	// 로그인 아이디로 고객 조회
-	public static CustomerModel getCustomer(String login_id, Connection conn) throws SQLException {
+	public static CustomerModel getCustomerByLoginId(String login_id, Connection conn) throws SQLException {
 		String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setString(1, login_id);
