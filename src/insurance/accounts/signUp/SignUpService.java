@@ -1,7 +1,12 @@
 package insurance.accounts.signUp;
 
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Base64;
 
+import insurance.InsuranceTeamConnector;
+import insurance.dao.CustomerDAO;
 import insurance.model.CustomerModel;
 
 public class SignUpService {
@@ -41,7 +46,26 @@ public class SignUpService {
 			System.out.println("본인인증이 실패하였습니다.");
 			return;
 		}
+		String name = info[0];
+		String personal_id = info[1];
+		String phone_number = info[2];
 		
+		/// TODO: 인증이 끝나면, 아이디 있나 체크하고 로그인 시키기
+		try (Connection conn = InsuranceTeamConnector.getConnection()) {
+			CustomerModel c = CustomerDAO.getCustomerByPersonalId(personal_id, conn);
+			if (c == null) {
+				System.out.println("아이디와 비밀번호를 설정해주세요");
+			} else {
+				String loginId = c.getLogin_id();
+				System.out.printf("이미 가입하셨습니다. 아이디는 %s입니다. 로그인하시겠습니까?\n", loginId);
+				return;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		// id 검증받기
 		String login_id = null;
 		try {
 			login_id = LoginIdValidator.getVerifiedLoginId();
@@ -49,20 +73,33 @@ public class SignUpService {
 			e.printStackTrace();
 		}
 		
+		// 비밀번호 검증받기
 		String password = PasswordValidator.validatePassword(login_id);
 		
+		// 검증받은 비밀번호를 암호화해서 hash와 salt를 저장하기
+		byte[] salt = PasswordEncryptor.generateSalt();
+		String encodedSalt = Base64.getEncoder().encodeToString(salt);
+		String password_hash = null;
+		try {
+			password_hash = PasswordEncryptor.hashPassword(password, salt);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		
+		// 입력받은 정보를 토대로 객체생성
+		CustomerModel c = new CustomerModel(name, personal_id, phone_number
+										, login_id, password_hash, encodedSalt);
 		
-//	    public String encryptPassword(String pw) {
-//	        // 암호화
-//	    }
-//
-//	    public boolean saveUser(String id, String encryptedPw) {
-//	        // DB 저장
-//		}
-	    
-//		CustomerModel c = new CustomerModel();
+		/// TODO: 위의 CONN과 합치기
+		/// 객체를 DB에 저장
+		try (Connection conn = InsuranceTeamConnector.getConnection()) {
 		
+			CustomerDAO.addCustomer(c, conn);
+			System.out.printf("가입완료!! %d고객님 가입 축하드립니다\n", name);
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
 	}
 }
 

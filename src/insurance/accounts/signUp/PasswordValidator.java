@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class PasswordValidator {
 	static String specialChars = "!@#$%^&*-_=+;:,.?~`";
 	
-	
 	public static void main(String[] args) {
 		validatePassword("abc12345");
 	}

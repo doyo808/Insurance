@@ -1,10 +1,20 @@
 package insurance.accounts.signUp;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Scanner;
 
+import insurance.InsuranceTeamConnector;
+import insurance.dao.CustomerDAO;
+import insurance.model.CustomerModel;
+
 public class AuthenticationManager {
 	// 본인인증 하는 곳 (가상 SMS로 처리)
+	public static void main(String[] args) {
+		getAuthentication();
+	}
+	
 	
 	public static String[] getAuthentication() {
 		Scanner sc = new Scanner(System.in);
@@ -57,6 +67,7 @@ public class AuthenticationManager {
 					System.out.println("인증에 성공했습니다!");
 					verified = true;
 					break;
+					
 				} else {
 					System.out.println("인증번호가 일치하지 않습니다.");
 				}

@@ -11,6 +11,7 @@ public class PasswordEncryptor {
 	// 따라서 무작위 문자열을 첨가하는데 이를 salt라 부른다
 	// salt는 무작위성이 중요해서 byte배열을 쓴다 (secureRandom 함수는 무작위성이 뛰어나다)
 	// 또한 해시를 생성하는 해시함수도 바이트배열을 입력받는다(문자열이면 바이트배열로 변환해야함)
+	/// TODO: 반복해싱 도입해서 일부러 해시화속도를 늦추기(브루트포스 방어)
 	
 	/// salt 생성
     public static byte[] generateSalt() {

@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 public class AgreementManager {
 	// 약관 동의를 받는 곳
+	public static void main(String[] args) {
+		getAuthTerms();
+	}
 	
 	/// TODO: 약관 샘플만들기 + 선택항목 동의받기(수신동의, 마케팅 동의)
 	public static boolean getAuthTerms() {	// 필수 항목 동의했나 구하는 메서드

@@ -30,17 +30,9 @@ public class LoginIdValidator {
 	                continue;
 	            }
 
-	            if (CustomerDAO.getCustomer(login_id, conn) != null) {
-	                System.out.println(login_id + "는 이미 있는 아이디입니다. 로그인 화면으로 이동하시겠습니까? (Y/N)");
-	                String ans = sc.next();
-	                if (ans.equalsIgnoreCase("Y")) {
-	                    // 로그인 화면 이동 로직 또는 리턴 null 등 처리
-	                    System.out.println("로그인 화면으로 이동합니다.");
-	                    return null;  // 예: null 리턴으로 구분
-	                } else {
-	                    System.out.println("다른 아이디를 입력해주세요.");
-	                    continue;
-	                }
+	            if (CustomerDAO.getCustomerByLoginId(login_id, conn) != null) {
+	                System.out.println(login_id + "는 이미 있는 아이디입니다.");
+	               
 	            } else {
 	                System.out.println(login_id + "는 사용가능합니다.");
 	                break;
