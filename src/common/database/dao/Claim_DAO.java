@@ -3,13 +3,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import common.database.model.ClaimModel;
 
-public class ClaimDAO { // 더미데이터로 테스트 해봐야함
+public class Claim_DAO {
 		
 //		// 이어서 만들예정
 //		// 고객이 입력한 정보를 토대로 다른 테이블과 연결해 claims 테이블에 값이 들어가야함 (이클립스->DB)	
@@ -18,20 +15,19 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		// 청구테이블(계약ID) JOIN 계약테이블(고객ID) JOIN 고객테이블(이름, 주민번호, 전화번호)
 		// 피보험자테이블로 다시 수정하기 
 		
+		
 	
 		// 고객이 청구대상을 '본인'으로 선택하면 로그인 기록을 가지고와서 그 사람의 보험계약 정보를 가지고 와야함
 		// 고객이 하나 이상의 계약이 꼭 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
 		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
 		public static ClaimModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
-			String query = "SELECT customer_name, personal_id, phone_number FROM CUSTOMERS WHERE login_id = ?";
-			
-//			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
-//					+ "FROM normal_logs "
-//					+ "INNER JOIN customers cs USING(customer_id)"
-//					+ "INNER JOIN contracts ct USING(customer_id) "
-//					+ "INNER JOIN products pr USING(product_id) "
-//					+ "WHERE login_id = ?";
+			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
+					+ "FROM normal_logs "
+					+ "INNER JOIN customers cs USING(customer_id)"
+					+ "INNER JOIN contracts ct USING(customer_id) "
+					+ "INNER JOIN products pr USING(product_id) "
+					+ "WHERE login_id = ?";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setString(1, login_id);
 				
@@ -42,10 +38,9 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		}
 	
 	
-		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
+		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 표시 (DB -> 이클립스)
 		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회
-		public static List<ClaimModel> getClaims(String login_id, Connection conn) throws SQLException {
-			List<ClaimModel> claimList = new ArrayList<>();
+		public static ClaimModel getClaims(String login_id, Connection conn) throws SQLException {
 			String query = "SELECT * FROM CLAIMS "
 					+ "INNER JOIN CONTRACTS USING(contract_id) "
 					+ "INNER JOIN CUSTOMERS USING(customer_id) "
@@ -54,12 +49,9 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 				pstmt.setString(1, login_id);
 				
 				try (ResultSet rs = pstmt.executeQuery()) {
-					while (rs.next()) {
-						claimList.add(new ClaimModel(rs));
-					}
+					return rs.next() ? new ClaimModel(rs) : null;
 				}
-			}
-			return claimList;
+			} 
 		}
 		
 //		// 모든 고객 조회

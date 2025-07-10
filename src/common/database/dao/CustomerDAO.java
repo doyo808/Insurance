@@ -15,7 +15,7 @@ import common.database.model.CustomerModel;
 public class CustomerDAO {
 	
 	// 로그인 아이디로 고객 조회
-	public static CustomerModel getCustomerByLoginId(String login_id, Connection conn) throws SQLException {
+	public static CustomerModel getCustomer(String login_id, Connection conn) throws SQLException {
 		String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setString(1, login_id);
@@ -25,18 +25,6 @@ public class CustomerDAO {
 			}
 		} 
 	}
-	
-	// 주민등록번호로 고객 조회
-		public static CustomerModel getCustomerByPersonalId(String personal_id, Connection conn) throws SQLException {
-			String query = "SELECT * FROM CUSTOMERS WHERE personal_id = ?";
-			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-				pstmt.setString(1, personal_id);
-				
-				try (ResultSet rs = pstmt.executeQuery()) {
-					return rs.next() ? new CustomerModel(rs) : null;
-				}
-			} 
-		}
 	
 	// 모든 고객 조회
 	public static List<CustomerModel> getAllCustomers(Connection conn) throws SQLException {
@@ -78,7 +66,7 @@ public class CustomerDAO {
 
 		String query = "INSERT INTO CUSTOMERS(customer_id, customer_name"
 				+ ", personal_id, phone_number, login_id, password_hash, password_salt) "
-				+ "VALUES(SEQ_CUSTOMER_ID.nextval, ?, ?, ?, ?, ?, ?)";
+				+ "VALUES(SEQ_CUSTOMER_ID.nextval, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setString(1, c.getCustomer_name());

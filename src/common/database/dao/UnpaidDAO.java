@@ -1,6 +1,10 @@
 package common.database.dao;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +13,7 @@ import common.database.model.UnpaidModel;
 public class UnpaidDAO {
 
     // 특정 고객의 미납 내역 조회
-    public List<UnpaidModel> getUnpaidsByCustomer(int customerId, Connection conn) throws SQLException {
+    public static List<UnpaidModel> getUnpaidsByCustomer(int customerId, Connection conn) throws SQLException {
         String query = "SELECT * FROM unpaids WHERE customer_id = ?";
         List<UnpaidModel> result = new ArrayList<>();
 
@@ -27,7 +31,7 @@ public class UnpaidDAO {
     }
 
     // 모든 미납 내역 조회
-    public List<UnpaidModel> getAllUnpaids(Connection conn) throws SQLException {
+    public static List<UnpaidModel> getAllUnpaids(Connection conn) throws SQLException {
         String query = "SELECT * FROM unpaids";
         List<UnpaidModel> result = new ArrayList<>();
 
@@ -44,7 +48,7 @@ public class UnpaidDAO {
     }
 
     // 미납 추가
-    public int addUnpaid(UnpaidModel u, Connection conn) throws SQLException {
+    public static int addUnpaid(UnpaidModel u, Connection conn) throws SQLException {
         String query = "INSERT INTO unpaids (unpaid_id, customer_id, contract_id, unpaid_amount, " +
                 "unpaid_date, unpaid_count, payment_deadline) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -62,7 +66,7 @@ public class UnpaidDAO {
     }
 
     // 삭제
-    public int deleteUnpaid(int unpaidId, Connection conn) throws SQLException {
+    public static int deleteUnpaid(int unpaidId, Connection conn) throws SQLException {
         String query = "DELETE FROM unpaids WHERE unpaid_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
