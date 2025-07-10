@@ -1,10 +1,10 @@
 package customer.claim.gui;
 
-import java.awt.CardLayout;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
+import common.gui.CardSwitchButton;
 
 public class ClaimMainPanel extends JPanel {
    
@@ -22,16 +22,21 @@ public class ClaimMainPanel extends JPanel {
       }
    };
    
-   JButton 신규청구버튼 = new JButton("보험금 신규 청구하기") {
-      {
-         setBounds(532, 316, 400, 180);
-      }
-   };
+//   JButton 신규청구버튼 = new JButton("보험금 신규 청구하기") {
+//      {
+//         setBounds(532, 316, 400, 180);
+//      }
+//   };
+//   
+//   신규청구버튼.addActionListener((e) -> {
+//      CardLayout cl = (CardLayout)(parentCardPanel.getLayout());
+//      cl.show(parentCardPanel, "ClaimTargetPanel");
+//   });
    
-   신규청구버튼.addActionListener((e) -> {
-      CardLayout cl = (CardLayout)(parentCardPanel.getLayout());
-      cl.show(parentCardPanel, "ClaimTargetPanel");
-   });
+   CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 400, 180);
+   신규청구버튼.setBounds(532, 316, 400, 180);
+   
+   
    
    JButton 추가청구버튼 = new JButton("이전에 청구했던 질병, 사고 추가 청구하기") {
       {
