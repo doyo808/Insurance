@@ -1,4 +1,4 @@
-package insuranceMain;
+package common.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,7 +36,6 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 10, 1440, 1024);
 		getContentPane().setLayout(new BorderLayout());
-		
 		
 		
 	}
