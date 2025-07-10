@@ -1,10 +1,15 @@
 package insurance.product;
 
+import insurance.InsuranceTeamConnector;
+import insurance.dao.ProductDAO;
+import insurance.model.ProductModel;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -13,9 +18,13 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.Window.Type;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.awt.Rectangle;
 import java.awt.Component;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.awt.Dimension;
 import javax.swing.JTable;
@@ -25,10 +34,9 @@ import java.awt.FlowLayout;
 import java.awt.TextField;
 import java.awt.Button;
 import java.awt.Panel;
-import java.awt.List;
 import javax.swing.table.DefaultTableModel;
 
-public class ProductModel extends JFrame {
+public class ProductFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -42,7 +50,7 @@ public class ProductModel extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductModel frame = new ProductModel();
+					ProductFrame frame = new ProductFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +62,7 @@ public class ProductModel extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductModel() {
+	public ProductFrame() {
 		setBounds(new Rectangle(5, 5, 1440, 1024));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		contentPane = new JPanel();
@@ -62,6 +70,7 @@ public class ProductModel extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		JPanel header_panel = new JPanel();
+		header_panel.setBorder(BorderFactory.createEmptyBorder(100, 0, 0, 0));
 		header_panel.setLocale(Locale.KOREA);
 		header_panel.setName("헤더");
 		header_panel.setAutoscrolls(true);
@@ -108,23 +117,54 @@ public class ProductModel extends JFrame {
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		JButton btnNewButton_4 = new JButton("New button");
+		JButton btnNewButton_4 = new JButton("검색");
 		panel.add(btnNewButton_4);
 		
 		Panel panel_1 = new Panel();
 		body_panel.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
+		table.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
+		table.setShowVerticalLines(false);
+		
+		
+		//------------------------------------------------------
+		
+		//상품 정보를 DB에서 담아서 오는 코드
+		
+		Object[][] models = null;
+		ArrayList<ProductModel> pro = null;
+		
+		try (Connection conn = InsuranceTeamConnector.getConnection()){
+			pro = (ArrayList<ProductModel>)ProductDAO.getAllProducts(conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		models = new Object[pro.size()][5];
+
+		for (int i = 0, size = pro.size(); i < size; i++) {
+			models[i][0] = pro.get(i).getProductId();
+			models[i][1] = pro.get(i).getDivision();
+			models[i][2] = pro.get(i).getProductName();
+			models[i][3] = pro.get(i).getTermAndConditionsPath();
+			models[i][4] = pro.get(i).getProductManualPath();
+		}
+		
+		//----------------------------------------------------
 		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
+			models,
 			new String[] {
-				"번호", "상품명", "약관", "상품설명서"
+				"\uBC88\uD638", "\uBD84\uB958", "\uC0C1\uD488\uBA85", "\uC57D\uAD00", "\uC0C1\uD488\uC124\uBA85\uC11C"
 			}
 		));
-		panel_1.add(table);
-		
+		table.getColumn("번호").setPreferredWidth(150);
+		table.setRowHeight(30);
+		JScrollPane scrollpane = new JScrollPane(table);
+		scrollpane.setPreferredSize(new Dimension(800, 600));
+		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		panel_1.add(scrollpane);
 		
 
 	}
