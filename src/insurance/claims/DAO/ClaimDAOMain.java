@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import insurance.InsuranceTeamConnector;
+import insurance.dao.CustomerDAO;
+import insurance.model.CustomerModel;
 
 public class ClaimDAOMain {
 	public static void main(String[] args) {
@@ -23,8 +25,11 @@ public class ClaimDAOMain {
 		//
 			System.out.println("고객의 로그인ID 입력하면 그 고객의 정보 나타남"); 
 			
-			ClaimModel customerInfo = ClaimDAO.getCustomerInfo("hong123", conn);
-				System.out.println(customerInfo);
+			CustomerModel c = CustomerDAO.getCustomer("hong123", conn);
+			System.out.println(c);
+			
+//			ClaimModel customerInfo = ClaimDAO.getCustomerInfo("hong123", conn);
+//				System.out.println(customerInfo);
 			
 		
 		} catch (SQLException e) {
