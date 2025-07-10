@@ -1,13 +1,7 @@
 package common.account.signup.customer;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Scanner;
-
-import common.database.dao.CustomerDAO;
-import common.database.model.CustomerModel;
-import common.method.InsuranceTeamConnector;
 
 public class AuthenticationManager {
 	// 본인인증 하는 곳 (가상 SMS로 처리)
