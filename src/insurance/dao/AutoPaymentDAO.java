@@ -13,7 +13,7 @@ import insurance.model.AutoPaymentModel;
 public class AutoPaymentDAO {
 
     // 전체 자동이체 정보 조회
-    public List<AutoPaymentModel> getAllAutoPayments(Connection conn) throws SQLException {
+    public static List<AutoPaymentModel> getAllAutoPayments(Connection conn) throws SQLException {
         String query = "SELECT * FROM AUTO_PAYMENTS";
         List<AutoPaymentModel> list = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class AutoPaymentDAO {
     }
 
     // 특정 고객의 자동이체 정보 조회
-    public List<AutoPaymentModel> getAutoPaymentsByCustomerId(int customerId, Connection conn) throws SQLException {
+    public static List<AutoPaymentModel> getAutoPaymentsByCustomerId(int customerId, Connection conn) throws SQLException {
         String query = "SELECT * FROM AUTO_PAYMENTS WHERE customer_id = ?";
         List<AutoPaymentModel> list = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class AutoPaymentDAO {
     }
 
     // 자동이체 계좌 등록
-    public int insertAutoPayment(AutoPaymentModel model, Connection conn) throws SQLException {
+    public static int insertAutoPayment(AutoPaymentModel model, Connection conn) throws SQLException {
         String query = "INSERT INTO AUTO_PAYMENTS (account_id, customer_id, bank_name, bank_account, status, created_at, updated_at) "
                      + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
@@ -64,7 +64,7 @@ public class AutoPaymentDAO {
     }
     
     // 수정
-    public int updateAutoPayment(AutoPaymentModel model, Connection conn) throws SQLException {
+    public static int updateAutoPayment(AutoPaymentModel model, Connection conn) throws SQLException {
         String query = "UPDATE AUTO_PAYMENTS SET customer_id = ?, bank_name = ?, bank_account = ?, status = ?, " +
                        "created_at = ?, updated_at = ? WHERE account_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -80,7 +80,7 @@ public class AutoPaymentDAO {
     }
 
     // 삭제
-    public int deleteAutoPayment(int accountId, Connection conn) throws SQLException {
+    public static int deleteAutoPayment(int accountId, Connection conn) throws SQLException {
         String query = "DELETE FROM AUTO_PAYMENTS WHERE account_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, accountId);
