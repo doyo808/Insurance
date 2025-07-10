@@ -1,4 +1,4 @@
-package customer.product.gui;
+package employee.product;
 
 import java.awt.EventQueue;
 
@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ProductManage extends JFrame {
+public class ProductManageFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -18,7 +18,7 @@ public class ProductManage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductManage frame = new ProductManage();
+					ProductManageFrame frame = new ProductManageFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +30,7 @@ public class ProductManage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductManage() {
+	public ProductManageFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1440, 1024);
 		contentPane = new JPanel();
