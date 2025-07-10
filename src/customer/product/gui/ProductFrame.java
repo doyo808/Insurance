@@ -5,37 +5,29 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import java.awt.Color;
-import java.awt.Window.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.awt.Rectangle;
-import java.awt.Component;
-import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.awt.Dimension;
 import javax.swing.JTable;
-import javax.swing.JList;
 import javax.swing.JTextField;
-import java.awt.FlowLayout;
-import java.awt.TextField;
-import java.awt.Button;
 import java.awt.Panel;
 import javax.swing.table.DefaultTableModel;
 
 import common.database.dao.ProductDAO;
 import common.database.model.ProductModel;
 import common.method.InsuranceTeamConnector;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ProductFrame extends JFrame {
 
@@ -125,8 +117,14 @@ public class ProductFrame extends JFrame {
 		body_panel.add(panel_1, BorderLayout.CENTER);
 		
 		table = new JTable();
-		table.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		table.setShowVerticalLines(false);
+		table.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
 		
 		
 		//------------------------------------------------------
@@ -159,12 +157,23 @@ public class ProductFrame extends JFrame {
 			new String[] {
 				"\uBC88\uD638", "\uBD84\uB958", "\uC0C1\uD488\uBA85", "\uC57D\uAD00", "\uC0C1\uD488\uC124\uBA85\uC11C"
 			}
-		));
-		table.getColumn("번호").setPreferredWidth(150);
+		){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int col, int row) {
+				return false;
+			}
+		});
 		table.setRowHeight(30);
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setPreferredSize(new Dimension(800, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		table.setDefaultEditor(String.class, null);
+		table.getTableHeader().setReorderingAllowed(false);
 		panel_1.add(scrollpane);
 		
 
