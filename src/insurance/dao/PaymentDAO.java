@@ -15,7 +15,7 @@ public class PaymentDAO {
 	
 	
 	/**
-	 * 특정 고객의 특정 기간 동안의 결제 내역을 조회합니다.
+	 * 특정 고객의 특정 기간 동안의 결제 내역들을 조회합니다.
 	 *
 	 * @param customer_id 조회할 고객 ID
 	 * @param conn 데이터베이스 연결 객체
@@ -24,7 +24,7 @@ public class PaymentDAO {
 	 * @return 조회된 결제 내역을 담은 리스트
 	 * @throws SQLException 데이터베이스 조회 중 예외 발생 시
 	 */
-	public static ArrayList<PaymentModel> getPaymentModel(int customer_id, Connection conn, Date start, Date end) throws SQLException {
+	public static ArrayList<PaymentModel> getPaymentModels(int customer_id, Connection conn, Date start, Date end) throws SQLException {
 	    String query = "SELECT * FROM payments WHERE customer_id = ? AND payment_date BETWEEN ? AND ?";
 
 	    ArrayList<PaymentModel> payments = new ArrayList<>();

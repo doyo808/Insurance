@@ -1,4 +1,4 @@
-package insurance.claims.DAO;
+package insurance.model;
 import java.sql.ResultSet;
 
 import java.sql.SQLException;

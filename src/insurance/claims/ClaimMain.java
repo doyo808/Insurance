@@ -5,3 +5,4 @@ public class ClaimMain {
 	      ClaimMainFrame frame = new ClaimMainFrame();
 	   }
 	}
+
