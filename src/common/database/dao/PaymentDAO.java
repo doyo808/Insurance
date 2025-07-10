@@ -5,75 +5,69 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import common.database.model.PaymentModel;
 
-
-
 public class PaymentDAO {
-	
-	
-	/**
-	 * 특정 고객의 특정 기간 동안의 결제 내역들을 조회합니다.
-	 *
-	 * @param customer_id 조회할 고객 ID
-	 * @param conn 데이터베이스 연결 객체
-	 * @param start 조회 시작일
-	 * @param end 조회 종료일
-	 * @return 조회된 결제 내역을 담은 리스트
-	 * @throws SQLException 데이터베이스 조회 중 예외 발생 시
-	 */
-	public static ArrayList<PaymentModel> getPaymentModels(int customer_id, Connection conn, Date start, Date end) throws SQLException {
-	    String query = "SELECT * FROM payments WHERE customer_id = ? AND payment_date BETWEEN ? AND ?";
 
-	    ArrayList<PaymentModel> payments = new ArrayList<>();
+    public PaymentModel getById(int id, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM PAYMENTS WHERE payment_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? new PaymentModel(rs) : null;
+            }
+        }
+    }
 
-	    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-	        pstmt.setInt(1, customer_id);
-	        pstmt.setDate(2, new java.sql.Date(start.getTime()));
-	        pstmt.setDate(3, new java.sql.Date(end.getTime()));
+    public ArrayList<PaymentModel> getAll(Connection conn) throws SQLException {
+        String sql = "SELECT * FROM PAYMENTS";
+        ArrayList<PaymentModel> list = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(new PaymentModel(rs));
+            }
+        }
+        return list;
+    }
 
-	        try (ResultSet rs = pstmt.executeQuery()) {
-	            while (rs.next()) {
-	                payments.add(new PaymentModel(rs));
-	            }
-	        }
-	    }
+    public int insert(PaymentModel model, Connection conn) throws SQLException {
+        String sql = "INSERT INTO PAYMENTS (payment_id, customer_id, contract_id, unpaid_id, paid_amount, payment_date, account_id, pay_status) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, model.getPayment_id());
+            pstmt.setInt(2, model.getCustomer_id());
+            pstmt.setInt(3, model.getContract_id());
+            pstmt.setInt(4, model.getUnpaid_id());
+            pstmt.setDouble(5, model.getPaid_amount());
+            pstmt.setDate(6, model.getPayment_date());
+            pstmt.setObject(7, model.getAccount_id()); // null 허용
+            pstmt.setString(8, model.getPay_status());
+            return pstmt.executeUpdate();
+        }
+    }
 
-	    return payments;
-	}
-	
-	
-	/**
-	 * 특정 상품, 특정 고객, 특정 기간 동안의 결제 내역을 조회합니다. (내역조회)
-	 *
-	 * @param customer_id 조회할 고객 ID
-	 * @param conn 데이터베이스 연결 객체
-	 * @param start 조회 시작일
-	 * @param end 조회 종료일
-	 * @return 조회된 결제 내역을 담은 리스트
-	 * @throws SQLException 데이터베이스 조회 중 예외 발생 시
-	 */
-	public static ArrayList<PaymentModel> getInquireList(Integer customer_id, Integer product_id, Connection conn, Date start, Date end) throws SQLException {
-	    String query = "SELECT * FROM payments INNER JOIN contracts USING(contract_id) "
-	    		+ "WHERE customer_id = ? AND payment_date BETWEEN ? AND ? AND product_id = ?";
+    public int update(PaymentModel model, Connection conn) throws SQLException {
+        String sql = "UPDATE PAYMENTS SET customer_id = ?, contract_id = ?, unpaid_id = ?, paid_amount = ?, payment_date = ?, account_id = ?, pay_status = ? WHERE payment_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, model.getCustomer_id());
+            pstmt.setInt(2, model.getContract_id());
+            pstmt.setInt(3, model.getUnpaid_id());
+            pstmt.setDouble(4, model.getPaid_amount());
+            pstmt.setDate(5, model.getPayment_date());
+            pstmt.setObject(6, model.getAccount_id());
+            pstmt.setString(7, model.getPay_status());
+            pstmt.setInt(8, model.getPayment_id());
+            return pstmt.executeUpdate();
+        }
+    }
 
-	    ArrayList<PaymentModel> payments = new ArrayList<>();
-
-	    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-	        pstmt.setInt(1, customer_id);
-	        pstmt.setDate(2, new java.sql.Date(start.getTime()));
-	        pstmt.setDate(3, new java.sql.Date(end.getTime()));
-	        pstmt.setInt(4, product_id);
-
-	        try (ResultSet rs = pstmt.executeQuery()) {
-	            while (rs.next()) {
-	                payments.add(new PaymentModel(rs));
-	            }
-	        }
-	    }
-
-	    return payments;
-	}
+    public int delete(int id, Connection conn) throws SQLException {
+        String sql = "DELETE FROM PAYMENTS WHERE payment_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            return pstmt.executeUpdate();
+        }
+    }
 }
