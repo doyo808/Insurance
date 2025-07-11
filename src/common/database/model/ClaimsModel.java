@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class ClaimModel {
+public class ClaimsModel {
 			
 
 			private Integer claim_id;
@@ -21,7 +21,7 @@ public class ClaimModel {
 			private Integer total_paid_amount;
 			
 			// 생성자
-			public ClaimModel(ResultSet rs) throws SQLException {
+			public ClaimsModel(ResultSet rs) throws SQLException {
 				this.claim_id = rs.getInt("claim_id");
 				this.contract_id = rs.getInt("contract_id");
 				this.claim_date = rs.getDate("claim_date");

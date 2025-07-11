@@ -32,7 +32,6 @@ public class EnterBankAccountPanel extends JPanel {
 
 	      JLabel 계좌번호입력라벨 = new JLabel("보험금 수령계좌 입력") {
 	         {
-	            setFont(new Font("굴림", Font.PLAIN, 30));
 	            setBounds(112, 137, 293, 63);
 	         }
 	      };
@@ -40,20 +39,16 @@ public class EnterBankAccountPanel extends JPanel {
 	      
 	      JRadioButton 자동이체선택버튼 = new JRadioButton(" 자동이체(계좌번호 자동입력)") {
 	         {
-	            setFont(new Font("굴림", Font.PLAIN, 35));
 	            setBounds(589, 168, 500, 80);
 	         }
 	      };
 	      
-	      JRadioButton 계좌번호직접입력 = new JRadioButton(" 최근이용계좌") {
+	      JRadioButton 계좌번호직접입력 = new JRadioButton(" 직접입력") {
 	         {
 	            setBounds(589, 239, 500, 80);
-	            setFont(new Font("굴림", Font.PLAIN, 35));
 	         }
 	      };
 	      
-	      
-
 	      add(자동이체선택버튼);
 	      add(계좌번호직접입력);
 
@@ -75,14 +70,12 @@ public class EnterBankAccountPanel extends JPanel {
 
 	      JLabel 은행명라벨 = new JLabel("은행명: ") {
 	         {
-	            setFont(new Font("굴림", Font.PLAIN, 20));
 	            setBounds(230, 68, 150, 30);
 	         }
 	      };
 	      
 	      JTextField 은행명필드 = new JTextField() {
 	         {
-	            setFont(new Font("굴림", Font.PLAIN, 18));
 	            setBounds(322, 68, 200, 30);
 	         }
 	      };
@@ -90,11 +83,8 @@ public class EnterBankAccountPanel extends JPanel {
 			은행명필드.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					String inputName = 은행명필드.getText();
-					if (!Validators.isValidName(inputName)) {
-						JOptionPane.showMessageDialog(null, "이름은 한글 2~9글자 가능합니다.");
-						은행명필드.setText("");
-					}
+					String inputBankName = 은행명필드.getText();
+					
 				}
 
 			});  
@@ -103,7 +93,6 @@ public class EnterBankAccountPanel extends JPanel {
 	      JLabel 계좌번호라벨 = new JLabel("계좌번호: ") {
 	         {
 	            setBounds(176, 140, 150, 30);
-	            setFont(new Font("굴림", Font.PLAIN, 20));
 	         }
 	      };
 	      
@@ -156,7 +145,7 @@ public class EnterBankAccountPanel extends JPanel {
 		   
 		   다음.addActionListener((e) -> {
 		         if (선택버튼그룹.getSelection() == null) {
-		            JOptionPane.showMessageDialog(this, "청구대상을 선택해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
+		            JOptionPane.showMessageDialog(this, "계좌정보를 입력해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
 		         } else if (계좌번호직접입력.isSelected() && 
 		               (은행명필드.getText().trim().isEmpty() || 
 		                연락처필드.getText().trim().isEmpty() || 
@@ -164,7 +153,7 @@ public class EnterBankAccountPanel extends JPanel {
 		            JOptionPane.showMessageDialog(this, "모든 계좌정보를 입력해주세요", "안내", JOptionPane.INFORMATION_MESSAGE); 
 		            // this를 기준으로 메세지창 위치가 정해짐                                                               
 		         } else {
-		            cl.show(parentCardPanel, "AccidentDatePanel");
+		            cl.show(parentCardPanel, ""); // 서류등록 패널 만들고 카드패널에 추가한후 그 이름을 여기에...
 		         }
 		      });
 		   

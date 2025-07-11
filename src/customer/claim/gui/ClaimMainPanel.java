@@ -25,6 +25,7 @@ public class ClaimMainPanel extends JPanel {
       AccidentDatePanel 사고일선택패널 = new AccidentDatePanel(카드패널);
       ClaimCategoryPanel 청구유형선택패널 = new ClaimCategoryPanel(카드패널);
       ClaimSituationPanel 청구상황선택패널 = new ClaimSituationPanel(카드패널);
+      EnterBankAccountPanel 계좌입력패널 = new EnterBankAccountPanel(카드패널);
 //      
 ////      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
       // 카드패널에 각 패널 등록(카드 이름 지정 필수)
@@ -33,11 +34,14 @@ public class ClaimMainPanel extends JPanel {
       카드패널.add(사고일선택패널, "AccidentDatePanel");
       카드패널.add(청구유형선택패널, "ClaimCategoryPanel");
       카드패널.add(청구상황선택패널, "ClaimSituationPanel");
+      카드패널.add(계좌입력패널, "EnterBankAccountPanel");
+      
 //      
 //      // 첫페이지에 보여지기 위함
       CardLayout cl = (CardLayout) 카드패널.getLayout();
 //      cl.show(카드패널, "ClaimMainPanel");
-      cl.show(카드패널, "ClaimSituationPanel");
+//      cl.show(카드패널, "ClaimSituationPanel");
+        cl.show(카드패널, "EnterBankAccountPanel");
       
       setVisible(true);
 
