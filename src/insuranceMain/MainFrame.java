@@ -1,14 +1,11 @@
-package common.gui;
+package insuranceMain;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import common.gui.Unsigned_panel.Unsigned_MainPanel;
-
 public class MainFrame extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -20,12 +17,7 @@ public class MainFrame extends JFrame {
 				try {
 					// 여기가 메인 시작
 					MainFrame frame = new MainFrame();
-					
-					Unsigned_MainPanel ump = new Unsigned_MainPanel();
-					
-					
-					frame.add(ump);
-					
+					frame.pack();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,14 +27,22 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * 흐름도: 메인프레임 > 메인패널 > (고객메인패널, 직원메인패널)
+	 * 고객메인패널(카드) > 회원가입/로그인 > 조회, 가입, 청구 등 각 기능 패널
 	 */
 	public MainFrame() {
+		init();
 		
+		addComponents();
+	}
+	
+	void addComponents() {
+		add(new MainPanel());
+	}
+	
+	void init() {		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 10, 1440, 1024);
 		getContentPane().setLayout(new BorderLayout());
-		
-		
+		setResizable(false);	
 	}
 }
