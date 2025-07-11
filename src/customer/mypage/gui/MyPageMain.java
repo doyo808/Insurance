@@ -1,5 +1,5 @@
 package customer.mypage.gui;
 
-public class TEST {
+public class MyPageMain {
 
 }
