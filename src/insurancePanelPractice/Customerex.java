@@ -2,13 +2,13 @@ package insurancePanelPractice;
 
 import java.util.List;
 
-public class Customer {
+public class Customerex {
 	private String name;
 	private String phone_number;
 	private List<String> subscribedProducts;
 	
 	
-	public Customer(String name, String phone_number, List<String> subscribedProducts) {
+	public Customerex(String name, String phone_number, List<String> subscribedProducts) {
 		super();
 		this.name = name;
 		this.phone_number = phone_number;

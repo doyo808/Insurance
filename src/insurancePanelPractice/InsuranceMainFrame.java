@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 public class InsuranceMainFrame extends JFrame {
-	private Customer c;
+	private Customerex c;
 	
 	public InsuranceMainFrame() {
 		init();
@@ -18,7 +18,7 @@ public class InsuranceMainFrame extends JFrame {
 		List<String> products = new ArrayList<>();
 		products.add(product1);
 		products.add(product2);
-		this.c = new Customer("홍길동", "010-1234-1234", products);
+		this.c = new Customerex("홍길동", "010-1234-1234", products);
 		
 		// 패널 설정
 		CenterPanel cp = new CenterPanel();
