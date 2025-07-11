@@ -1,9 +1,10 @@
 package customer.claim.gui;
 
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -13,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import common.method.Validators;
 
 public class ClaimTargetPanel extends JPanel {
 
@@ -80,6 +83,19 @@ public class ClaimTargetPanel extends JPanel {
             setBounds(322, 68, 200, 30);
          }
       };
+      
+		이름필드.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				String inputName = 이름필드.getText();
+				if (!Validators.isValidName(inputName)) {
+					JOptionPane.showMessageDialog(null, "이름은 한글 2~9글자 가능합니다.");
+					이름필드.setText("");
+				}
+			}
+
+		});  
+      
 
       JLabel 주민번호라벨 = new JLabel("주민등록번호: ") {
          {
@@ -89,11 +105,25 @@ public class ClaimTargetPanel extends JPanel {
       };
       
       JTextField 주민번호필드 = new JTextField() {
-         {
+         { // 우선 주민번호는 '-'넣어야함 -> 추후에 
             setFont(new Font("굴림", Font.PLAIN, 18));
             setBounds(322, 140, 200, 30);
          }
       };
+      
+		if (이름필드.isValid()) {
+
+			주민번호필드.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					String inputPersonal_id = 주민번호필드.getText();
+					if (!Validators.isValidPersonal_id(inputPersonal_id));
+					JOptionPane.showMessageDialog(null, "주민등록번호가 유효하지 않습니다.");
+					주민번호필드.setText("");
+				}
+			});
+
+		}
 
       JLabel 연락처라벨 = new JLabel("휴대폰 번호: ") {
          {
@@ -169,4 +199,5 @@ public class ClaimTargetPanel extends JPanel {
       
    }
 }
+
 
