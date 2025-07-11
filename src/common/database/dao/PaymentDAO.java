@@ -5,12 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 
 import common.database.model.PaymentModel;
 
 public class PaymentDAO {
 
-    public PaymentModel getById(int id, Connection conn) throws SQLException {
+    public static PaymentModel getById(int id, Connection conn) throws SQLException {
         String sql = "SELECT * FROM PAYMENTS WHERE payment_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -20,7 +21,7 @@ public class PaymentDAO {
         }
     }
 
-    public ArrayList<PaymentModel> getAll(Connection conn) throws SQLException {
+    public static ArrayList<PaymentModel> getAll(Connection conn) throws SQLException {
         String sql = "SELECT * FROM PAYMENTS";
         ArrayList<PaymentModel> list = new ArrayList<>();
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -32,38 +33,37 @@ public class PaymentDAO {
         return list;
     }
 
-    public int insert(PaymentModel model, Connection conn) throws SQLException {
+    public static int insert(PaymentModel payment, Connection conn) throws SQLException {
         String sql = "INSERT INTO PAYMENTS (payment_id, customer_id, contract_id, unpaid_id, paid_amount, payment_date, account_id, pay_status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                     "VALUES (SEQ_PAYMENT_ID.nextval, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, model.getPayment_id());
-            pstmt.setInt(2, model.getCustomer_id());
-            pstmt.setInt(3, model.getContract_id());
-            pstmt.setInt(4, model.getUnpaid_id());
-            pstmt.setDouble(5, model.getPaid_amount());
-            pstmt.setDate(6, model.getPayment_date());
-            pstmt.setObject(7, model.getAccount_id()); // null 허용
-            pstmt.setString(8, model.getPay_status());
+            pstmt.setInt(1, payment.getCustomer_id());
+            pstmt.setInt(2, payment.getContract_id());
+            pstmt.setInt(3, payment.getUnpaid_id());
+            pstmt.setDouble(4, payment.getPaid_amount());
+            pstmt.setTimestamp(5, payment.getPayment_date());
+            pstmt.setObject(6, payment.getAccount_id()); // null 허용
+            pstmt.setString(7, payment.getPay_status());
             return pstmt.executeUpdate();
         }
     }
 
-    public int update(PaymentModel model, Connection conn) throws SQLException {
+    public static int update(PaymentModel payment, Connection conn) throws SQLException {
         String sql = "UPDATE PAYMENTS SET customer_id = ?, contract_id = ?, unpaid_id = ?, paid_amount = ?, payment_date = ?, account_id = ?, pay_status = ? WHERE payment_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, model.getCustomer_id());
-            pstmt.setInt(2, model.getContract_id());
-            pstmt.setInt(3, model.getUnpaid_id());
-            pstmt.setDouble(4, model.getPaid_amount());
-            pstmt.setDate(5, model.getPayment_date());
-            pstmt.setObject(6, model.getAccount_id());
-            pstmt.setString(7, model.getPay_status());
-            pstmt.setInt(8, model.getPayment_id());
+            pstmt.setInt(1, payment.getCustomer_id());
+            pstmt.setInt(2, payment.getContract_id());
+            pstmt.setInt(3, payment.getUnpaid_id());
+            pstmt.setDouble(4, payment.getPaid_amount());
+            pstmt.setTimestamp(5, payment.getPayment_date());
+            pstmt.setObject(6, payment.getAccount_id());
+            pstmt.setString(7, payment.getPay_status());
+            pstmt.setInt(8, payment.getPayment_id());
             return pstmt.executeUpdate();
         }
     }
 
-    public int delete(int id, Connection conn) throws SQLException {
+    public static int delete(int id, Connection conn) throws SQLException {
         String sql = "DELETE FROM PAYMENTS WHERE payment_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);

@@ -13,12 +13,12 @@ import common.database.model.UnpaidModel;
 public class UnpaidDAO {
 
     // 특정 고객의 미납 내역 조회
-    public static List<UnpaidModel> getUnpaidsByCustomer(int customerId, Connection conn) throws SQLException {
+    public static List<UnpaidModel> getUnpaidsByCustomer(int customer_id, Connection conn) throws SQLException {
         String query = "SELECT * FROM unpaids WHERE customer_id = ?";
         List<UnpaidModel> result = new ArrayList<>();
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, customerId);
+            pstmt.setInt(1, customer_id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -29,7 +29,20 @@ public class UnpaidDAO {
 
         return result;
     }
+    // 고객의 미납내역 한개를 조회
 
+    public static UnpaidModel getUnpaidByCustomer(int customer_id, int unpaid_id, Connection conn) throws SQLException {
+        String query = "SELECT * FROM unpaids WHERE customer_id = ? AND unpaid_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, customer_id);
+            pstmt.setInt(2, unpaid_id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? new UnpaidModel(rs) : null; 
+            }
+        }
+    }
+    
     // 모든 미납 내역 조회
     public static List<UnpaidModel> getAllUnpaids(Connection conn) throws SQLException {
         String query = "SELECT * FROM unpaids";
@@ -50,7 +63,7 @@ public class UnpaidDAO {
     // 미납 추가
     public static int addUnpaid(UnpaidModel u, Connection conn) throws SQLException {
         String query = "INSERT INTO unpaids (unpaid_id, customer_id, contract_id, unpaid_amount, " +
-                "unpaid_date, unpaid_count, payment_deadline) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "unpaid_date, unpaid_count, payment_deadline, ispaid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, u.getUnpaidId());
@@ -60,17 +73,34 @@ public class UnpaidDAO {
             pstmt.setDate(5, new java.sql.Date(u.getUnpaidDate().getTime()));
             pstmt.setInt(6, u.getUnpaidCount());
             pstmt.setDate(7, new java.sql.Date(u.getPaymentDeadline().getTime()));
-
+            pstmt.setString(8, u.getIsPaid());
             return pstmt.executeUpdate();
         }
     }
-
+    
+    /**
+     *  결제가 완료되면 미납내역을 완료됐다고 수정
+     * @param unpaid_id
+     * @param conn
+     * @return
+     * @throws SQLException
+     */
+    public static int updateUnpaidY(int unpaid_id, Connection conn) throws SQLException {
+    	String query = "UPDATE unpaids SET ispaid = 'Y' WHERE unpaid_id = ?";
+    	
+    	try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+    		pstmt.setInt(1, unpaid_id);
+    		return pstmt.executeUpdate();
+    	}
+    }
+    
+    
     // 삭제
-    public static int deleteUnpaid(int unpaidId, Connection conn) throws SQLException {
+    public static int deleteUnpaid(int unpaid_id, Connection conn) throws SQLException {
         String query = "DELETE FROM unpaids WHERE unpaid_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, unpaidId);
+            pstmt.setInt(1, unpaid_id);
             return pstmt.executeUpdate();
         }
     }
