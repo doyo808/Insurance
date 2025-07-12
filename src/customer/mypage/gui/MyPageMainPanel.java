@@ -15,9 +15,9 @@ import javax.swing.SwingConstants;
 // 컨텐츠판넬 사이즈 : setBounds(0, 162, 1440, 700);
 // 하단판텔 사이즈 : setBounds(0, 0, 1440, 162);	
 
-public class MyPageMainWindow extends JPanel {
+public class MyPageMainPanel extends JPanel {
 	
-	public MyPageMainWindow() {
+	public MyPageMainPanel() {
 		setPreferredSize(new Dimension(1440, 700));
 		setBounds(0, 162, 1440, 700);
 		
