@@ -1,87 +1,76 @@
 package customer.claim.gui;
 
-import java.awt.CardLayout;
-import java.awt.Font;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.JButton;
+import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
+import org.jdatepicker.impl.*;
 
 public class AccidentDatePanel extends JPanel {
 
    private JPanel parentCardPanel;
-   private JLabel 사고일확인라벨; // 라벨이 계속 누적 생성되는 걸 막기 위함
+   private JLabel 사고일확인라벨;
 
    public AccidentDatePanel(JPanel parentCardPanel) {
       this.parentCardPanel = parentCardPanel;
-//      setLayout(new BorderLayout());
-      setLayout(null);
-      setBounds(250, 0, 1440, 1024);
       CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
 
-      사고일확인라벨 = new JLabel() { // 고객이 선택한 날짜를 다시 한번 알려줌
-         {
-            setHorizontalAlignment(JLabel.CENTER);
-            setFont(new Font("굴림", Font.PLAIN, 30));
-            setBounds(433, 426, 531, 63);
-         }
-      };
-      add(사고일확인라벨);
+      setLayout(new GridBagLayout());
+      
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(20, 20, 20, 20);
+      gbc.fill = GridBagConstraints.HORIZONTAL;
 
-      JLabel 사고일선택라벨 = new JLabel("사고(발병)일 선택") {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 30));
-            setBounds(112, 137, 293, 63);
-         }
-      };
-      add(사고일선택라벨);
+      JLabel 사고일선택라벨 = new JLabel("사고(발병)일 선택");
+      사고일선택라벨.setFont(new Font("굴림", Font.PLAIN, 20));
+      gbc.gridx = 0;
+      gbc.gridy = 0;
+      gbc.gridwidth = 2;
+      gbc.anchor = GridBagConstraints.CENTER;
+      add(사고일선택라벨, gbc);
 
       UtilDateModel model = new UtilDateModel();
-      Properties p = new Properties();
+      Properties p = new Properties(); //날짜 선택창에서 버튼에 표시될 텍스트를 한글로 설정하고 싶을 때 사용
       p.put("text.today", "오늘");
       p.put("text.month", "월");
       p.put("text.year", "년");
 
       JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-//           datePanel.setBounds(300, 200, 150, 50);
-
       JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
       datePicker.getJFormattedTextField().setFont(new Font("굴림", Font.PLAIN, 20));
-//           datePicker.setPreferredSize(new Dimension(200, 30));
 
-      datePicker.setBounds(560, 224, 264, 30);
-      add(datePicker);
+      gbc.gridy = 1;
+      gbc.gridwidth = 2;
+      add(datePicker, gbc);
 
-      
-      datePicker.addActionListener((e) -> {
+      사고일확인라벨 = new JLabel("");
+      사고일확인라벨.setHorizontalAlignment(JLabel.CENTER);
+      사고일확인라벨.setFont(new Font("굴림", Font.PLAIN, 20));
+      gbc.gridy = 2;
+      gbc.gridwidth = 2;
+      add(사고일확인라벨, gbc);
+
+      datePicker.addActionListener(e -> {
          Date selectedDate = (Date) datePicker.getModel().getValue();
          Date today = removeTime(new Date());
 
-         if (selectedDate == null) {
-            return;
-         }
+         if (selectedDate == null) return;
 
          Calendar cal = Calendar.getInstance();
          cal.setTime(selectedDate);
          int year = cal.get(Calendar.YEAR);
-         int month = cal.get(Calendar.MONTH) + 1; // Calendar.MONTH는 0부터 시작하기 때문에 1작게 나옴
+         int month = cal.get(Calendar.MONTH) + 1;
          int day = cal.get(Calendar.DAY_OF_MONTH);
 
-         // 내가 선택한 날짜 출력하기
          사고일확인라벨.setVisible(true);
-         String 사고일확인 = String.format("%d년 %d월 %d일이 맞습니까?", year, month, day);
-         사고일확인라벨.setText(사고일확인);
+         사고일확인라벨.setText(String.format("%d년 %d월 %d일이 맞습니까?", year, month, day));
+
          if (selectedDate.after(today)) {
             JOptionPane.showMessageDialog(this, "해당 일은 현재보다 미래입니다!", "안내", JOptionPane.INFORMATION_MESSAGE);
             datePicker.getModel().setValue(null);
@@ -89,34 +78,32 @@ public class AccidentDatePanel extends JPanel {
          }
       });
 
-      JButton 이전버튼 = new JButton("이전") {
-         {
-            setBounds(470, 686, 100, 30);
-            addActionListener((e) -> {
-               cl.show(parentCardPanel, "ClaimTargetPanel");
-               datePicker.getModel().setValue(null);
-               사고일확인라벨.setText("");
-            });
-         }
-      };
+   // 하단 버튼
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+      JButton 이전버튼 = new JButton("이전");
+      JButton 다음버튼 = new JButton("다음");
 
-      JButton 다음버튼 = new JButton("다음") {
-         ;
-         {
-            setBounds(853, 686, 100, 30);
-         }
-      };
+      buttonPanel.add(이전버튼);
+      buttonPanel.add(다음버튼);
       
-      다음버튼.addActionListener((e) -> {
-    	  Date selectedDate = (Date) datePicker.getModel().getValue();
-    	  if(selectedDate != null) {
-    		  cl.show(parentCardPanel, "ClaimCategoryPanel");
-    	  } else {
-    		  JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
-    	  }
+      이전버튼.addActionListener(e -> {
+         cl.show(parentCardPanel, "ClaimTargetPanel");
+         datePicker.getModel().setValue(null);
+         사고일확인라벨.setText("");
       });
-      add(이전버튼);
-      add(다음버튼);
+
+      다음버튼.addActionListener(e -> {
+         Date selectedDate = (Date) datePicker.getModel().getValue();
+         if (selectedDate != null) {
+            cl.show(parentCardPanel, "ClaimSituationPanel");
+         } else {
+            JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
+         }
+      });
+      gbc.gridy = 3;
+      gbc.gridwidth = 2;
+      gbc.anchor = GridBagConstraints.CENTER;
+      add(buttonPanel, gbc);
    }
 
    public static Date removeTime(Date date) {
@@ -146,7 +133,5 @@ public class AccidentDatePanel extends JPanel {
          }
          return "";
       }
-
    }
-
 }

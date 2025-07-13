@@ -1,13 +1,21 @@
 package customer.claim.gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Panel;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import common.gui.CardSwitchButton;
 
@@ -16,18 +24,28 @@ public class ClaimSituationPanel extends JPanel {
 	
 	private JPanel parentCardPanel;
 	
+	 // 콤보박스를 담는 패널
+    private JPanel comboBoxContainer;
+	
 	public ClaimSituationPanel(JPanel parentCardPanel) {
 		this.parentCardPanel = parentCardPanel;
 	      CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
 	      setBounds(250, 0, 1440, 1024);
-	      setLayout(new FlowLayout());
+	      setLayout(new BorderLayout());
 	      
-	      JLabel 청구상황선택라벨 = new JLabel("청구상황 선택");
-    	  청구상황선택라벨.setFont(new Font("굴림", Font.PLAIN, 30));
-    	  청구상황선택라벨.setBounds(112, 137, 293, 63);
-	       add(청구상황선택라벨);
-	       
-	       String[] 청구상황 = {"병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요", "여행 중 사고가 발생했어요"};
+	      // 상단 제목
+	        JLabel titleLabel = new JLabel("청구상황 선택");
+	        titleLabel.setFont(new Font("굴림", Font.BOLD, 30));
+	        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	        add(titleLabel, BorderLayout.NORTH);
+	        
+	        // 중앙 콤보박스 영역을 담을 패널
+	        comboBoxContainer = new JPanel();
+	        comboBoxContainer.setLayout(new BoxLayout(comboBoxContainer, BoxLayout.Y_AXIS));
+	        comboBoxContainer.setBorder(BorderFactory.createEmptyBorder(50, 300, 50, 300));
+	       add(comboBoxContainer);
+	        
+	       String[] 상황 = {"병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요"}; //"여행 중 사고가 발생했어요"는 다른거 다 만들고 추가...
 	       
 	       // 병원에 다녀왔어요(실손 등) 선택시
 	       String[] 병원 = {"아팠어요(질병)", "다쳤어요(상해)"};
@@ -90,48 +108,60 @@ public class ClaimSituationPanel extends JPanel {
 				입력칸 없이 계좌이체로 넘어감
 				
 	        */
-	       JComboBoxMaker 청구상황선택콤보박스 = new JComboBoxMaker(this, 청구상황);
-	       청구상황선택콤보박스.setVisible(true);
+	       JComboBoxMaker 상황선택콤보박스 = new JComboBoxMaker(상황);
+	       comboBoxContainer.add(상황선택콤보박스);
+	       상황선택콤보박스.setVisible(true);
 	       
-	       JComboBoxMaker 다른사람콤보박스 = new JComboBoxMaker(this, 다른사람);
-	       JComboBoxMaker 병원콤보박스 = new JComboBoxMaker(this, 병원);
-	       JComboBoxMaker 병원_아팠어요_진단내용콤보박스 = new JComboBoxMaker(this, 병원_아팠어요_진단내용);
-	       JComboBoxMaker 병원_다쳤어요_다친신체부위콤보박스 = new JComboBoxMaker(this, 병원_다쳤어요_다친신체부위);
-	       JComboBoxMaker 병원_다쳤어요_다친신체부위_부상유형선택콤보박스 = new JComboBoxMaker(this, 병원_다쳤어요_다친신체부위_부상유형선택);
-	       JComboBoxMaker 교통사고_다쳤어요_다친신체부위콤보박스 = new JComboBoxMaker(this, 교통사고_다쳤어요_다친신체부위);
-	       JComboBoxMaker 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스 = new JComboBoxMaker(this, 교통사고_다쳤어요_다친신체부위_부상유형선택);
+	       JComboBoxMaker 다른사람콤보박스 = new JComboBoxMaker(다른사람);
+	       JComboBoxMaker 병원콤보박스 = new JComboBoxMaker(병원);
+	       JComboBoxMaker 병원_아팠어요_진단내용콤보박스 = new JComboBoxMaker(병원_아팠어요_진단내용);
+	       JComboBoxMaker 병원_다쳤어요_다친신체부위콤보박스 = new JComboBoxMaker(병원_다쳤어요_다친신체부위);
+	       JComboBoxMaker 병원_다쳤어요_다친신체부위_부상유형선택콤보박스 = new JComboBoxMaker(병원_다쳤어요_다친신체부위_부상유형선택);
+	       JComboBoxMaker 교통사고_다쳤어요_다친신체부위콤보박스 = new JComboBoxMaker(교통사고_다쳤어요_다친신체부위);
+	       JComboBoxMaker 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스 = new JComboBoxMaker(교통사고_다쳤어요_다친신체부위_부상유형선택);
 	       
 	       
-	       청구상황선택콤보박스.addActionListener((e) -> {
-	    	   String 선택값 = 청구상황선택콤보박스.getSelectedItem().toString();
+	       // DB CLAIMS Table claim_category 컬럼 값에 넣는 예시
+//	    		   Map<String, String> 상황매핑 = new HashMap<>();
+//	    		   상황매핑.put("병원에 다녀왔어요(실손 등)", "질병");
+//	    		   상황매핑.put("다른 사람에게 피해를 입혔어요", "일반상해");
+//	    		   상황매핑.put("교통사고로 비용이 발생했어요", "교통사고");
+
+	       상황선택콤보박스.addActionListener((e) -> {
+	    	   String 선택값 = 상황선택콤보박스.getSelectedItem().toString();
 	    	   
 	    	   if ("병원에 다녀왔어요(실손 등)".equals(선택값)) {
+//	    		   String DB저장값 = 상황매핑.get(선택값);
+//	    		   // DB에 저장
+//	    		   preparedStatement.setString(1, DB저장값);  // 예: "질병"
+
 	    		   병원콤보박스.setVisible(true);
-	    		   숨기기(다른사람콤보박스);
-	    		   숨기기(교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
+	    		   notVisible(다른사람콤보박스);
+	    		   notVisible(교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
 	    	   } else if ("다른 사람에게 피해를 입혔어요".equals(선택값)) {
 	    		   다른사람콤보박스.setVisible(true);
-	    		   숨기기(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스);
-	    		   숨기기(교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
+	    		   notVisible(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스);
+	    		   notVisible(교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
 	    	   } else if ("교통사고로 비용이 발생했어요".equals(선택값)) {
 	    		   교통사고_다쳤어요_다친신체부위콤보박스.setVisible(true);
-	    		   숨기기(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스);
-	    		   숨기기(다른사람콤보박스);
+	    		   notVisible(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스);
+	    		   notVisible(다른사람콤보박스);
 	    	   }
 	       });
 	       
 	       병원콤보박스.addActionListener((e) -> {
-	    	   숨기기(다른사람콤보박스,교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
+	    	   notVisible(다른사람콤보박스,교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
 	    	   String 병원선택값 =  병원콤보박스.getSelectedItem().toString();
 	    	   if ("아팠어요(질병)".equals(병원선택값)) {
 	    		   병원_아팠어요_진단내용콤보박스.setVisible(true);
 	    	   } else if ("다쳤어요(상해)".equals(병원선택값)) {
 	    		   병원_다쳤어요_다친신체부위콤보박스.setVisible(true);
+	    		   병원_다쳤어요_다친신체부위콤보박스.setVisible(true);
 	    	   }
 	       });
 	       
 	       다른사람콤보박스.addActionListener ((e) ->{
-	    	   숨기기(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스,
+	    	   notVisible(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 병원_다쳤어요_다친신체부위콤보박스, 병원_다쳤어요_다친신체부위_부상유형선택콤보박스,
 	    			   교통사고_다쳤어요_다친신체부위콤보박스, 교통사고_다쳤어요_다친신체부위_부상유형선택콤보박스);
 	    	   String 다른사람선택값 = 다른사람콤보박스.getSelectedItem().toString();
 	    	   if ("다쳤어요(신체)".equals(다른사람선택값)) {
@@ -141,15 +171,21 @@ public class ClaimSituationPanel extends JPanel {
 	    	   
 	       });
 	       
-	   CardSwitchButton 다음 = new CardSwitchButton("다음", this, parentCardPanel, "", 100, 30);     
-	   다음.setLocation(853, 686);   
-	   
-	   CardSwitchButton 이전 = new CardSwitchButton("이전", this, parentCardPanel, "ClaimCategoryPanel", 100, 30);
-	   이전.setLocation(470, 686); 
+	       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+	       
+	       JButton 이전 = new JButton("이전");
+	       JButton 다음 = new JButton("다음");
+	       buttonPanel.add(이전);
+	      buttonPanel.add(다음);
+	      
+	      다음.addActionListener((e) -> {
+	    	  cl.show(parentCardPanel, "EnterBankAccountPanel");
+	      });
+	      add(buttonPanel, BorderLayout.SOUTH);
 	   
 	}
 	
-	private void 숨기기 (JComponent... components) {
+	private void notVisible (JComponent... components) {
 	    for (JComponent comp : components) {
 	        comp.setVisible(false);
 	    }
@@ -158,16 +194,12 @@ public class ClaimSituationPanel extends JPanel {
 
 class JComboBoxMaker extends JComboBox<String> {
 	
-	public JComboBoxMaker(JPanel Panel, String[] items) {
+	public JComboBoxMaker(String[] items) {
 		super(items);
 		
-		setSize(470, 45);
-//		setBounds(487, 133, 470, 45);
+		setMaximumSize(new Dimension(600, 40));
 		setSelectedItem(null); // 아무것도 선택되지 않은 상태에서 시작
 		setVisible(false);
-	
-		Panel.add(this);
-		
 		
 	}
 	

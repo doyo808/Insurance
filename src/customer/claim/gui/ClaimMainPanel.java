@@ -2,6 +2,7 @@ package customer.claim.gui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 
@@ -23,7 +24,7 @@ public class ClaimMainPanel extends JPanel {
       ClaimFirstPanel 청구첫번째패널 = new ClaimFirstPanel(카드패널);
       ClaimTargetPanel 청구대상패널 = new ClaimTargetPanel(카드패널);
       AccidentDatePanel 사고일선택패널 = new AccidentDatePanel(카드패널);
-      ClaimCategoryPanel 청구유형선택패널 = new ClaimCategoryPanel(카드패널);
+//      ClaimCategoryPanel 청구유형선택패널 = new ClaimCategoryPanel(카드패널);
       ClaimSituationPanel 청구상황선택패널 = new ClaimSituationPanel(카드패널);
       EnterBankAccountPanel 계좌입력패널 = new EnterBankAccountPanel(카드패널);
 //      
@@ -32,7 +33,7 @@ public class ClaimMainPanel extends JPanel {
       카드패널.add(청구첫번째패널, "ClaimMainPanel");
       카드패널.add(청구대상패널, "ClaimTargetPanel");
       카드패널.add(사고일선택패널, "AccidentDatePanel");
-      카드패널.add(청구유형선택패널, "ClaimCategoryPanel");
+//      카드패널.add(청구유형선택패널, "ClaimCategoryPanel");
       카드패널.add(청구상황선택패널, "ClaimSituationPanel");
       카드패널.add(계좌입력패널, "EnterBankAccountPanel");
       
@@ -40,8 +41,8 @@ public class ClaimMainPanel extends JPanel {
 //      // 첫페이지에 보여지기 위함
       CardLayout cl = (CardLayout) 카드패널.getLayout();
 //      cl.show(카드패널, "ClaimMainPanel");
-//      cl.show(카드패널, "ClaimSituationPanel");
-        cl.show(카드패널, "EnterBankAccountPanel");
+      cl.show(카드패널, "EnterBankAccountPanel");
+//        cl.show(카드패널, "EnterBankAccountPanel");
       
       setVisible(true);
 
