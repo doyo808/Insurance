@@ -15,7 +15,7 @@ public class MyPageMainFrame extends JFrame {
 		
 		setLayout(null);
 		
-		MyPageMainPanel panelMyPage = new MyPageMainPanel();
+		MyPageMainWindow panelMyPage = new MyPageMainWindow();
 				
 		
 		add(panelMyPage);	
