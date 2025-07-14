@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import common.account.login.Session;
+
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +34,7 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		init();
-		
+		Session.clear();
 		addComponents();
 	}
 	
