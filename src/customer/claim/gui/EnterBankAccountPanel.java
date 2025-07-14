@@ -14,56 +14,52 @@ public class EnterBankAccountPanel extends JPanel {
 
    public EnterBankAccountPanel(JPanel parentCardPanel) {
       this.parentCardPanel = parentCardPanel;
-      CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
+      CardLayout cl = (CardLayout)(parentCardPanel.getLayout());
       setLayout(new BorderLayout());
       
-      
-
-      // ⬆️ 상단 타이틀
-      JLabel titleLabel = new JLabel("보험금 수령계좌 입력");
-      titleLabel.setFont(new Font("굴림", Font.PLAIN, 30));
-      titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      titleLabel.setBorder(BorderFactory.createEmptyBorder(50, 10, 20, 10)); // 상단 간격
-      add(titleLabel, BorderLayout.NORTH);
+      TitlePanel title = new TitlePanel("보험금 수령계좌 입력");
+      add(title, BorderLayout.NORTH);
 
       // ⬅️ 가운데 패널 구성
-      JPanel centerPanel = new JPanel();
-      centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+      JPanel centerPanel = new JPanel(new BorderLayout());
       centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
       add(centerPanel, BorderLayout.CENTER);
       
       // 라디오 버튼 패널
       JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
       JRadioButton 자동이체선택버튼 = new JRadioButton(" 자동이체(계좌번호 자동입력)");
-      자동이체선택버튼.setFont(new Font("굴림", Font.PLAIN, 25));
-      JRadioButton 계좌번호직접입력 = new JRadioButton(" 직접입력");
-      계좌번호직접입력.setFont(new Font("굴림", Font.PLAIN, 25));
-
+      자동이체선택버튼.setFont(new Font("굴림", Font.PLAIN, 15));
+      자동이체선택버튼.setVisible(true);
+      
+      JRadioButton 계좌번호직접입력버튼 = new JRadioButton(" 직접입력");
+      계좌번호직접입력버튼.setFont(new Font("굴림", Font.PLAIN, 15));
+      계좌번호직접입력버튼.setVisible(true);
       
       ButtonGroup 선택버튼그룹 = new ButtonGroup();
       선택버튼그룹.add(자동이체선택버튼);
-      선택버튼그룹.add(계좌번호직접입력);
-
-      radioPanel.add(자동이체선택버튼);
-      radioPanel.add(계좌번호직접입력);
-      centerPanel.add(radioPanel);
-
+      선택버튼그룹.add(계좌번호직접입력버튼);
       
+      radioPanel.add(자동이체선택버튼);
+      radioPanel.add(계좌번호직접입력버튼);
+ 
+      centerPanel.add(radioPanel, BorderLayout.NORTH);
       
       // 입력 패널 (직접입력 선택 시만 보여짐)
       JPanel 계좌번호직접입력패널 = new JPanel(new GridBagLayout());
       계좌번호직접입력패널.setBorder(BorderFactory.createTitledBorder("계좌 정보 입력"));
+      계좌번호직접입력패널.setMaximumSize(new Dimension(400, 200)); // 크기 제한
       계좌번호직접입력패널.setVisible(false);
-      계좌번호직접입력패널.setMaximumSize(new Dimension(600, 200)); // 크기 제한
-      centerPanel.add(계좌번호직접입력패널);
-
+     
+      centerPanel.add(계좌번호직접입력패널, BorderLayout.CENTER);
+      
       GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(10, 10, 10, 10);
+      gbc.insets = new Insets(30, 30, 30, 10);
       gbc.anchor = GridBagConstraints.WEST;
 
       JLabel 은행명라벨 = new JLabel("은행명:");
       JTextField 은행명필드 = new JTextField(15);
-
+      은행명필드.setFont(new Font("굴림", Font.PLAIN, 18));
+      
       JLabel 계좌번호라벨 = new JLabel("계좌번호:");
       JTextField 계좌번호필드 = new JTextField(15);
       계좌번호필드.setFont(new Font("굴림", Font.PLAIN, 18));
@@ -104,19 +100,24 @@ public class EnterBankAccountPanel extends JPanel {
          repaint();
       });
 
-      계좌번호직접입력.addActionListener((e) -> {
+      계좌번호직접입력버튼.addActionListener((e) -> {
          계좌번호직접입력패널.setVisible(true);
          revalidate();
          repaint();
       });
 
       // ⬇️ 하단 버튼 영역
+      
+      
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-      CardSwitchButton 이전 = new CardSwitchButton("이전", this, parentCardPanel, "ClaimCategoryPanel", 100, 30);
-      CardSwitchButton 다음 = new CardSwitchButton("다음", this, parentCardPanel, "", 100, 30); // TODO: 다음 패널 이름 넣기
+
+      JButton 이전 = new JButton("이전");
+      JButton 다음 = new JButton("다음");
+      buttonPanel.add(이전);
+      buttonPanel.add(다음);
 
       이전.addActionListener((e) -> {
-         cl.show(parentCardPanel, "ClaimSituationPanel");
+         cl.show(parentCardPanel, "ClaimTypePanel");
          선택버튼그룹.clearSelection();
          은행명필드.setText("");
          연락처필드.setText("");
@@ -127,13 +128,13 @@ public class EnterBankAccountPanel extends JPanel {
       다음.addActionListener((e) -> {
          if (선택버튼그룹.getSelection() == null) {
             JOptionPane.showMessageDialog(this, "계좌정보를 선택해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
-         } else if (계좌번호직접입력.isSelected() &&
+         } else if (계좌번호직접입력버튼.isSelected() &&
                (은행명필드.getText().trim().isEmpty() ||
                 연락처필드.getText().trim().isEmpty() ||
                 계좌번호필드.getText().trim().isEmpty())) {
             JOptionPane.showMessageDialog(this, "모든 계좌정보를 입력해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
          } else {
-            cl.show(parentCardPanel, ""); // TODO: 다음 패널 이름으로 변경
+            cl.show(parentCardPanel, "DocumentRegistrationPanel"); // TODO: 다음 패널 이름으로 변경
          }
       });
 

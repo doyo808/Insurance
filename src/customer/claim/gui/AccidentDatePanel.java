@@ -20,23 +20,15 @@ public class AccidentDatePanel extends JPanel {
    public AccidentDatePanel(JPanel parentCardPanel) {
       this.parentCardPanel = parentCardPanel;
       CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
+      setSize(1440, 700);      
+      setLayout(new BorderLayout());
 
-      setLayout(new GridBagLayout());
-      
-      GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new Insets(20, 20, 20, 20);
-      gbc.fill = GridBagConstraints.HORIZONTAL;
+      TitlePanel title = new TitlePanel("사고(발병)일 선택");
+      add(title, BorderLayout.NORTH);
 
-      JLabel 사고일선택라벨 = new JLabel("사고(발병)일 선택");
-      사고일선택라벨.setFont(new Font("굴림", Font.PLAIN, 20));
-      gbc.gridx = 0;
-      gbc.gridy = 0;
-      gbc.gridwidth = 2;
-      gbc.anchor = GridBagConstraints.CENTER;
-      add(사고일선택라벨, gbc);
-
+      // -------------------- 가운데 날짜 선택 패널 --------------------
       UtilDateModel model = new UtilDateModel();
-      Properties p = new Properties(); //날짜 선택창에서 버튼에 표시될 텍스트를 한글로 설정하고 싶을 때 사용
+      Properties p = new Properties();
       p.put("text.today", "오늘");
       p.put("text.month", "월");
       p.put("text.year", "년");
@@ -45,17 +37,34 @@ public class AccidentDatePanel extends JPanel {
       JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
       datePicker.getJFormattedTextField().setFont(new Font("굴림", Font.PLAIN, 20));
 
-      gbc.gridy = 1;
-      gbc.gridwidth = 2;
-      add(datePicker, gbc);
-
       사고일확인라벨 = new JLabel("");
       사고일확인라벨.setHorizontalAlignment(JLabel.CENTER);
       사고일확인라벨.setFont(new Font("굴림", Font.PLAIN, 20));
-      gbc.gridy = 2;
-      gbc.gridwidth = 2;
-      add(사고일확인라벨, gbc);
 
+   // DatePickerPanel 내부만 GridBagLayout으로 구성
+      JPanel DatePickerPanel = new JPanel(new GridBagLayout());
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new Insets(20, 20, 20, 20);
+      gbc.gridx = 0;
+      gbc.fill = GridBagConstraints.HORIZONTAL;
+      gbc.anchor = GridBagConstraints.CENTER;
+
+      // 1. 날짜 선택기 추가
+      gbc.gridy = 0;
+      DatePickerPanel.add(datePicker, gbc);
+
+      // 2. 사고일확인라벨 초기화 및 추가
+      사고일확인라벨 = new JLabel("");
+      사고일확인라벨.setHorizontalAlignment(JLabel.CENTER);
+      사고일확인라벨.setFont(new Font("굴림", Font.PLAIN, 20));
+
+      gbc.gridy = 1;
+      DatePickerPanel.add(사고일확인라벨, gbc);
+
+      // DatePickerPanel 전체를 가운데에 추가
+      add(DatePickerPanel, BorderLayout.CENTER);
+
+      // 날짜 선택 이벤트
       datePicker.addActionListener(e -> {
          Date selectedDate = (Date) datePicker.getModel().getValue();
          Date today = removeTime(new Date());
@@ -77,22 +86,27 @@ public class AccidentDatePanel extends JPanel {
             사고일확인라벨.setText("");
          }
       });
-
-   // 하단 버튼
-      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-      JButton 이전버튼 = new JButton("이전");
-      JButton 다음버튼 = new JButton("다음");
-
-      buttonPanel.add(이전버튼);
-      buttonPanel.add(다음버튼);
       
-      이전버튼.addActionListener(e -> {
+      
+      
+
+      // -------------------- 하단 버튼 패널 --------------------
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+      JButton 이전 = new JButton("이전");
+      JButton 다음 = new JButton("다음");
+      buttonPanel.add(이전);
+      buttonPanel.add(다음);
+      add(buttonPanel, BorderLayout.SOUTH);
+
+      // 이전 버튼: 초기화
+      이전.addActionListener((e) -> {
          cl.show(parentCardPanel, "ClaimTargetPanel");
          datePicker.getModel().setValue(null);
          사고일확인라벨.setText("");
       });
 
-      다음버튼.addActionListener(e -> {
+      // 다음 버튼: 유효성 체크
+      다음.addActionListener((e) -> {
          Date selectedDate = (Date) datePicker.getModel().getValue();
          if (selectedDate != null) {
             cl.show(parentCardPanel, "ClaimSituationPanel");
@@ -100,10 +114,6 @@ public class AccidentDatePanel extends JPanel {
             JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
          }
       });
-      gbc.gridy = 3;
-      gbc.gridwidth = 2;
-      gbc.anchor = GridBagConstraints.CENTER;
-      add(buttonPanel, gbc);
    }
 
    public static Date removeTime(Date date) {

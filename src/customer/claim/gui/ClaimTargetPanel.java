@@ -31,23 +31,19 @@ public class ClaimTargetPanel extends JPanel {
       CardLayout cl = (CardLayout) parentCardPanel.getLayout();
       setLayout(new BorderLayout());
 
-      // 상단 제목
-      JLabel titleLabel = new JLabel("청구대상 선택");
-      titleLabel.setFont(new Font("굴림", Font.PLAIN, 30));
-      titleLabel.setHorizontalAlignment(JLabel.CENTER);
-      add(titleLabel, BorderLayout.NORTH);
+      TitlePanel title = new TitlePanel("청구대상 선택");
+      add(title, BorderLayout.NORTH);
 
       // 중앙 패널: 라디오 버튼과 입력창
-      JPanel centerPanel = new JPanel();
-      centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+      JPanel centerPanel = new JPanel(new BorderLayout());
+      centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
       add(centerPanel, BorderLayout.CENTER);
+      centerPanel.setVisible(true);
 
       // 라디오 버튼
       JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
       JRadioButton 계약자선택버튼 = new JRadioButton(" 계약자(본인)");
-      계약자선택버튼.setFont(new Font("굴림", Font.PLAIN, 25));
       JRadioButton 다른사람선택버튼 = new JRadioButton(" 다른사람");
-      다른사람선택버튼.setFont(new Font("굴림", Font.PLAIN, 25));
 
       ButtonGroup 선택버튼그룹 = new ButtonGroup();
       선택버튼그룹.add(계약자선택버튼);
@@ -55,22 +51,22 @@ public class ClaimTargetPanel extends JPanel {
 
       radioPanel.add(계약자선택버튼);
       radioPanel.add(다른사람선택버튼);
-      centerPanel.add(radioPanel);
+      centerPanel.add(radioPanel, BorderLayout.NORTH);
 
       // 입력 폼 (다른 사람일 경우)
       JPanel 다른사람정보입력패널 = new JPanel(new GridBagLayout());
       다른사람정보입력패널.setBorder(BorderFactory.createTitledBorder("다른 사람 정보 입력"));
+      다른사람정보입력패널.setPreferredSize(new Dimension(400, 200));
       다른사람정보입력패널.setVisible(false);
-      다른사람정보입력패널.setPreferredSize(new Dimension(600, 200));
-      centerPanel.add(다른사람정보입력패널);
+
+      centerPanel.add(다른사람정보입력패널, BorderLayout.CENTER);
 
       GridBagConstraints gbc = new GridBagConstraints();
-      gbc.insets = new java.awt.Insets(10, 10, 10, 10);
+      gbc.insets = new java.awt.Insets(30, 30, 30, 10);
       gbc.anchor = GridBagConstraints.WEST;
 
       JLabel 이름라벨 = new JLabel("이름:");
       JTextField 이름필드 = new JTextField(15);
-      이름필드.setFont(new Font("굴림", Font.PLAIN, 18));
 
       이름필드.addFocusListener(new FocusAdapter() {
          @Override
