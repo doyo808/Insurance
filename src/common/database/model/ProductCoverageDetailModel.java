@@ -4,14 +4,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProductCoverageDetailModel {
-	int productCoverageId;
-	int productId;
+	Integer productCoverageId;
+	Integer productId;
 	String productCoverName;
 	String productCoverDetail;
 	
-	
-	
-	public ProductCoverageDetailModel(int productCoverageId, int productId, String productCoverName,
+	public ProductCoverageDetailModel(Integer productCoverageId, Integer productId, String productCoverName,
 			String productCoverDetail) {
 		super();
 		this.productCoverageId = productCoverageId;

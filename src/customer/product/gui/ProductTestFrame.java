@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import common.gui.headerBar;
 
-public class ProductFrame extends JFrame {
+public class ProductTestFrame extends JFrame {
 
 	// ******* 테스트를 위한 상품페이지의 메인프레임입니다.
 	
@@ -21,7 +21,7 @@ public class ProductFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductFrame frame = new ProductFrame();
+					ProductTestFrame frame = new ProductTestFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,7 +33,7 @@ public class ProductFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductFrame() {
+	public ProductTestFrame() {
 		setBounds(new Rectangle(5, 5, 1440, 1024));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel contentPane = new JPanel();
@@ -88,7 +88,9 @@ public class ProductFrame extends JFrame {
 //		ProductIntroducePanel pip = new ProductIntroducePanel(contentPane);
 //		contentPane.add(pip);
 
-		contentPane.add(new ProductIntroDetailPanel(), BorderLayout.CENTER);
+//		contentPane.add(new ProductIntroDetailPanel(), BorderLayout.CENTER);
+		
+		contentPane.add(new ProductMainPanel(), BorderLayout.CENTER);
 		
 //		contentPane.setVisible(true);
 	}
