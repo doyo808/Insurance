@@ -23,7 +23,7 @@ public class ClaimFirstPanel extends JPanel {
         왼쪽패널버튼넣는패널.setBackground(Color.WHITE);
 
         CardSwitchButton 청구내역조회버튼 = new CardSwitchButton(
-                "보험금 청구내역 조회(진행상태 및 결과 조회)", this,
+                "보험금 청구내역 조회(진행상태 및 결과 조회)",
                 parentCardPanel, "", 400, 350); // 원래 크기 유지
 
         왼쪽패널버튼넣는패널.add(청구내역조회버튼);
@@ -36,11 +36,15 @@ public class ClaimFirstPanel extends JPanel {
         첫번째패널오른쪽.setBackground(Color.WHITE);
 
         // 패널이름추가하기!!!!!!!!
-        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", this,parentCardPanel, "ClaimTargetPanel", 300, 130);
-        CardSwitchButton 추가청구버튼 = new CardSwitchButton("이전에 청구했던 질병, 사고 추가 청구하기", this, parentCardPanel, "", 300, 130);
-        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", this,parentCardPanel, "", 300, 130);
-        CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", this, parentCardPanel, "", 300, 130);
+        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 300, 130);
+        CardSwitchButton 추가청구버튼 = new CardSwitchButton("이전에 청구했던 질병, 사고 추가 청구하기", parentCardPanel, "", 300, 130);
+        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "", 300, 130);
 
+        JButton 상황별필요서류버튼 = new JButton("상황별 필요서류 안내");
+	    상황별필요서류버튼.setSize(300, 130);
+        RequiredDocumentsInfo infoPanel = new RequiredDocumentsInfo(parentCardPanel, "ClaimFirstPanel");
+        parentCardPanel.add(infoPanel, "RequiredDocumentsInfoFromClaimFirstPanel");
+        
         첫번째패널오른쪽.add(신규청구버튼);
         첫번째패널오른쪽.add(추가청구버튼);
         첫번째패널오른쪽.add(청구방법버튼);

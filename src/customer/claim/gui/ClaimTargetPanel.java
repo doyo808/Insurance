@@ -1,12 +1,18 @@
 package customer.claim.gui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,154 +24,108 @@ import javax.swing.JTextField;
 import common.method.Validators;
 
 public class ClaimTargetPanel extends JPanel {
-
    private JPanel parentCardPanel;
 
    public ClaimTargetPanel(JPanel parentCardPanel) {
       this.parentCardPanel = parentCardPanel;
-      CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
-      setBounds(250, 0, 1440, 1024);
-      setLayout(null);
-      
-      JPanel 청구대상패널 = new JPanel(new CardLayout());
+      CardLayout cl = (CardLayout) parentCardPanel.getLayout();
+      setLayout(new BorderLayout());
 
-      JLabel 청구대상선택라벨 = new JLabel("청구대상 선택") {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 30));
-            setBounds(112, 137, 293, 63);
-         }
-      };
-      add(청구대상선택라벨);
-      
-      JRadioButton 계약자선택버튼 = new JRadioButton(" 계약자(본인)") {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 35));
-            setBounds(589, 168, 500, 80);
-         }
-      };
-      
-      JRadioButton 다른사람선택버튼 = new JRadioButton(" 다른사람") {
-         {
-            setBounds(589, 239, 500, 80);
-            setFont(new Font("굴림", Font.PLAIN, 35));
-         }
-      };
+      TitlePanel title = new TitlePanel("청구대상 선택");
+      add(title, BorderLayout.NORTH);
 
-      add(계약자선택버튼);
-      add(다른사람선택버튼);
+      // 중앙 패널: 라디오 버튼과 입력창
+      JPanel centerPanel = new JPanel(new BorderLayout());
+      centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
+      add(centerPanel, BorderLayout.CENTER);
+      centerPanel.setVisible(true);
+
+      // 라디오 버튼
+      JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+      JRadioButton 계약자선택버튼 = new JRadioButton(" 계약자(본인)");
+      JRadioButton 다른사람선택버튼 = new JRadioButton(" 다른사람");
 
       ButtonGroup 선택버튼그룹 = new ButtonGroup();
       선택버튼그룹.add(계약자선택버튼);
       선택버튼그룹.add(다른사람선택버튼);
-      
-      
 
-      JPanel 다른사람정보입력패널 = new JPanel() {
-         {
-            setBounds(302, 337, 734, 304);
-            setBorder(BorderFactory.createLineBorder(Color.GRAY));
-            setLayout(null);
-            setVisible(false);
+      radioPanel.add(계약자선택버튼);
+      radioPanel.add(다른사람선택버튼);
+      centerPanel.add(radioPanel, BorderLayout.NORTH);
+
+      // 입력 폼 (다른 사람일 경우)
+      JPanel 다른사람정보입력패널 = new JPanel(new GridBagLayout());
+      다른사람정보입력패널.setBorder(BorderFactory.createTitledBorder("다른 사람 정보 입력"));
+      다른사람정보입력패널.setPreferredSize(new Dimension(400, 200));
+      다른사람정보입력패널.setVisible(false);
+
+      centerPanel.add(다른사람정보입력패널, BorderLayout.CENTER);
+
+      GridBagConstraints gbc = new GridBagConstraints();
+      gbc.insets = new java.awt.Insets(30, 30, 30, 10);
+      gbc.anchor = GridBagConstraints.WEST;
+
+      JLabel 이름라벨 = new JLabel("이름:");
+      JTextField 이름필드 = new JTextField(15);
+
+      이름필드.addFocusListener(new FocusAdapter() {
+         @Override
+         public void focusLost(FocusEvent e) {
+            String inputName = 이름필드.getText();
+            if (!Validators.isValidName(inputName)) {
+               JOptionPane.showMessageDialog(null, "이름은 한글 2~9글자 가능합니다.");
+               이름필드.setText("");
+            }
          }
-      };
-      add(다른사람정보입력패널);
+      });
 
-      JLabel 이름라벨 = new JLabel("이름: ") {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 20));
-            setBounds(230, 68, 150, 30);
+      JLabel 주민번호라벨 = new JLabel("주민등록번호:");
+      JTextField 주민번호필드 = new JTextField(15);
+
+      주민번호필드.addFocusListener(new FocusAdapter() {
+         @Override
+         public void focusLost(FocusEvent e) {
+            String inputPersonal_id = 주민번호필드.getText();
+            if (!Validators.isValidPersonal_id(inputPersonal_id)) {
+               JOptionPane.showMessageDialog(null, "주민등록번호가 유효하지 않습니다.");
+               주민번호필드.setText("");
+            }
          }
-      };
-      
-      JTextField 이름필드 = new JTextField() {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 18));
-            setBounds(322, 68, 200, 30);
-         }
-      };
-      
-		이름필드.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				String inputName = 이름필드.getText();
-				if (!Validators.isValidName(inputName)) {
-					JOptionPane.showMessageDialog(null, "이름은 한글 2~9글자 가능합니다.");
-					이름필드.setText("");
-				}
-			}
+      });
 
-		});  
-      
+      JLabel 연락처라벨 = new JLabel("휴대폰 번호:");
+      JTextField 연락처필드 = new JTextField(15);
 
-      JLabel 주민번호라벨 = new JLabel("주민등록번호: ") {
-         {
-            setBounds(176, 140, 150, 30);
-            setFont(new Font("굴림", Font.PLAIN, 20));
-         }
-      };
-      
-      JTextField 주민번호필드 = new JTextField() {
-         { // 우선 주민번호는 '-'넣어야함 -> 추후에 
-            setFont(new Font("굴림", Font.PLAIN, 18));
-            setBounds(322, 140, 200, 30);
-         }
-      };
-      
-		if (이름필드.isValid()) {
+      gbc.gridx = 0; gbc.gridy = 0;
+      다른사람정보입력패널.add(이름라벨, gbc);
+      gbc.gridx = 1;
+      다른사람정보입력패널.add(이름필드, gbc);
 
-			주민번호필드.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					String inputPersonal_id = 주민번호필드.getText();
-					if (!Validators.isValidPersonal_id(inputPersonal_id));
-					JOptionPane.showMessageDialog(null, "주민등록번호가 유효하지 않습니다.");
-					주민번호필드.setText("");
-				}
-			});
+      gbc.gridx = 0; gbc.gridy = 1;
+      다른사람정보입력패널.add(주민번호라벨, gbc);
+      gbc.gridx = 1;
+      다른사람정보입력패널.add(주민번호필드, gbc);
 
-		}
+      gbc.gridx = 0; gbc.gridy = 2;
+      다른사람정보입력패널.add(연락처라벨, gbc);
+      gbc.gridx = 1;
+      다른사람정보입력패널.add(연락처필드, gbc);
 
-      JLabel 연락처라벨 = new JLabel("휴대폰 번호: ") {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 20));
-            setBounds(176, 212, 150, 30);
-         }
-      };
-      
-      JTextField 연락처필드 = new JTextField() {
-         {
-            setFont(new Font("굴림", Font.PLAIN, 18));
-            setBounds(322, 211, 200, 30);
-         }
-      };
-
-      다른사람정보입력패널.add(이름라벨);
-      다른사람정보입력패널.add(이름필드);
-      다른사람정보입력패널.add(주민번호라벨);
-      다른사람정보입력패널.add(주민번호필드);
-      다른사람정보입력패널.add(연락처라벨);
-      다른사람정보입력패널.add(연락처필드);
-      
-      계약자선택버튼.addActionListener((e) -> {
+      계약자선택버튼.addActionListener(e -> {
          다른사람정보입력패널.setVisible(false);
-         revalidate(); // 레이아웃 재계산
-         repaint(); // 화면 다시 그림
+         revalidate(); repaint();
       });
-      
-      다른사람선택버튼.addActionListener((e) -> {
+
+      다른사람선택버튼.addActionListener(e -> {
          다른사람정보입력패널.setVisible(true);
-         revalidate(); // 레이아웃 재계산
-         repaint(); // 화면 다시 그림
+         revalidate(); repaint();
       });
 
+      // 하단 버튼
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+      JButton 이전버튼 = new JButton("이전");
+      JButton 다음버튼 = new JButton("다음");
 
-      JButton 이전버튼 = new JButton("이전") {
-         {
-            setBounds(470, 686, 100, 30);
-         }
-      };
-      add(이전버튼);
-      
       이전버튼.addActionListener((e) -> {
          cl.show(parentCardPanel, "ClaimMainPanel");
          선택버튼그룹.clearSelection();
@@ -175,29 +135,21 @@ public class ClaimTargetPanel extends JPanel {
          다른사람정보입력패널.setVisible(false);
       });
 
-      JButton 다음버튼 = new JButton("다음") {
-         {
-            setBounds(853, 686, 100, 30);
-         }
-      };
-      add(다음버튼);
-
       다음버튼.addActionListener((e) -> {
          if (선택버튼그룹.getSelection() == null) {
             JOptionPane.showMessageDialog(this, "청구대상을 선택해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
-         } else if (다른사람선택버튼.isSelected() && 
-               (이름필드.getText().trim().isEmpty() || 
-                연락처필드.getText().trim().isEmpty() || 
+         } else if (다른사람선택버튼.isSelected() &&
+               (이름필드.getText().trim().isEmpty() ||
+                연락처필드.getText().trim().isEmpty() ||
                 주민번호필드.getText().trim().isEmpty())) {
-            JOptionPane.showMessageDialog(this, "모든 정보를 입력해주세요", "안내", JOptionPane.INFORMATION_MESSAGE); 
-            // this를 기준으로 메세지창 위치가 정해짐                                                               
+            JOptionPane.showMessageDialog(this, "모든 정보를 입력해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
          } else {
             cl.show(parentCardPanel, "AccidentDatePanel");
          }
-
       });
-      
+
+      buttonPanel.add(이전버튼);
+      buttonPanel.add(다음버튼);
+      add(buttonPanel, BorderLayout.SOUTH);
    }
 }
-
-

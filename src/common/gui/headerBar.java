@@ -7,11 +7,11 @@ import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-public class HeaderBar extends JPanel {
+public class headerBar extends JPanel {
 		
 	private JPanel parentCardPanel; //카드 전환에 사용될 부모 패널
 	
-	public HeaderBar(JPanel parentCardPanel) {
+	public headerBar(JPanel parentCardPanel) {
 		this.parentCardPanel = parentCardPanel;
 		
 //		setPreferredSize(new Dimension(0, 200)); // 높이 고정, 너비는 프레임에 맞춤
@@ -21,12 +21,12 @@ public class HeaderBar extends JPanel {
 		
 		
 		// 여기서 parentCardPanel은 상품조회,상품가입,청구,납부,마이페이지.. 등의 패널이 다 들어간 카드레이아웃 패널입니다.
-		CardSwitchButton 보험상품조회버튼 = new CardSwitchButton("보험상품조회", this,parentCardPanel, "", 150, 60); // 보험상품조회메인패널 이름 필요
-		CardSwitchButton 보험상품가입버튼 = new CardSwitchButton("보험상품가입", this,parentCardPanel, "", 150, 60); // 보험상품가입메인패널 이름 필요
-		CardSwitchButton 보험금청구버튼 = new CardSwitchButton("보험금청구", this,parentCardPanel, "ClaimMainPanel", 150, 60);
-		CardSwitchButton 보험금납부버튼 = new CardSwitchButton("보험금납부", this,parentCardPanel, "", 150, 60); // 보험금납부메인패널 이름 필요
-		CardSwitchButton 마이페이지버튼 = new CardSwitchButton("마이페이지", this,parentCardPanel, "", 150, 60); // 마이페이지메인패널 이름 필요
-		CardSwitchButton 회원가입버튼 = new CardSwitchButton("회원가입", this,parentCardPanel, "", 150, 60); // 회원가입메인패널이름 필요
+		CardSwitchButton 보험상품조회버튼 = new CardSwitchButton("보험상품조회", parentCardPanel, "", 150, 60); // 보험상품조회메인패널 이름 필요
+		CardSwitchButton 보험상품가입버튼 = new CardSwitchButton("보험상품가입", parentCardPanel, "", 150, 60); // 보험상품가입메인패널 이름 필요
+		CardSwitchButton 보험금청구버튼 = new CardSwitchButton("보험금청구", parentCardPanel, "ClaimMainPanel", 150, 60);
+		CardSwitchButton 보험금납부버튼 = new CardSwitchButton("보험금납부", parentCardPanel, "", 150, 60); // 보험금납부메인패널 이름 필요
+		CardSwitchButton 마이페이지버튼 = new CardSwitchButton("마이페이지", parentCardPanel, "", 150, 60); // 마이페이지메인패널 이름 필요
+		CardSwitchButton 회원가입버튼 = new CardSwitchButton("회원가입", parentCardPanel, "", 150, 60); // 회원가입메인패널이름 필요
 		
 		add(보험상품조회버튼);
 		add(보험상품가입버튼);

@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import common.database.model.ClaimModel;
+import common.database.model.ClaimsModel;
 import common.database.model.CustomerModel;
 
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
@@ -54,7 +54,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		// 고객이 하나 이상의 계약이 꼭 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
 		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
-		public static ClaimModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
+		public static ClaimsModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
 			String query = "SELECT customer_name, personal_id, phone_number FROM CUSTOMERS WHERE login_id = ?";
 			
 //			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
@@ -67,7 +67,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 				pstmt.setString(1, login_id);
 				
 				try (ResultSet rs = pstmt.executeQuery()) { 
-					return rs.next() ? new ClaimModel(rs) : null;
+					return rs.next() ? new ClaimsModel(rs) : null;
 				}
 			}
 		}
@@ -75,8 +75,8 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 	
 		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
 		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회
-		public static List<ClaimModel> getClaims(String login_id, Connection conn) throws SQLException {
-			List<ClaimModel> claimList = new ArrayList<>();
+		public static List<ClaimsModel> getClaims(String login_id, Connection conn) throws SQLException {
+			List<ClaimsModel> claimList = new ArrayList<>();
 			String query = "SELECT * FROM CLAIMS "
 					+ "INNER JOIN CONTRACTS USING(contract_id) "
 					+ "INNER JOIN CUSTOMERS USING(customer_id) "
@@ -86,7 +86,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 				
 				try (ResultSet rs = pstmt.executeQuery()) {
 					while (rs.next()) {
-						claimList.add(new ClaimModel(rs));
+						claimList.add(new ClaimsModel(rs));
 					}
 				}
 			}

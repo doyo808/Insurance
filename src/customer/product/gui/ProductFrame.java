@@ -1,12 +1,13 @@
 package customer.product.gui;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Rectangle;
-import common.gui.HeaderBar;
+
+import common.gui.headerBar;
 
 public class ProductFrame extends JFrame {
 
@@ -83,7 +84,7 @@ public class ProductFrame extends JFrame {
 		
 		*/
 		
-		contentPane.add(new HeaderBar(contentPane), BorderLayout.NORTH);
+		contentPane.add(new headerBar(contentPane), BorderLayout.NORTH);
 		
 //		ProductIntroducePanel pip = new ProductIntroducePanel(contentPane);
 //		contentPane.add(pip);
