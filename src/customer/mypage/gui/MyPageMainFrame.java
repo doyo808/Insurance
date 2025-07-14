@@ -6,7 +6,7 @@ public class MyPageMainFrame extends JFrame {
 	
 	public MyPageMainFrame() {
 		
-		setTitle("윤한식");
+		setTitle("윤한식_MyPage");
 		setBounds(100, 10, 1440, 1024);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
