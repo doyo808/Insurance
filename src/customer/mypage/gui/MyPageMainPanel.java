@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -14,6 +16,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 import common.account.login.Session;
 import common.database.dao.CustomerDAO;
@@ -106,9 +109,9 @@ public class MyPageMainPanel extends JPanel {
         add(paymentScroll);
 
         // ==== 데이터 로드 ====
-        loadPersonalInfo();
-        //loadContractInfo();
-        //loadPaymentHistory();
+        loadPersonalInfo();        
+        loadContractInfo();
+        loadPaymentHistory();
     }
 	
 	private JTextField addLabeledField(JLabel label, int x, int y, int labelWidth, int fieldWidth) {
@@ -136,8 +139,8 @@ public class MyPageMainPanel extends JPanel {
 			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}    
-        
+		}
+		
 //		CustomerModel cm = Session.getCustomer(); //공통 로그인 세션 사용시
 		
 	    tfName.setText(cm.getCustomer_name());
@@ -150,48 +153,63 @@ public class MyPageMainPanel extends JPanel {
 	    tfCompanyPhone.setText(cm.getJob_phone_number());
 	    tfWorkAddress.setText(cm.getJob_address1() + cm.getJob_address2());
     }
+
+    private void loadContractInfo() {
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0);
+    	
+    	try (Connection conn = InsuranceTeamConnector.getConnection()){			
+			
+			String sql = "SELECT contract_id, product_name, premium, signup_date, effective_date, payment_end_date, coverage_end_date, status "
+					+ "FROM contracts c, products p "
+					+ "WHERE c.product_id = p.product_id AND customer_id = ?";			
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 1);
+			
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				model.addRow(new Object[]{
+						rs.getInt("contract_id"),
+						rs.getString("product_name"),
+						rs.getInt("premium"),
+						rs.getString("signup_date"),
+						rs.getString("effective_date"),
+						rs.getString("payment_end_date"),
+						rs.getString("coverage_end_date"),
+						rs.getString("status")				
+				});
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        contractTable.setModel(model);
+    }
 //
-//    private void loadContractInfo() {
-//        DefaultTableModel model = new DefaultTableModel(new String[]{"보험상품명", "계약번호", "가입일", "만기일"}, 0);
-//        try (Connection conn = DBManager.getConnection()) {
-//            String sql = "SELECT 보험상품명, 계약번호, 가입일, 만기일 FROM 계약 WHERE 사용자ID = ?";
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            pstmt.setInt(1, 1);
-//
-//            ResultSet rs = pstmt.executeQuery();
-//            while (rs.next()) {
-//                model.addRow(new Object[]{
-//                    rs.getString("보험상품명"),
-//                    rs.getString("계약번호"),
-//                    rs.getDate("가입일"),
-//                    rs.getDate("만기일")
-//                });
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        contractTable.setModel(model);
-//    }
-//
-//    private void loadPaymentHistory() {
-//        DefaultTableModel model = new DefaultTableModel(new String[]{"납입년월", "보험상품명"}, 0);
-//        try (Connection conn = DBManager.getConnection()) {
-//            String sql = "SELECT 납입년월, 보험상품명 FROM 납입내역 WHERE 사용자ID = ?";
-//            PreparedStatement pstmt = conn.prepareStatement(sql);
-//            pstmt.setInt(1, 1);
-//
-//            ResultSet rs = pstmt.executeQuery();
-//            while (rs.next()) {
-//                model.addRow(new Object[]{
-//                    rs.getString("납입년월"),
-//                    rs.getString("보험상품명")
-//                });
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        paymentTable.setModel(model);
-//    }
+    private void loadPaymentHistory() {
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0);
+    	try(Connection conn = InsuranceTeamConnector.getConnection();) {
+    		
+    		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
+    				+ "FROM payments p, contracts c "
+    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
+    		PreparedStatement pstmt = conn.prepareStatement(sql);
+    		pstmt.setInt(1, 1);
+    		
+    		ResultSet rs = pstmt.executeQuery();
+    		while(rs.next()) {
+    			model.addRow(new Object[] {
+    					rs.getInt("contract_id"),
+    					rs.getString("payment_date"),
+    					rs.getString("product_name"),
+    					rs.getInt("paid_amount"),
+    					rs.getString("pay_status")   					
+    			});
+    		}   				
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}        paymentTable.setModel(model);
+    }
 	
 	
 }
