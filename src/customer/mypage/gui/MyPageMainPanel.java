@@ -46,13 +46,7 @@ public class MyPageMainPanel extends JPanel {
 		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
         separator.setBounds(0, 0, 1440, 700); // x, y, width, height
         separator.setForeground(Color.RED); // 구분선 색상
-        add(separator);		
-		
-//		JLabel lblNewLabel = new JLabel("New label");
-//		lblNewLabel.setBounds(20, 10, 57, 15);
-//		add(lblNewLabel);
-		
-		
+        add(separator);	
         
 		int labelW = 80;
         int fieldW = 250;

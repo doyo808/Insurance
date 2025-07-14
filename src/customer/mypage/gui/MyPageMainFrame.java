@@ -8,7 +8,7 @@ public class MyPageMainFrame extends JFrame {
 	
 	public MyPageMainFrame() {
 		
-		setTitle("윤한식_MyPage");
+		setTitle("OO다이렉트 보험 마이페이지");
 		setBounds(100, 10, 1440, 1024);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
