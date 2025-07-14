@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import common.account.login.Session;
+
 import common.database.dao.CustomerDAO;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
@@ -155,7 +155,14 @@ public class MyPageMainPanel extends JPanel {
     }
 
     private void loadContractInfo() {
-    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0);
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
+    		@Override
+    		public boolean isCellEditable(int row, int column) {
+    			return false;
+    			//특정 컬럼을 수정하고 싶을 때
+    			//return column == 0;
+    		}
+    	};
     	
     	try (Connection conn = InsuranceTeamConnector.getConnection()){			
 			
@@ -186,7 +193,13 @@ public class MyPageMainPanel extends JPanel {
     }
 //
     private void loadPaymentHistory() {
-    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0);
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0) {
+    		@Override
+    		public boolean isCellEditable(int row, int column) {
+    			return false;
+    		}
+    	};
+    	
     	try(Connection conn = InsuranceTeamConnector.getConnection();) {
     		
     		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
