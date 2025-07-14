@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Panel;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -27,18 +28,19 @@ import java.awt.Color;
 
 public class ProductIntroducePanel extends JPanel {
 
-    private JPanel parentCardPanel;
-	
+    private int shareproductId = 0;
+
+	private MouseClickListener listener;
+    
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Create the panel.
 	 */
-	public ProductIntroducePanel(JPanel parentCardPanel) {
+	public ProductIntroducePanel() {
 		setBackground(new Color(192, 192, 192));
 		setAutoscrolls(true);
 		setBounds(new Rectangle(0, 0, 1440, 700));
-		this.parentCardPanel = parentCardPanel;
 		
 		setLayout(new BorderLayout());
 		Panel inHeaderPanel = new Panel();
@@ -69,11 +71,6 @@ public class ProductIntroducePanel extends JPanel {
 		
 		
 		JTable table = new JTable();
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-		});
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		table.setShowVerticalLines(false);
 		table.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
@@ -89,7 +86,6 @@ public class ProductIntroducePanel extends JPanel {
 		try (Connection conn = InsuranceTeamConnector.getConnection()){
 			products = (ArrayList<ProductModel>)ProductDAO.getAllProducts(conn);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		int productSize = products.size();
@@ -116,23 +112,71 @@ public class ProductIntroducePanel extends JPanel {
 			}
 		){
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
+			// 테이블을 수정할수있는지 여부를 비활성화해두는것
 			@Override
 			public boolean isCellEditable(int col, int row) {
 				return false;
 			}
 		});
+		
+		// 테이블의 행마다 더블클릭을 하면 해당 상세페이지로 넘어가는 이벤트
+//		table.addMouseListener(new MouseAdapter() {
+//            public void mouseClicked(MouseEvent e) {
+//            	if(e.getClickCount() == 2) {
+//            		int row = table.getSelectedRow(); // 선택된 행 인덱스
+//            		if (row >= 0) {
+//            			
+//            			Object productId = table.getValueAt(row, 0);
+//            			System.out.println("테스트중 productId = " + productId);
+//            			shareproductId = (int)productId;
+//            		}            		
+//            	}
+//            }
+//        });
+		
+		table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	if(e.getClickCount() == 2) {
+            		if (listener != null) {
+            			int row = table.getSelectedRow(); // 선택된 행 인덱스
+            			if (row >= 0) {
+            				
+            				Object productId = table.getValueAt(row, 0);
+            				System.out.println("테스트중 productId = " + productId);
+            				shareproductId = (int)productId;
+            			} 
+            			listener.onChildPanelClicked(e);  // 부모에게 알림
+            		}
+            	}
+            }
+        });
+		
 		table.setRowHeight(30);
 		JScrollPane scrollpane = new JScrollPane(table);
 		scrollpane.setAutoscrolls(true);
 		scrollpane.setPreferredSize(new Dimension(800, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		table.setDefaultEditor(String.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
 		product_table.add(scrollpane);
 		
 	}
+	
+	public int getProductId() {
+		return shareproductId;
+	}
+	
+	// 부모가 등록할 리스너
+    public void setMouseClickListener(MouseClickListener listener) {
+        this.listener = listener;
+    }
+
+    // 리스너 인터페이스 정의
+    public interface MouseClickListener {
+        void onChildPanelClicked(MouseEvent e);
+    }
 }

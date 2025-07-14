@@ -1,5 +1,7 @@
 package common.database.dao;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,13 +105,14 @@ public class ProductDAO {
      * @param conn DB 연결 객체
      * @return 삽입 성공 행 수 (보통 1)
      * @throws SQLException
+     * @throws FileNotFoundException 
      */
-    public static int addProduct(ProductModel p, Connection conn) throws SQLException {
+    public static int addProduct(ProductModel p, String path, Connection conn) throws SQLException, FileNotFoundException {
         String query = "INSERT INTO products ("
                 + "product_id, division, product_name, join_age_low, join_age_high, "
                 + "join_limit_low, join_limit_high, term_and_conditions_path, "
-                + "product_manual_path, base_premium, premium_constant"
-                + ") VALUES (product_id_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "product_manual_path, base_premium, premium_constant, product_introduce"
+                + ") VALUES (product_id_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, p.getDivision());
@@ -122,6 +125,7 @@ public class ProductDAO {
             pstmt.setString(8, p.getProductManualPath());
             pstmt.setDouble(9, p.getBasePremium());
             pstmt.setDouble(10, p.getPremiumConstant());
+            pstmt.setBlob(11, new FileInputStream(path));
 
             return pstmt.executeUpdate();
         }
