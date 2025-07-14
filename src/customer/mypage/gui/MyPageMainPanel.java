@@ -26,7 +26,7 @@ import common.method.InsuranceTeamConnector;
 // 컨텐츠판넬 사이즈 : setBounds(0, 162, 1440, 700);
 // 하단판텔 사이즈 : setBounds(0, 0, 1440, 162);	
 
-public class MyPageMainWindow extends JPanel {
+public class MyPageMainPanel extends JPanel {
 	
 	private JLabel lbName, lbAddress, lbBirth, lbPhone, lbEmail, lbJob, lbCompany, lbWorkAddress, lbCompanyPhone;
 	private JTextField tfName, tfAddress, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfWorkAddress, tfCompanyPhone;
@@ -34,7 +34,7 @@ public class MyPageMainWindow extends JPanel {
 	private JButton btnEdit;
 
 	
-	public MyPageMainWindow() {
+	public MyPageMainPanel() {
 		setPreferredSize(new Dimension(1440, 700));
 		setBounds(0, 162, 1440, 700);
 		
@@ -129,14 +129,12 @@ public class MyPageMainWindow extends JPanel {
 		try {
 			conn = InsuranceTeamConnector.getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         CustomerModel cm = null;
 		try {
 			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}    
         
