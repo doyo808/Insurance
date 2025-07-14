@@ -22,6 +22,19 @@ public class ContractDAO {
             }
         }
     }
+    
+    public static ContractModel getByContId(Integer contract_id, Connection conn) throws SQLException {
+    	String sql = "Select * FROM contracts WHERE contract_id = ?";
+    	try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    		pstmt.setInt(1, contract_id);
+    		try (ResultSet rs = pstmt.executeQuery()) {
+    			if (rs.next()) {
+    				return new ContractModel(rs);
+    			}
+    			return null;
+    		}
+    	}
+    }
 
     public static ArrayList<ContractModel> getAll(Connection conn) throws SQLException {
         String sql = "SELECT * FROM CONTRACTS";
