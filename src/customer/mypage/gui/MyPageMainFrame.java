@@ -1,10 +1,12 @@
 package customer.mypage.gui;
 
+import java.sql.SQLException;
+
 import javax.swing.JFrame;
 
 public class MyPageMainFrame extends JFrame {
 	
-	public MyPageMainFrame() {
+	public MyPageMainFrame() throws SQLException {
 		
 		setTitle("윤한식_MyPage");
 		setBounds(100, 10, 1440, 1024);
@@ -22,7 +24,7 @@ public class MyPageMainFrame extends JFrame {
 		
 	}	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		new MyPageMainFrame();
 	}
 

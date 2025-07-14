@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,7 +31,8 @@ public class MyPageMainWindow extends JPanel {
 	private JLabel lbName, lbAddress, lbBirth, lbPhone, lbEmail, lbJob, lbCompany, lbWorkAddress, lbCompanyPhone;
 	private JTextField tfName, tfAddress, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfWorkAddress, tfCompanyPhone;
 	private JTable contractTable, paymentTable;
-	private JButton btnEdit;  
+	private JButton btnEdit;
+
 	
 	public MyPageMainWindow() {
 		setPreferredSize(new Dimension(1440, 700));
@@ -48,6 +50,7 @@ public class MyPageMainWindow extends JPanel {
 //		add(lblNewLabel);
 		
 		
+        
 		int labelW = 80;
         int fieldW = 250;
         int h = 25;
@@ -72,14 +75,8 @@ public class MyPageMainWindow extends JPanel {
         tfCompanyPhone = addLabeledField(lbCompanyPhone = new JLabel("회사연락처"), x3, y, labelW, fieldW);
 
         // 4행: 회사주소 (중앙 정렬)
-        y += h + spacingY;
-        lbWorkAddress = new JLabel("회사주소");
-        lbWorkAddress.setBounds(x1, y, labelW, h);
-        add(lbWorkAddress);
-        tfWorkAddress = new JTextField();
-        tfWorkAddress.setBounds(x1 + labelW + 10, y, fieldW + 960, h);
-        tfWorkAddress.setEditable(false);
-        add(tfWorkAddress);   
+        y += h + spacingY;       
+        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 960);       
 
         // 5행: 수정 버튼
         y += h + spacingY;
@@ -127,16 +124,33 @@ public class MyPageMainWindow extends JPanel {
 	
 	
 	private void loadPersonalInfo() {
-		CustomerModel cm = Session.getCustomer();
+		/// FIXME: 테스트용 연결과 고객모델
+        Connection conn = null;
+		try {
+			conn = InsuranceTeamConnector.getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        CustomerModel cm = null;
+		try {
+			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}    
+        
+//		CustomerModel cm = Session.getCustomer(); //공통 로그인 세션 사용시
 		
-//	    tfName.setText(cm.getCustomer_name());
-//	    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
-//	    tfBirth.setText(rs.getString("생년월일"));
-//	    tfPhone.setText(rs.getString("휴대폰"));
-//	    tfEmail.setText(rs.getString("이메일"));
-//	    tfJob.setText(rs.getString("직업"));
-//	    tfCompany.setText(rs.getString("회사명"));
-//	    tfCompanyPhone.setText(rs.getString("회사연락처"));
+	    tfName.setText(cm.getCustomer_name());
+	    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
+	    tfBirth.setText(cm.getPersonal_id());
+	    tfPhone.setText(cm.getPhone_number());
+	    tfEmail.setText(cm.getEmail());
+	    tfJob.setText(cm.getJob());
+	    tfCompany.setText(cm.getCompany_name());
+	    tfCompanyPhone.setText(cm.getJob_phone_number());
+	    tfWorkAddress.setText(cm.getJob_address1() + cm.getJob_address2());
     }
 //
 //    private void loadContractInfo() {
