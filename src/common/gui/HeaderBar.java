@@ -7,11 +7,11 @@ import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-public class headerBar extends JPanel {
+public class HeaderBar extends JPanel {
 		
 	private JPanel parentCardPanel; //카드 전환에 사용될 부모 패널
 	
-	public headerBar(JPanel parentCardPanel) {
+	public HeaderBar(JPanel parentCardPanel) {
 		this.parentCardPanel = parentCardPanel;
 		
 //		setPreferredSize(new Dimension(0, 200)); // 높이 고정, 너비는 프레임에 맞춤

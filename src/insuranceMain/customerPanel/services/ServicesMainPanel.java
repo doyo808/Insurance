@@ -1,20 +1,27 @@
 package insuranceMain.customerPanel.services;
 
-import java.awt.CardLayout;
+import java.awt.BorderLayout;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class ServicesMainPanel extends JPanel {
-	CardLayout c = new CardLayout();
+import common.gui.FooterImagePanel;
+import common.gui.HeaderBar;
+import insuranceMain.customerPanel.CustomerMainPanel;
 
-	public ServicesMainPanel() {
-		setLayout(c);
-		
-		add(new JButton("마이페이지"), "마이페이지");
-	}
+public class ServicesMainPanel extends JPanel {
+	private ServicesMainCenterPanel smcp;
 	
-	public void showCard(String string) {
-		c.show(this, string);
+	public ServicesMainPanel(CustomerMainPanel cmp) {
+		setLayout(new BorderLayout());
+		
+		add(smcp = new ServicesMainCenterPanel(cmp), BorderLayout.CENTER);
+		add(new HeaderBar(smcp), BorderLayout.NORTH);
+		FooterImagePanel fip = new FooterImagePanel();
+		add(fip, BorderLayout.SOUTH);
 	}
+
+	public ServicesMainCenterPanel getSmcp() {
+		return smcp;
+	}
+
 }

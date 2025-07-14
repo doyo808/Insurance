@@ -15,13 +15,16 @@ import javax.swing.SwingConstants;
 import common.account.login.LoginService;
 import common.account.login.Session;
 import common.database.model.CustomerModel;
+import common.gui.FooterImagePanel;
+import common.gui.HomeButton;
+import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class AccountsCard4 extends JPanel {
 	private JTextField textField;
 	
-	public AccountsCard4(AccountsMainPanel parentPanel) {
+	public AccountsCard4(AccountsMainPanel parentPanel, CustomerMainPanel cmp) {
 		addComponents(parentPanel);
-		
+		add(new HomeButton(cmp, 700, 10));
 	}
 	
 	void addComponents(AccountsMainPanel parentPanel) {
@@ -30,7 +33,7 @@ public class AccountsCard4 extends JPanel {
 		/// FIXME: 라벨
 		JLabel label1 = new JLabel("로그인 페이지");
 		label1.setHorizontalAlignment(SwingConstants.CENTER);
-		label1.setBounds(424, 41, 573, 67);
+		label1.setBounds(424, 121, 573, 67);
 		label1.setBackground(new Color(192, 192, 192));
 		Font currentFont = label1.getFont();
 		label1.setFont(new Font(currentFont.getName(), currentFont.getStyle(), 30));
@@ -96,7 +99,6 @@ public class AccountsCard4 extends JPanel {
 				errorLabel.setVisible(true);
 			} else {
 				Session.setCustomer(c);
-				AccountsCard2.n2.updateUserName(c.getCustomer_name());
 				parentPanel.showCard("회원_메인");
 			}
 			textField.setText("아이디");
@@ -105,7 +107,7 @@ public class AccountsCard4 extends JPanel {
 			label1.requestFocusInWindow();
 		});
 		
-		/// FIXME: 버튼(페이지 이동)
+		/// FIXME: 로그인버튼(클릭시 페이지 이동)
 		JButton logInBtn = new JButton("로그인");
 		logInBtn.setBounds(661, 280, 97, 23);
 		logInBtn.addActionListener(e -> {
@@ -117,7 +119,6 @@ public class AccountsCard4 extends JPanel {
 				errorLabel.setVisible(true);
 			} else {
 				Session.setCustomer(c);
-				AccountsCard2.n2.updateUserName(c.getCustomer_name());
 				parentPanel.showCard("회원_메인");
 			}
 			textField.setText("아이디");
@@ -132,6 +133,10 @@ public class AccountsCard4 extends JPanel {
 		signupBtn.addActionListener(e -> {
 			parentPanel.showCard("회원가입_메인");
 		});
+		
+		FooterImagePanel fip = new FooterImagePanel();
+		fip.setBounds(0, 874, 1440, 150);
+		add(fip);
 		
 		add(label1);
 		add(errorLabel);

@@ -9,7 +9,11 @@ import common.account.login.Session;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
-
+	
+	// 이곳에서 TEST모드 변경(true이면 홍길동 로그인된 상태, false는 로그아웃)
+	public static boolean TEST = true;
+	public static String LOGIN_ID = "hong123";
+	
 	/**
 	 * Launch the application.
 	 */
@@ -35,10 +39,6 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		init();
 		Session.clear();
-		addComponents();
-	}
-	
-	void addComponents() {
 		add(new MainPanel());
 	}
 	

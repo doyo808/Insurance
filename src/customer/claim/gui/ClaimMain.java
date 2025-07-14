@@ -3,11 +3,9 @@ package customer.claim.gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-import common.gui.ScrollWrapper;
-import common.gui.headerBar;
+import common.gui.HeaderBar;
 
 public class ClaimMain {
 	   public static void main(String[] args) {
@@ -23,8 +21,8 @@ public class ClaimMain {
 	      fr.add(메인패널);
 	      fr.setVisible(true);
 	   
-	   // 상단 헤더 바 추가
-	   fr.add(new headerBar(메인패널), BorderLayout.NORTH);
+//	   // 상단 헤더 바 추가
+//	   fr.add(new HeaderBar(메인패널), BorderLayout.NORTH);
 	   
 //	   JScrollPane scrollPane = new ScrollWrapper(claimMainPanel); // ClaimMainPanel을 스크롤로 감싸기
 //	   fr.add(new scrollPane(), BorderLayout.CENTER);

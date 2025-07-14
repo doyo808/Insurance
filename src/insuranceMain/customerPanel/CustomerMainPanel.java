@@ -20,7 +20,7 @@ public class CustomerMainPanel extends JPanel {
 	public CustomerMainPanel() {
 		setLayout(c);
 		
-		servicesPanel = new ServicesMainPanel();
+		servicesPanel = new ServicesMainPanel(this);
 		accountsPanel = new AccountsMainPanel(servicesPanel, this);
 		
 		add(servicesPanel, "services");
@@ -33,5 +33,7 @@ public class CustomerMainPanel extends JPanel {
 		c.show(this, string);
 	}
 
-	
+	public AccountsMainPanel getAMP() {
+		return accountsPanel;
+	}
 }

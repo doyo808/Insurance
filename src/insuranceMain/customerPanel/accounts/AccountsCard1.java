@@ -8,8 +8,8 @@ import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import common.gui.FooterImagePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
-import insuranceMain.customerPanel.services.ServicesMainPanel;
 
 public class AccountsCard1 extends JPanel {
 	// 비회원 첫페이지(로그인, 회원가입 버튼들 포함)
@@ -18,8 +18,8 @@ public class AccountsCard1 extends JPanel {
 		setLayout(new BorderLayout());
 		setBackground(Color.black);
 		
-		add(new PanelNorth(parentPanel), BorderLayout.NORTH);
-		add(new PanelSouth(), BorderLayout.SOUTH);
+		add(new PanelNorth(parentPanel, 1440, 174), BorderLayout.NORTH);
+		add(new FooterImagePanel(), BorderLayout.SOUTH);
 		add(new PanelCenter(parentPanel), BorderLayout.CENTER);
 	}
 }
@@ -49,35 +49,6 @@ class PanelCenter extends JPanel {
     }
 }
 
-class PanelNorth extends JPanel {
-	private AccountsMainPanel parentPanel;
-	
-	public PanelNorth(AccountsMainPanel parentPanel) {
-		this.parentPanel = parentPanel;
-		setBackground(Color.gray);
-		
-		JButton btn2 = new JButton("로그인");
-		JButton btn3 = new JButton("회원가입");
-
-		btn2.addActionListener(e -> {
-			parentPanel.showCard("로그인");
-		});
-		btn3.addActionListener(e -> {
-			parentPanel.showCard("회원가입_메인");
-		});
-		
-		add(btn2);
-		add(btn3);
-	}
-}
-
-class PanelSouth extends JPanel {
-	public PanelSouth() {
-		setBackground(Color.gray);
-		
-		// imageIcon으로 이미지로 채우기
-	}
-}
 
 
 
