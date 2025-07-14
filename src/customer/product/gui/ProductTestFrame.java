@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
-import common.gui.headerBar;
+import common.gui.HeaderBar;
 
 public class ProductTestFrame extends JFrame {
 
@@ -83,14 +83,14 @@ public class ProductTestFrame extends JFrame {
 		
 		*/
 		
-		contentPane.add(new headerBar(contentPane), BorderLayout.NORTH);
+//		contentPane.add(new HeaderBar(contentPane), BorderLayout.NORTH);
 		
 //		ProductIntroducePanel pip = new ProductIntroducePanel(contentPane);
 //		contentPane.add(pip);
 
 //		contentPane.add(new ProductIntroDetailPanel(), BorderLayout.CENTER);
 		
-		contentPane.add(new ProductMainPanel(), BorderLayout.CENTER);
+//		contentPane.add(new ProductMainPanel(), BorderLayout.CENTER);
 		
 //		contentPane.setVisible(true);
 	}

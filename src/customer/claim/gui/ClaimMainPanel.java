@@ -12,7 +12,7 @@ public class ClaimMainPanel extends JPanel {
 
 	public JPanel 카드패널;
 	
-   public ClaimMainPanel() {
+   public ClaimMainPanel(CustomerMainPanel cmp) {
 	   
 	   setLayout(new BorderLayout());
 	   setSize(1440, 700);

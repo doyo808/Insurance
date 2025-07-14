@@ -1,16 +1,18 @@
 package customer.payment.gui;
 
 
-import javax.swing.JPanel;
 import java.awt.Color;
+
 import javax.swing.UIManager;
+
+import insuranceMain.customerPanel.CustomerMainPanel;
 import net.miginfocom.swing.MigLayout;
 
 public class PaymentMainPanel extends BasicPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	public PaymentMainPanel() {
+	public PaymentMainPanel(CustomerMainPanel cmp) {
 		setForeground(new Color(255, 255, 255));
 		try {
             // Look & Feel을 Metal로 강제 설정 (Swing 기본 스타일)

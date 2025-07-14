@@ -10,8 +10,8 @@ import insuranceMain.customerPanel.CustomerMainPanel;
 import insuranceMain.customerPanel.accounts.AccountsMainPanel;
 
 public class HomeButton extends JButton {
-	private int width = 150;
-	private int height = 75;
+	private int width = 100;
+	private int height = 50;
 	
 	public HomeButton(CustomerMainPanel cmp, int x, int y) {
 		

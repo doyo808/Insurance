@@ -1,6 +1,5 @@
 package common.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -16,7 +15,7 @@ public class FooterImagePanel extends JPanel {
 	//	fip.setBounds(0, 850, 1440, 174);
 	//	add(fip);
 	
-	private String imagePath = "src/images/footer.png";
+	private String imagePath = "/images/footer.png";
 	private Image backgroundImage;
 	private int width = 1440;
 	private int height = 150;
@@ -25,8 +24,15 @@ public class FooterImagePanel extends JPanel {
 	public FooterImagePanel() {
 		setBackground(new Color(222, 222, 222));
 		
-		ImageIcon icon = new ImageIcon(imagePath);
-		backgroundImage = icon.getImage();
+		java.net.URL imageUrl = getClass().getResource(imagePath);
+		if (imageUrl != null) {
+			ImageIcon icon = new ImageIcon(imageUrl);
+			backgroundImage = icon.getImage();
+		} else {
+			System.err.println("footer.png 이미지 경로를 찾을 수 없습니다: " + imagePath);
+		}
+		
+		
 		setPreferredSize(new java.awt.Dimension(width, height));
 	}
 	

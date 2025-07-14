@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import common.gui.FooterImagePanel;
-import common.gui.headerBar;
+import common.gui.HeaderBar;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class ServicesMainPanel extends JPanel {
@@ -15,9 +15,8 @@ public class ServicesMainPanel extends JPanel {
 		setLayout(new BorderLayout());
 		
 		add(smcp = new ServicesMainCenterPanel(cmp), BorderLayout.CENTER);
-		add(new headerBar(smcp), BorderLayout.NORTH);
-		FooterImagePanel fip = new FooterImagePanel();
-		add(fip, BorderLayout.SOUTH);
+		add(new HeaderBar(smcp, cmp), BorderLayout.NORTH);
+		add(new FooterImagePanel(), BorderLayout.SOUTH);
 	}
 
 	public ServicesMainCenterPanel getSmcp() {

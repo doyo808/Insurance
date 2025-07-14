@@ -11,12 +11,12 @@ import javax.swing.JPanel;
 public class CardSwitchButton extends JButton {
 	
 	
-	public CardSwitchButton(String buttonName,JPanel parentCardPanel, String cardName, int with, int height) {
+	public CardSwitchButton(String buttonName,JPanel parentCardPanel, String cardName, int width, int height) {
 		setText(buttonName);
 //		setBackground(Color.BLACK);
 //		setFont(new Font("맑은고딕", Font.BOLD, 15));
 //		setForeground(Color.WHITE); 
-		setPreferredSize(new Dimension(with, height)); // 버튼크기
+		setPreferredSize(new Dimension(width, height)); // 버튼크기
 		setVisible(true);
 		
 		CardSwitch(parentCardPanel, cardName);

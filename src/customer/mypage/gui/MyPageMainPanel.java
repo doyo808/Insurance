@@ -3,10 +3,6 @@ package customer.mypage.gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -16,12 +12,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
 
-
-import common.database.dao.CustomerDAO;
-import common.database.model.CustomerModel;
-import common.method.InsuranceTeamConnector;
+import insuranceMain.customerPanel.CustomerMainPanel;
 
 
 //전체 화면 사이즈 : setBounds(100, 10, 1440, 1024);
@@ -37,7 +29,7 @@ public class MyPageMainPanel extends JPanel {
 	private JButton btnEdit;
 
 	
-	public MyPageMainPanel() {
+	public MyPageMainPanel(CustomerMainPanel cmp) {
 		setPreferredSize(new Dimension(1440, 700));
 		setBounds(0, 162, 1440, 700);
 		
@@ -103,9 +95,9 @@ public class MyPageMainPanel extends JPanel {
         add(paymentScroll);
 
         // ==== 데이터 로드 ====
-        loadPersonalInfo();        
-        loadContractInfo();
-        loadPaymentHistory();
+//        loadPersonalInfo();        
+//        loadContractInfo();
+//        loadPaymentHistory();
     }
 	
 	private JTextField addLabeledField(JLabel label, int x, int y, int labelWidth, int fieldWidth) {
@@ -120,103 +112,103 @@ public class MyPageMainPanel extends JPanel {
     }
 	
 	
-	private void loadPersonalInfo() {
-		/// FIXME: 테스트용 연결과 고객모델
-        Connection conn = null;
-		try {
-			conn = InsuranceTeamConnector.getConnection();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        CustomerModel cm = null;
-		try {
-			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-//		CustomerModel cm = Session.getCustomer(); //공통 로그인 세션 사용시
-		
-	    tfName.setText(cm.getCustomer_name());
-	    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
-	    tfBirth.setText(cm.getPersonal_id());
-	    tfPhone.setText(cm.getPhone_number());
-	    tfEmail.setText(cm.getEmail());
-	    tfJob.setText(cm.getJob());
-	    tfCompany.setText(cm.getCompany_name());
-	    tfCompanyPhone.setText(cm.getJob_phone_number());
-	    tfWorkAddress.setText(cm.getJob_address1() + cm.getJob_address2());
-    }
+//	private void loadPersonalInfo() {
+//		/// FIXME: 테스트용 연결과 고객모델
+//        Connection conn = null;
+//		try {
+//			conn = InsuranceTeamConnector.getConnection();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//        CustomerModel cm = null;
+//		try {
+//			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+////		CustomerModel cm = Session.getCustomer(); //공통 로그인 세션 사용시
+//		
+//	    tfName.setText(cm.getCustomer_name());
+//	    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
+//	    tfBirth.setText(cm.getPersonal_id());
+//	    tfPhone.setText(cm.getPhone_number());
+//	    tfEmail.setText(cm.getEmail());
+//	    tfJob.setText(cm.getJob());
+//	    tfCompany.setText(cm.getCompany_name());
+//	    tfCompanyPhone.setText(cm.getJob_phone_number());
+//	    tfWorkAddress.setText(cm.getJob_address1() + cm.getJob_address2());
+//    }
 
-    private void loadContractInfo() {
-    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
-    		@Override
-    		public boolean isCellEditable(int row, int column) {
-    			return false;
-    			//특정 컬럼을 수정하고 싶을 때
-    			//return column == 0;
-    		}
-    	};
-    	
-    	try (Connection conn = InsuranceTeamConnector.getConnection()){			
-			
-			String sql = "SELECT contract_id, product_name, premium, signup_date, effective_date, payment_end_date, coverage_end_date, status "
-					+ "FROM contracts c, products p "
-					+ "WHERE c.product_id = p.product_id AND customer_id = ?";			
-			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, 1);
-			
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()) {
-				model.addRow(new Object[]{
-						rs.getInt("contract_id"),
-						rs.getString("product_name"),
-						rs.getInt("premium"),
-						rs.getString("signup_date"),
-						rs.getString("effective_date"),
-						rs.getString("payment_end_date"),
-						rs.getString("coverage_end_date"),
-						rs.getString("status")				
-				});
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        contractTable.setModel(model);
-    }
-//
-    private void loadPaymentHistory() {
-    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0) {
-    		@Override
-    		public boolean isCellEditable(int row, int column) {
-    			return false;
-    		}
-    	};
-    	
-    	try(Connection conn = InsuranceTeamConnector.getConnection();) {
-    		
-    		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
-    				+ "FROM payments p, contracts c "
-    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
-    		PreparedStatement pstmt = conn.prepareStatement(sql);
-    		pstmt.setInt(1, 1);
-    		
-    		ResultSet rs = pstmt.executeQuery();
-    		while(rs.next()) {
-    			model.addRow(new Object[] {
-    					rs.getInt("contract_id"),
-    					rs.getString("payment_date"),
-    					rs.getString("product_name"),
-    					rs.getInt("paid_amount"),
-    					rs.getString("pay_status")   					
-    			});
-    		}   				
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}        paymentTable.setModel(model);
-    }
+//    private void loadContractInfo() {
+//    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
+//    		@Override
+//    		public boolean isCellEditable(int row, int column) {
+//    			return false;
+//    			//특정 컬럼을 수정하고 싶을 때
+//    			//return column == 0;
+//    		}
+//    	};
+//    	
+//    	try (Connection conn = InsuranceTeamConnector.getConnection()){			
+//			
+//			String sql = "SELECT contract_id, product_name, premium, signup_date, effective_date, payment_end_date, coverage_end_date, status "
+//					+ "FROM contracts c, products p "
+//					+ "WHERE c.product_id = p.product_id AND customer_id = ?";			
+//			PreparedStatement pstmt = conn.prepareStatement(sql);
+//			pstmt.setInt(1, 1);
+//			
+//			ResultSet rs = pstmt.executeQuery();
+//			while(rs.next()) {
+//				model.addRow(new Object[]{
+//						rs.getInt("contract_id"),
+//						rs.getString("product_name"),
+//						rs.getInt("premium"),
+//						rs.getString("signup_date"),
+//						rs.getString("effective_date"),
+//						rs.getString("payment_end_date"),
+//						rs.getString("coverage_end_date"),
+//						rs.getString("status")				
+//				});
+//			}
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//        contractTable.setModel(model);
+//    }
+////
+//    private void loadPaymentHistory() {
+//    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0) {
+//    		@Override
+//    		public boolean isCellEditable(int row, int column) {
+//    			return false;
+//    		}
+//    	};
+//    	
+//    	try(Connection conn = InsuranceTeamConnector.getConnection();) {
+//    		
+//    		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
+//    				+ "FROM payments p, contracts c "
+//    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
+//    		PreparedStatement pstmt = conn.prepareStatement(sql);
+//    		pstmt.setInt(1, 1);
+//    		
+//    		ResultSet rs = pstmt.executeQuery();
+//    		while(rs.next()) {
+//    			model.addRow(new Object[] {
+//    					rs.getInt("contract_id"),
+//    					rs.getString("payment_date"),
+//    					rs.getString("product_name"),
+//    					rs.getInt("paid_amount"),
+//    					rs.getString("pay_status")   					
+//    			});
+//    		}   				
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}        paymentTable.setModel(model);
+//    }
 	
 	
 }

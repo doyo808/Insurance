@@ -5,6 +5,9 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import customer.claim.gui.ClaimMainPanel;
+import customer.mypage.gui.MyPageMainPanel;
+import customer.payment.gui.PaymentMainPanel;
+import customer.product.gui.ProductMainPanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class ServicesMainCenterPanel extends JPanel {
@@ -15,9 +18,9 @@ public class ServicesMainCenterPanel extends JPanel {
 		
 		add(new ProductMainPanel(cmp), "보험상품조회");
 		add(new ContractMainPanel(cmp), "보험상품가입");
-		add(new ClaimMainPanelTemp(cmp), "보험금청구");
+		add(new ClaimMainPanel(cmp), "보험금청구");
 		add(new PaymentMainPanel(cmp), "보험료납부");
-		add(new MypageMainPanel(cmp), "마이페이지");
+		add(new MyPageMainPanel(cmp), "마이페이지");
 	}
 	
 	public void showCard(String string) {

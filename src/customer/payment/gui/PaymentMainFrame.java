@@ -31,9 +31,9 @@ public class PaymentMainFrame extends JFrame {
 		
 		
 		
-		JPanel paymentMainPage = new PaymentMainPanel();
-		paymentMainPage.setBounds(0, 265, 1440, 720);
-		contentPane.add(paymentMainPage);
+//		JPanel paymentMainPage = new PaymentMainPanel();
+//		paymentMainPage.setBounds(0, 265, 1440, 720);
+//		contentPane.add(paymentMainPage);
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
