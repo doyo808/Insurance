@@ -3,10 +3,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import common.database.model.ClaimModel;
+import common.database.model.CustomerModel;
 
-public class Claim_DAO {
+public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
 //		// 이어서 만들예정
 //		// 고객이 입력한 정보를 토대로 다른 테이블과 연결해 claims 테이블에 값이 들어가야함 (이클립스->DB)	
@@ -15,19 +19,50 @@ public class Claim_DAO {
 		// 청구테이블(계약ID) JOIN 계약테이블(고객ID) JOIN 고객테이블(이름, 주민번호, 전화번호)
 		// 피보험자테이블로 다시 수정하기 
 		
-		
+		/*
+			[보험금 청구 내역 조회 페이지]
+				
+				고객이 피보험자/수익자 중 하나를 선택하면 그 선택값이 쿼리문에 들어가야함
+				- 고객이 피보험자인지, 수익자인지에 따라 달라짐
+				
+				여기에 피보험자인지 수익자인지 조건 함께 설정...하자...
+				- 조회기간(청구일자) 설정
+				: SELECT claim_date FROM CLAIMS WHERE (여기에 입력값1 ~ 입력값2 사이값을 나타내는 조건 알아보기)
+				
+				- 청구 결과 목록 (List 반환)
+				: 접수번호/청구일자/진단명('감기')/피보험자이름 + 재해자(=피보험자),물보상구분/상품명 +증권번호(없으면 pass)/ 보상담당직원 이름 + 보상담당직원 연락처/ 처리상태('접수')
+				
+				: SELECT 
+				
+				
+				[보험금 청구 상세내역]
+				: 접수번호 / 진행상황=처리상태('접수')/
+				
+				<보험금청구내역 표>
+				사고발병일자/상품명/증권번호(없으면 pass)/재해자=피보험자/보상구분/재해유형/
+				
+				<보상담당자 표>
+				재해자/(직원)소속(부서)/담당자명/ 전화번호
+				
+				<처리현황 표>
+				접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/
+				
+				<결정보험금 표>
+		 */
 	
 		// 고객이 청구대상을 '본인'으로 선택하면 로그인 기록을 가지고와서 그 사람의 보험계약 정보를 가지고 와야함
 		// 고객이 하나 이상의 계약이 꼭 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
 		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
 		public static ClaimModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
-			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
-					+ "FROM normal_logs "
-					+ "INNER JOIN customers cs USING(customer_id)"
-					+ "INNER JOIN contracts ct USING(customer_id) "
-					+ "INNER JOIN products pr USING(product_id) "
-					+ "WHERE login_id = ?";
+			String query = "SELECT customer_name, personal_id, phone_number FROM CUSTOMERS WHERE login_id = ?";
+			
+//			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
+//					+ "FROM normal_logs "
+//					+ "INNER JOIN customers cs USING(customer_id)"
+//					+ "INNER JOIN contracts ct USING(customer_id) "
+//					+ "INNER JOIN products pr USING(product_id) "
+//					+ "WHERE login_id = ?";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setString(1, login_id);
 				
@@ -38,9 +73,10 @@ public class Claim_DAO {
 		}
 	
 	
-		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 표시 (DB -> 이클립스)
+		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
 		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회
-		public static ClaimModel getClaims(String login_id, Connection conn) throws SQLException {
+		public static List<ClaimModel> getClaims(String login_id, Connection conn) throws SQLException {
+			List<ClaimModel> claimList = new ArrayList<>();
 			String query = "SELECT * FROM CLAIMS "
 					+ "INNER JOIN CONTRACTS USING(contract_id) "
 					+ "INNER JOIN CUSTOMERS USING(customer_id) "
@@ -49,9 +85,12 @@ public class Claim_DAO {
 				pstmt.setString(1, login_id);
 				
 				try (ResultSet rs = pstmt.executeQuery()) {
-					return rs.next() ? new ClaimModel(rs) : null;
+					while (rs.next()) {
+						claimList.add(new ClaimModel(rs));
+					}
 				}
-			} 
+			}
+			return claimList;
 		}
 		
 //		// 모든 고객 조회

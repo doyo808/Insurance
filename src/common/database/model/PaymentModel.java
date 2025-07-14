@@ -1,8 +1,9 @@
 package common.database.model;
 
-import java.sql.Date;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 public class PaymentModel {
     private Integer payment_id;
@@ -10,12 +11,12 @@ public class PaymentModel {
     private Integer contract_id;
     private Integer unpaid_id;
     private Double paid_amount;
-    private Date payment_date;
+    private java.sql.Timestamp payment_date;
     private Integer account_id;
     private String pay_status;
 
     public PaymentModel(Integer payment_id, Integer customer_id, Integer contract_id,
-                        Integer unpaid_id, Double paid_amount, Date payment_date,
+                        Integer unpaid_id, Double paid_amount, java.sql.Timestamp payment_date,
                         Integer account_id, String pay_status) {
         this.payment_id = payment_id;
         this.customer_id = customer_id;
@@ -26,14 +27,21 @@ public class PaymentModel {
         this.account_id = account_id;
         this.pay_status = pay_status;
     }
-
+    
+    // 결제할때 생성해야하는 모델객체
+    public PaymentModel(Integer customer_id, Integer unpaid_id) {
+    	this.customer_id = customer_id;
+    	this.unpaid_id = unpaid_id;
+    }
+    
+    // DB에서 가져올때 생성되는 모델객체
     public PaymentModel(ResultSet rs) throws SQLException {
         this.payment_id = rs.getInt("payment_id");
         this.customer_id = rs.getInt("customer_id");
         this.contract_id = rs.getInt("contract_id");
         this.unpaid_id = rs.getInt("unpaid_id");
         this.paid_amount = rs.getDouble("paid_amount");
-        this.payment_date = rs.getDate("payment_date");
+        this.payment_date = rs.getTimestamp("payment_date");
         this.account_id = rs.getInt("account_id");
         this.pay_status = rs.getString("pay_status");
     }
@@ -49,12 +57,15 @@ public class PaymentModel {
     public void setUnpaid_id(Integer unpaid_id) { this.unpaid_id = unpaid_id; }
     public Double getPaid_amount() { return paid_amount; }
     public void setPaid_amount(Double paid_amount) { this.paid_amount = paid_amount; }
-    public Date getPayment_date() { return payment_date; }
-    public void setPayment_date(Date payment_date) { this.payment_date = payment_date; }
+    public java.sql.Timestamp getPayment_date() { return payment_date; }
+    public void setPayment_date(LocalDateTime payment_date) { this.payment_date = java.sql.Timestamp.valueOf(payment_date); }
     public Integer getAccount_id() { return account_id; }
     public void setAccount_id(Integer account_id) { this.account_id = account_id; }
     public String getPay_status() { return pay_status; }
     public void setPay_status(String pay_status) { this.pay_status = pay_status; }
+    public void setPay_statusYes() { 
+    	this.pay_status = "Y";
+    }
 
     @Override
     public String toString() {

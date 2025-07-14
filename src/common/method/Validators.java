@@ -32,7 +32,7 @@ public class Validators {
 	}
 	
 	/// FIXME: 주민등록번호 검증기 (만 14세 이상)
-	static boolean isValidPersonal_id(String personal_id) {
+	public static boolean isValidPersonal_id(String personal_id) {
 		
 		if (personal_id == null || !personal_id.matches("\\d{6}-\\d{7}")) {
 			return false;

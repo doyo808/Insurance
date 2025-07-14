@@ -12,10 +12,11 @@ public class UnpaidModel {
     private Date unpaid_date;
     private Integer unpaid_count;
     private Date payment_deadline;
-
+    private String ispaid;
+    
     public UnpaidModel(Integer unpaid_id, Integer customer_id, Integer contract_id,
                        Double unpaid_amount, Date unpaid_date,
-                       Integer unpaid_count, Date payment_deadline) {
+                       Integer unpaid_count, Date payment_deadline, String ispaid) {
         this.unpaid_id = unpaid_id;
         this.customer_id = customer_id;
         this.contract_id = contract_id;
@@ -23,6 +24,7 @@ public class UnpaidModel {
         this.unpaid_date = unpaid_date;
         this.unpaid_count = unpaid_count;
         this.payment_deadline = payment_deadline;
+        this.ispaid = ispaid;
     }
 
     public UnpaidModel(ResultSet rs) throws SQLException {
@@ -33,6 +35,7 @@ public class UnpaidModel {
         this.unpaid_date = rs.getDate("unpaid_date");
         this.unpaid_count = rs.getInt("unpaid_count");
         this.payment_deadline = rs.getDate("payment_deadline");
+        this.ispaid = rs.getString("ispaid");
     }
 
     // Getter/Setter
@@ -91,6 +94,22 @@ public class UnpaidModel {
     public void setPaymentDeadline(Date payment_deadline) {
         this.payment_deadline = payment_deadline;
     }
+    
+    public Boolean getIsPaidBool() {
+    	return "Y".equals(ispaid);
+    }
+    
+    public String getIsPaid() {
+    	return ispaid;
+    }
+    
+    public void setIsPaidN() {
+    	this.ispaid = "N";
+    }
+    
+    public void setIsPaidY() {
+    	this.ispaid = "Y";
+    }
 
     @Override
     public String toString() {
@@ -100,6 +119,7 @@ public class UnpaidModel {
                ", unpaid_amount=" + unpaid_amount +
                ", unpaid_date=" + unpaid_date +
                ", unpaid_count=" + unpaid_count +
-               ", payment_deadline=" + payment_deadline + "]";
+               ", payment_deadline=" + payment_deadline +
+               ", ispaid=" + ispaid + "]";
     }
 }
