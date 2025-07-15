@@ -7,12 +7,14 @@ import javax.swing.UIManager;
 
 import insuranceMain.customerPanel.CustomerMainPanel;
 import net.miginfocom.swing.MigLayout;
+import java.awt.Rectangle;
 
 public class PaymentMainPanel extends BasicPanel {
 
 	private static final long serialVersionUID = 1L;
 
 	public PaymentMainPanel(CustomerMainPanel cmp) {
+		setBounds(new Rectangle(0, 0, 1440, 700));
 		setForeground(new Color(255, 255, 255));
 		try {
             // Look & Feel을 Metal로 강제 설정 (Swing 기본 스타일)
@@ -37,6 +39,7 @@ public class PaymentMainPanel extends BasicPanel {
 		add(menu3, "cell 1 5,grow");
 		menu3.setButtonText("등록");
 		menu3.setLabelText("자동이체 등록");
+		
 		
 	}
 }

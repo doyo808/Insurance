@@ -18,20 +18,25 @@ import java.awt.CardLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 
-public class InquirePanel extends BasicPanel {
+public class AutoPaymentPanel1 extends BasicPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	
+	// 자동이체 등록전 어떤 계약의 자동이체를 지정할지 선택하는 패널
 	/**
 	 * Create the panel.
 	 */
-	public InquirePanel() {
+	public AutoPaymentPanel1() {
 		setBounds(0, 0, 1440, 700);
-		setLayout(new MigLayout("", "[200px,grow][1040px,grow][200px]", "[150px,grow][][318.00,grow]"));
+		setLayout(new MigLayout("", "[200px,grow][1040px,grow][200px]", "[][][318.00,grow]"));
 		List<String[]> data = List.of(
 	            new String[]{"1", "실손보험", "C12345", "2023-01-01", "2033-01-01", "월납", "30,000", "홍길동"},
 	            new String[]{"2", "암보험", "C67890", "2022-05-01", "2032-05-01", "연납", "100,000", "김영희"}
-	        );
+
+	    );
+		
+		
 		JLabel lbln = new JLabel("<html><div style='text-align: center;'>상세내역을 확일할<br>계약을 선택해주세요</div></html>");
 		lbln.setHorizontalAlignment(SwingConstants.CENTER);
 		lbln.setFont(new Font("맑은 고딕", Font.BOLD, 20));
@@ -42,8 +47,7 @@ public class InquirePanel extends BasicPanel {
 		
 		JPanel ContractPanel = new ContractTablePanel(data);
 		ContractPanel.setBackground(new Color(255, 255, 255));
-		add(ContractPanel, "cell 1 2,alignx center,aligny center");
-		ContractPanel.setLayout(new MigLayout("", "[]", "[]"));
+		add(ContractPanel, "cell 1 2,grow");
 	}
 	
 	

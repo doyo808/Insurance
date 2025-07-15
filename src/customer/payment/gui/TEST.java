@@ -7,7 +7,7 @@ public class TEST {
 		JFrame mainFrame = new JFrame();
 		mainFrame.setBounds(0, 0, 1440, 1024);
 		
-		mainFrame.add(new InquirePanel());
+		mainFrame.add(new AutoPaymentPanel1());
 		
 		
 		
