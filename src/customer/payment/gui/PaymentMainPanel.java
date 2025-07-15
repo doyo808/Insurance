@@ -1,45 +1,42 @@
 package customer.payment.gui;
 
-
+import java.awt.CardLayout;
 import java.awt.Color;
-
-import javax.swing.UIManager;
-
-import insuranceMain.customerPanel.CustomerMainPanel;
-import net.miginfocom.swing.MigLayout;
 import java.awt.Rectangle;
+import javax.swing.JPanel;
 
-public class PaymentMainPanel extends BasicPanel {
+public class PaymentMainPanel extends DefaultPanel implements CardSwitcher {
 
 	private static final long serialVersionUID = 1L;
-
-	public PaymentMainPanel(CustomerMainPanel cmp) {
+	private PaymentMenuPanel paymentMenuPanel;
+	private AutoPaymentPanel1 autoPaymentPanel1;
+	private AutoPaymentPanel2 autoPaymentPanel2;
+	private Integer selected_contract_id; 
+	
+	public PaymentMainPanel() {
+		paymentMenuPanel = new PaymentMenuPanel(this);
+		autoPaymentPanel1 = new AutoPaymentPanel1(this);
+		autoPaymentPanel2 = new AutoPaymentPanel2();				
+		
 		setBounds(new Rectangle(0, 0, 1440, 700));
 		setForeground(new Color(255, 255, 255));
-		try {
-            // Look & Feel을 Metal로 강제 설정 (Swing 기본 스타일)
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		setBackground(new Color(255, 255, 255));
-		setLayout(new MigLayout("", "[30.00][350px]", "[30][80px][30][80px][30][80px]"));
-		
-		PaymentMenuPanel menu1 = new PaymentMenuPanel();
-		add(menu1, "cell 1 1,grow");
-		menu1.setButtonText("조회");
-        menu1.setLabelText("보험료 납부 내역 조회");
-        
-		PaymentMenuPanel menu2 = new PaymentMenuPanel();
-		add(menu2, "cell 1 3,grow");
-		menu2.setButtonText("납부");
-		menu2.setLabelText("보험료 납부");
-		
-		PaymentMenuPanel menu3 = new PaymentMenuPanel();
-		add(menu3, "cell 1 5,grow");
-		menu3.setButtonText("등록");
-		menu3.setLabelText("자동이체 등록");
-		
-		
+		setLayout(new CardLayout());
+
+		add("PaymentMenu", paymentMenuPanel);
+		add("AutoPayment1", autoPaymentPanel1);
+		add("AutoPayment2", autoPaymentPanel2);
+	}
+
+	@Override
+	public void showCard(String cardName) {
+	    CardLayout cl = (CardLayout) this.getLayout();
+	    cl.show(this, cardName);
+	}
+
+	// ✅ AutoPaymentPanel1에서 선택된 계약 정보를 넘겨줄 메서드
+	public void showAutoPayment2(String[] contractData) {
+	
+	    autoPaymentPanel2.displayRegisteredAccount(selected_contract_id);
+	    showCard("AutoPayment2");
 	}
 }

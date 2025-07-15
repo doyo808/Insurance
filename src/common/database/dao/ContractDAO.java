@@ -47,6 +47,21 @@ public class ContractDAO {
         }
         return list;
     }
+    
+    public static ArrayList<ContractModel> getAllById(Integer customer_id, Connection conn) throws SQLException {
+        String sql = "SELECT * FROM contracts WHERE customer_id = ?";
+        ArrayList<ContractModel> list = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);) {
+        	pstmt.setInt(1, customer_id);
+        	
+        	try (ResultSet rs = pstmt.executeQuery()) {	
+	           while (rs.next()) {
+               list.add(new ContractModel(rs));
+	           }
+        	}	
+        }
+        return list;
+    } 
 
     public static int insert(ContractModel model, Connection conn) throws SQLException {
         String sql = "INSERT INTO CONTRACTS (contract_id, customer_id, insured_id, beneficiary_id, product_id, signup_date, effective_date, created_date, payment_end_date, coverage_end_date, status, premium, product_payment_cycle_id) "

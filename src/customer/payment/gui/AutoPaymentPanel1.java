@@ -2,39 +2,53 @@ package customer.payment.gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import common.account.login.Session;
+import common.database.dao.ContractDAO;
+import common.database.dao.ProductDAO;
+import common.database.dao.ProductPaymentCycleDAO;
+import common.database.model.ContractModel;
+import common.database.model.CustomerModel;
+import common.method.InsuranceTeamConnector;
+import customer.payment.method.AutoPaymentInquire;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.BoxLayout;
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 
-public class AutoPaymentPanel1 extends BasicPanel {
+public class AutoPaymentPanel1 extends DefaultPanel {
 
 	private static final long serialVersionUID = 1L;
-
 	
+	private ContractTablePanel contractPanel;
+	private String[] selected = null;
+	private CardSwitcher swicher;
 	// 자동이체 등록전 어떤 계약의 자동이체를 지정할지 선택하는 패널
 	/**
 	 * Create the panel.
 	 */
-	public AutoPaymentPanel1() {
+	public AutoPaymentPanel1(CardSwitcher switcher) {
+		this.swicher = switcher;
 		setBounds(0, 0, 1440, 700);
-		setLayout(new MigLayout("", "[200px,grow][1040px,grow][200px]", "[][][318.00,grow]"));
-		List<String[]> data = List.of(
-	            new String[]{"1", "실손보험", "C12345", "2023-01-01", "2033-01-01", "월납", "30,000", "홍길동"},
-	            new String[]{"2", "암보험", "C67890", "2022-05-01", "2032-05-01", "연납", "100,000", "김영희"}
-
-	    );
+		setLayout(new MigLayout("", "[200px,grow][1040px,grow][200px]", "[][][318.00,grow][]"));
+		
+		
+		
+		List<String[]> datas = AutoPaymentInquire.getcontractDataStr();
+		
+		
+		
+		
+//		List<String[]> data1 = List.of(
+//	            new String[]{"1", "실손보험ffffffffffffff", "C12345", "2023-01-01", "2033-01-01", "월납", "30000"},
+//	            new String[]{"2", "암보험ffffffffffffff", "C67890", "2022-05-01", "2032-05-01", "연납", "100000"}
+//	    );
+		
 		
 		
 		JLabel lbln = new JLabel("<html><div style='text-align: center;'>상세내역을 확일할<br>계약을 선택해주세요</div></html>");
@@ -45,10 +59,26 @@ public class AutoPaymentPanel1 extends BasicPanel {
 		
 		
 		
-		JPanel ContractPanel = new ContractTablePanel(data);
-		ContractPanel.setBackground(new Color(255, 255, 255));
-		add(ContractPanel, "cell 1 2,grow");
+		JPanel contractPanel = new ContractTablePanel(datas);
+		contractPanel.setBackground(new Color(255, 255, 255));
+		add(contractPanel, "cell 1 2,grow");
+		
+		
+		PaymentDefaultButton chkbtn = new PaymentDefaultButton("확인");
+		add(chkbtn, "cell 1 3, center");
+		
+		chkbtn.addActionListener(e -> {
+			selected = ((ContractTablePanel) contractPanel).getSelectedContract();
+			
+			if (selected != null) {
+				System.out.println("선택된 계약: " + Arrays.toString(selected));
+				switcher.showCard("AutoPayment2");
+            } else {
+                System.out.println("계약이 선택되지 않았습니다.");
+            }
+				
+		});
 	}
 	
-	
+
 }

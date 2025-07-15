@@ -21,7 +21,7 @@ public class ContractTablePanel extends JPanel {
         this.contractData = data;
         setLayout(new BorderLayout());
 
-        String[] headers = {"No", "보험상품명", "계약번호", "가입일", "만기일", "납입방법", "보험료", "보험수익자", "선택"};
+        String[] headers = {"No", "보험상품명", "계약번호", "가입일", "만기일", "납입방법", "보험료", "선택"};
         int columnCount = headers.length;
         int rowCount = data.size() + 1; // +1 for header row
 
@@ -79,9 +79,11 @@ public class ContractTablePanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+
     /**
      * 현재 선택된 계약 정보를 반환합니다.
-     * 선택되지 않았으면 null을 반환합니다.
+     * 선택되지 않았으면 null을 반환합니다
+     * @return String[] data
      */
     public String[] getSelectedContract() {
         if (selectedIndex >= 0 && selectedIndex < contractData.size()) {

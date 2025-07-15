@@ -19,6 +19,7 @@ public class PaymentMenuButton extends JButton {
 
         setBorder(new RoundedBorder(20));
         setPreferredSize(new Dimension(350, 35));
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     // 배경 그리기 (라운드)
