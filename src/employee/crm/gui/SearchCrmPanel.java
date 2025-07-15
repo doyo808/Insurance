@@ -41,7 +41,7 @@ public class SearchCrmPanel extends JPanel {
 		add(seperator);
 		
 		int labelW = 80, fieldW = 200, height = 25;
-        int x1 = 30, x2 = 400, x3 = 770, x4 = 1140;
+        int x1 = 30, x2 = 380, x3 = 750, x4 = 1120;
         int y = 30, spacingY = 40;
         
      // ====== 조건 입력 필드 ======
@@ -83,14 +83,19 @@ public class SearchCrmPanel extends JPanel {
         add(tfContractId);
 
         JButton btnSearch = new JButton("조회");
-        btnSearch.setBounds(x3 + labelW + 10, y, 100, height);
+        btnSearch.setBounds(x4 + labelW + 10, y, 100, height);
         add(btnSearch);
 
         // ====== 테이블 ======
         String[] columns = {
             "고객ID", "이름", "생년월일", "아이디", "휴대폰", "이메일", "주소", "계약번호"
         };
-        tableModel = new DefaultTableModel(columns, 0);
+        tableModel = new DefaultTableModel(columns, 0) {
+        	public boolean isCellEditable(int row, int coloumn) {
+        		return false;
+        	}
+        };
+        
         resultTable = new JTable(tableModel);
         JScrollPane scroll = new JScrollPane(resultTable);
         scroll.setBounds(30, 150, 1380, 500);
@@ -103,6 +108,7 @@ public class SearchCrmPanel extends JPanel {
 	private void searchCustomers() {
         tableModel.setRowCount(0); // 기존 결과 초기화
 
+        //조회조건
         String name = tfName.getText().trim();
         String birth = tfBirth.getText().trim();
         String userId = tfUserId.getText().trim();
@@ -110,7 +116,7 @@ public class SearchCrmPanel extends JPanel {
         String contractId = tfContractId.getText().trim();
 
         StringBuilder sql = new StringBuilder(
-            "SELECT c.customer_id, c.customer_name, c.personal_id, c.user_id, c.phone_number, c.email, " +
+            "SELECT c.customer_id, c.customer_name, c.personal_id, c.login_id, c.phone_number, c.email, " +
             "CONCAT(c.address_1, c.address_2) AS full_address, ct.contract_id " +
             "FROM customers c " +
             "LEFT JOIN contracts ct ON c.customer_id = ct.customer_id WHERE 1=1"
@@ -127,7 +133,7 @@ public class SearchCrmPanel extends JPanel {
             params.add(birth + "%");  // 앞자리 조회
         }
         if (!userId.isEmpty()) {
-            sql.append(" AND c.user_id LIKE ?");
+            sql.append(" AND c.login_id LIKE ?");
             params.add("%" + userId + "%");
         }
         if (!phone.isEmpty()) {
@@ -152,7 +158,7 @@ public class SearchCrmPanel extends JPanel {
                     rs.getInt("customer_id"),
                     rs.getString("customer_name"),
                     rs.getString("personal_id"),
-                    rs.getString("user_id"),
+                    rs.getString("login_id"),
                     rs.getString("phone_number"),
                     rs.getString("email"),
                     rs.getString("full_address"),
