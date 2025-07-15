@@ -7,21 +7,19 @@ import java.util.Date;
 public class ProductPaymentCycleModel {
     private Integer product_payment_cycle_id;
     private Integer product_id;
-    private Integer payment_cycle_month;  // 납입주기 (월 단위)
-    private Date created_at;
+    private Integer payment_cycle;  // 납입주기 (월 단위)
 
-    public ProductPaymentCycleModel(Integer product_payment_cycle_id, Integer product_id, Integer payment_cycle_month, Date created_at) {
+
+    public ProductPaymentCycleModel(Integer product_payment_cycle_id, Integer product_id, Integer payment_cycle) {
         this.product_payment_cycle_id = product_payment_cycle_id;
         this.product_id = product_id;
-        this.payment_cycle_month = payment_cycle_month;
-        this.created_at = created_at;
+        this.payment_cycle = payment_cycle;
     }
 
     public ProductPaymentCycleModel(ResultSet rs) throws SQLException {
         this.product_payment_cycle_id = rs.getInt("product_payment_cycle_id");
         this.product_id = rs.getInt("product_id");
-        this.payment_cycle_month = rs.getInt("payment_cycle_month");
-        this.created_at = rs.getDate("created_at");
+        this.payment_cycle = rs.getInt("payment_cycle");
     }
 
     public Integer getProduct_payment_cycle_id() {
@@ -41,26 +39,19 @@ public class ProductPaymentCycleModel {
     }
 
     public Integer getPayment_cycle_month() {
-        return payment_cycle_month;
+        return payment_cycle;
     }
 
-    public void setPayment_cycle_month(Integer payment_cycle_month) {
-        this.payment_cycle_month = payment_cycle_month;
+    public void setPayment_cycle_month(Integer payment_cycle) {
+        this.payment_cycle = payment_cycle;
     }
 
-    public Date getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
 
     @Override
     public String toString() {
         return "ProductPaymentCycleModel [product_payment_cycle_id=" + product_payment_cycle_id 
                 + ", product_id=" + product_id 
-                + ", payment_cycle_month=" + payment_cycle_month 
-                + ", created_at=" + created_at + "]";
+                + ", payment_cycle" + payment_cycle 
+                + "]";
     }
 }

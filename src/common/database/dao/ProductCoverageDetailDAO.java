@@ -14,7 +14,7 @@ public class ProductCoverageDetailDAO {
 
     // 단일 조회
     public static ProductCoverageDetailModel getById(int id, Connection conn) throws SQLException {
-        String sql = "SELECT * FROM PRODUCT_COVERAGE_PERIODS WHERE product_coverage_period_id = ?";
+        String sql = "SELECT * FROM PRODUCT_COVERAGE_DETAILS WHERE product_coverage_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
 
@@ -52,17 +52,17 @@ public class ProductCoverageDetailDAO {
      * @throws SQLException
      */
     public static List<ProductCoverageDetailModel> getProductDetails(int productId, Connection conn) throws SQLException {
-        String query = "SELECT * FROM products WHERE product_id = ?";
+        String query = "SELECT * FROM PRODUCT_COVERAGE_DETAILS WHERE product_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, productId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                List<ProductCoverageDetailModel> products = new ArrayList<>();
+                List<ProductCoverageDetailModel> productDetails = new ArrayList<>();
                 while (rs.next()) {
-                    products.add(new ProductCoverageDetailModel(rs));
+                    productDetails.add(new ProductCoverageDetailModel(rs));
                 }
-                return products;
+                return productDetails;
             }
         }
     }
