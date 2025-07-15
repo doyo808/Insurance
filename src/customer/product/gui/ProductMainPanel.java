@@ -27,7 +27,15 @@ public class ProductMainPanel extends JPanel {
             	// 테스트용 상품번호 출력
             	System.out.println(num);
             	
-            	// TODO 해당 상품번호를 통해 세부정보를 조회해야함
+            	// 해당 상품번호를 통해 세부정보를 조회함
+            	detail.setSharedProductId(num);
+            	
+            	// 기존 컴포넌트 제거
+            	detail.removeAll();
+            	// 컴포넌트 다시 추가
+            	detail.setHeaderButton();
+            	detail.setCardlayout();
+            	
             	cl.show(panel, "detail");
             }
         });
