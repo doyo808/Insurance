@@ -27,39 +27,66 @@ import javax.swing.ImageIcon;
 
 public class ProductIntroDetailPanel extends JPanel {
 
+	private int sharedProductId = 0;
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Create the panel.
-	 */
+	
+	JPanel headerButtons;
+	JButton btn1;
+	JButton btn2;
+	
+	CardLayout cl;
+	JPanel displayDetails;
+	JPanel cardPanel1;
+	JPanel cardPanel2;
 	
 	public ProductIntroDetailPanel() {
 		setPreferredSize(new Dimension(1440, 700));
-		setLayout(new BorderLayout(0, 0));
+		setLayout(new BorderLayout());
+
+		setHeaderButton();
+		setCardlayout();
+	}
+	
+	public void setHeaderButton() {
+		headerButtons = new JPanel();
+		headerButtons.setSize(new Dimension(1440, 100));
+		headerButtons.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		add(headerButtons, BorderLayout.NORTH);
 		
-		JPanel panel = new JPanel();
-		panel.setSize(new Dimension(1440, 100));
-		panel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-		add(panel, BorderLayout.NORTH);
-		
-		JButton btn1 = new JButton("상품소개");
+		btn1 = new JButton("상품소개");
 		btn1.setBackground(new Color(128, 128, 128));
 		btn1.setForeground(new Color(255, 255, 255));
 		btn1.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		panel.add(btn1);
+		headerButtons.add(btn1);
 		
-		JButton btn2 = new JButton("보장내용");
+		btn2 = new JButton("보장내용");
 		btn2.setBackground(new Color(128, 128, 128));
 		btn2.setForeground(new Color(255, 255, 255));
 		btn2.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		panel.add(btn2);
+		headerButtons.add(btn2);
 		
-		CardLayout cl = new CardLayout();
-		JPanel displayDetails = new JPanel(cl);
+		btn1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cl.show(displayDetails, "card1");
+			}
+		});
+		
+		btn2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				cl.show(displayDetails, "card2");
+			}
+		});
+	}
+	
+	public void setCardlayout() {
+		cl = new CardLayout();
+		displayDetails = new JPanel(cl);
 		displayDetails.setPreferredSize(new Dimension(800, 700));
 		add(displayDetails);
-		JPanel cardPanel1 = new JPanel();
-		JPanel cardPanel2 = new JPanel();
+		cardPanel1 = new JPanel();
+		cardPanel2 = new JPanel();
 		
 		displayDetails.add(cardPanel1, "card1");
 		displayDetails.add(cardPanel2, "card2");
@@ -73,11 +100,11 @@ public class ProductIntroDetailPanel extends JPanel {
 		try (Connection conn = InsuranceTeamConnector.getConnection()){
 			
 			// TODO 이전 페이지에서 올바른 상품번호를 가져와야함
-			product = ProductDAO.getProduct(1, conn);
+			product = ProductDAO.getProduct(sharedProductId, conn);
 			
 			if(product != null) {
 				InputStream input = product.getProduct_introduce().getBinaryStream();
-				image = ImageIO.read(input);				
+				image = ImageIO.read(input);
 			} else {
 				System.out.println("상품이 존재하지않음");
 			}
@@ -106,24 +133,13 @@ public class ProductIntroDetailPanel extends JPanel {
 		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.BOLD, 30));
 		cardPanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		
-		
 		cardPanel1.add(lblNewLabel);
 		cardPanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		cardPanel2.add(lblNewLabel_1);
-		
-		btn1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				cl.show(displayDetails, "card1");
-			}
-		});
-		
-		btn2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				cl.show(displayDetails, "card2");
-			}
-		});
+	}
+	
+	
+	public void setSharedProductId(int productId) {
+		this.sharedProductId = productId;
 	}
 }
