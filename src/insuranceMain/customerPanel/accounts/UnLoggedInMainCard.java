@@ -11,14 +11,14 @@ import javax.swing.JPanel;
 import common.gui.FooterImagePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
-public class AccountsCard1 extends JPanel {
+public class UnLoggedInMainCard extends JPanel {
 	// 비회원 첫페이지(로그인, 회원가입 버튼들 포함)
 	
-	public AccountsCard1(AccountsMainPanel parentPanel) {
+	public UnLoggedInMainCard(AccountsMainPanel parentPanel) {
 		setLayout(new BorderLayout());
 		setBackground(Color.black);
 		
-		add(new PanelNorth(parentPanel, 1440, 174), BorderLayout.NORTH);
+		add(new HeaderBarOfEaryPage(parentPanel, 1440, 174), BorderLayout.NORTH);
 		add(new FooterImagePanel(), BorderLayout.SOUTH);
 		add(new PanelCenter(parentPanel), BorderLayout.CENTER);
 	}
