@@ -1,50 +1,58 @@
 package customer.payment.gui;
 
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
-import java.awt.Font;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Rectangle;
 
-public class PaymentMenuPanel extends JPanel {
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
-	private static final long serialVersionUID = 1L;
-	private JLabel label = new JLabel("내용입력");
-	private JButton button = new PaymentMenuButton("내용입력");
+import net.miginfocom.swing.MigLayout;
+
+public class PaymentMenuPanel extends DefaultPanel{
+	private CardSwitcher switcher;
 	/**
-	 * Create the panel.
+	 * 
 	 */
-	public PaymentMenuPanel() {
+	private static final long serialVersionUID = 1L;
+	
+	PaymentMenuPanel(CardSwitcher swicher) {
+		setBounds(new Rectangle(0, 0, 1440, 700));
+		setForeground(new Color(255, 255, 255));
+		this.switcher = swicher;
+		try {
+            // Look & Feel을 Metal로 강제 설정 (Swing 기본 스타일)
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		setBackground(new Color(255, 255, 255));
-		setSize(350, 80);
-		setLayout(null);
-		button.setBackground(new Color(0, 0, 0));
-		button.setBounds(0, 45, 350, 35);
-		add(button);
+		setLayout(new MigLayout("", "[30.00][350px]", "[30][80px][30][80px][30][80px]"));
 		
+		PaymentMenuComponentPanel menu1 = new PaymentMenuComponentPanel();
+		add(menu1, "cell 1 1,grow");
+		menu1.setButtonText("조회");
+        menu1.setLabelText("보험료 납부 내역 조회");
+        menu1.addButtonListener(e -> {
+        	switcher.showCard("AutoPayment1");
+        });
+        
+        
+		PaymentMenuComponentPanel menu2 = new PaymentMenuComponentPanel();
+		add(menu2, "cell 1 3,grow");
+		menu2.setButtonText("납부");
+		menu2.setLabelText("보험료 납부");
+		menu2.addButtonListener(e -> {
+        	switcher.showCard("AutoPayment1");
+        });
 		
-		label.setBackground(new Color(255, 255, 255));
-		label.setBounds(0, 0, 350, 35);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-		add(label);
-
+		PaymentMenuComponentPanel menu3 = new PaymentMenuComponentPanel();
+		add(menu3, "cell 1 5,grow");
+		menu3.setButtonText("등록");
+		menu3.setLabelText("자동이체 등록");
+		menu3.addButtonListener(e -> {
+        	switcher.showCard("AutoPayment1");
+        });
 	}
 	
-	public void setButtonText(String txt) {
-		button.setText(txt);
-	}
-	
-	public void setLabelText(String txt) {
-		label.setText(txt);
-	}
-	
-	public void addButtonListener(ActionListener listener) {
-		button.addActionListener(listener);
-	}
-
 }

@@ -1,112 +1,111 @@
 package customer.payment.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import java.util.ArrayList;
 
 public class ContractTablePanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -2071017780652711595L;
+    private static final int ROW_HEIGHT = 20;
 
-	/**
-	 * Create the panel.
-	 */
-	 private static final int ROW_HEIGHT = 30; // 줄 높이 고정
-	 private final List<JLabel> selectButtons = new ArrayList<>();
-	 
-	    public ContractTablePanel(List<String[]> data) {
-	    	setBackground(new Color(255, 255, 255));
-	        setLayout(new BorderLayout());
-	        setBounds(0, 0, 1040, 300);
-	        String[] headers = {"No", "보험상품명", "계약번호", "가입일", "만기일", "납입방법", "보험료", "보험수익자"};
-	        int rowCount = data.size() + 1;
+    private final List<JRadioButton> radioButtons = new ArrayList<>();
+    private final List<String[]> contractData;
+    private final ButtonGroup buttonGroup = new ButtonGroup();
+    private int selectedIndex = -1; // 선택된 행 인덱스 저장
 
-	        // 표 패널 (고정 높이 줄 사용)
-	        JPanel tablePanel = new JPanel(new GridLayout(rowCount, headers.length, 1, 1));
-	        tablePanel.setBackground(new Color(255, 255, 255));
-	        
-	     // 1행: 헤더
-	        for (String header : headers) {
-	            JLabel headerLabel = createCellLabel(header, true);
-	            tablePanel.add(headerLabel);
-	        }
+    public ContractTablePanel(List<String[]> data) {
+        this.contractData = data;
+        setLayout(new BorderLayout());
 
-	        // 2행~: 데이터 + 선택 버튼
-	        for (int row = 0; row < data.size(); row++) {
+        String[] headers = {"No", "보험상품명", "계약번호", "가입일", "만기일", "납입방법", "보험료", "선택"};
+        int columnCount = headers.length;
+        int rowCount = data.size() + 1; // +1 for header row
+
+        JLabel titleLabel = new JLabel("계약정보");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 20));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(titleLabel, BorderLayout.NORTH);
+
+        JPanel tablePanel = new JPanel(new GridLayout(rowCount, columnCount, 1, 1));
+
+        // 헤더 행 생성
+        for (String header : headers) {
+            JLabel headerLabel = createCellLabel(header, true);
+            tablePanel.add(headerLabel);
+        }
+
+        // 데이터 행 생성
+        for (int row = 0; row < data.size(); row++) {
+            String[] rowData = data.get(row);
+
+            // 일반 데이터 셀
+            for (String cell : rowData) {
+                JLabel cellLabel = createCellLabel(cell, false);
+                tablePanel.add(cellLabel);
+            }
+
+            // 선택용 라디오 버튼 셀
+            JRadioButton radioButton = new JRadioButton();
+            radioButton.setHorizontalAlignment(SwingConstants.CENTER);
+            radioButton.setOpaque(true);
+            radioButton.setBackground(Color.WHITE);
+            radioButton.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+            radioButton.setPreferredSize(new Dimension(40, ROW_HEIGHT));
+
+            final int index = row;
+            radioButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selectedIndex = index;
+                }
+            });
+
+            buttonGroup.add(radioButton);
+            radioButtons.add(radioButton);
+            tablePanel.add(radioButton);
+        }
+
+        JPanel containerForTable = new JPanel(new BorderLayout());
+        containerForTable.add(tablePanel, BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane(containerForTable);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setPreferredSize(new Dimension(850, 200));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        add(scrollPane, BorderLayout.CENTER);
+    }
 
 
-	            // 나머지 셀
-	            String[] rowData = data.get(row);
-	            for (String cell : rowData) {
-	                JLabel cellLabel = createCellLabel(cell, false);
-	                tablePanel.add(cellLabel);
-	            }
-	            
-	            // 선택 버튼 셀
-	            JLabel selectLabel = createSelectorLabel();
-	            selectButtons.add(selectLabel);
-	            tablePanel.add(selectLabel);
-	        }
+    /**
+     * 현재 선택된 계약 정보를 반환합니다.
+     * 선택되지 않았으면 null을 반환합니다
+     * @return String[] data
+     */
+    public String[] getSelectedContract() {
+        if (selectedIndex >= 0 && selectedIndex < contractData.size()) {
+            return contractData.get(selectedIndex);
+        }
+        return null;
+    }
 
-	        // 스크롤 가능하게 감싸기
-	        JScrollPane scrollPane = new JScrollPane(tablePanel);
-	        scrollPane.setPreferredSize(new Dimension(850, 150));
-	        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // 스크롤 속도 개선
+    // 셀 라벨 생성 함수
+    private JLabel createCellLabel(String text, boolean isHeader) {
+        JLabel label = new JLabel(text, SwingConstants.CENTER);
+        label.setOpaque(true);
+        label.setPreferredSize(new Dimension(100, ROW_HEIGHT));
+        label.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-	        add(scrollPane, BorderLayout.CENTER);
-	    }
+        if (isHeader) {
+            label.setFont(new Font("SansSerif", Font.BOLD, 12));
+            label.setBackground(new Color(230, 230, 230));
+        } else {
+            label.setBackground(Color.WHITE);
+        }
 
-	    // 셀용 라벨 생성 메서드
-	    private JLabel createCellLabel(String text, boolean isHeader) {
-	        JLabel label = new JLabel(text, SwingConstants.CENTER);
-	        label.setOpaque(true);
-	        label.setPreferredSize(new Dimension(100, ROW_HEIGHT));
-	        label.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-
-	        if (isHeader) {
-	            label.setFont(new Font("SansSerif", Font.BOLD, 12));
-	            label.setBackground(new Color(230, 230, 230));
-	        } else {
-	            label.setBackground(Color.WHITE);
-	        }
-
-	        return label;
-	    }
-	    
-	    // 동그라미 선택 버튼 셀 생성
-	    private JLabel createSelectorLabel() {
-	        JLabel label = new JLabel("○", SwingConstants.CENTER); // 초기 상태
-	        label.setFont(new Font("Dialog", Font.BOLD, 16));
-	        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-	        label.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-	        label.setOpaque(true);
-	        label.setBackground(Color.WHITE);
-	        label.setPreferredSize(new Dimension(40, ROW_HEIGHT));
-
-	        // 토글 이벤트
-	        label.addMouseListener(new MouseAdapter() {
-	            private boolean selected = false;
-
-	            @Override
-	            public void mouseClicked(MouseEvent e) {
-	                selected = !selected;
-	                label.setText(selected ? "●" : "○");
-	            }
-	        });
-
-	        return label;
-	    }
+        return label;
+    }
 }

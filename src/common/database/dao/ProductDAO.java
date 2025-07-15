@@ -62,9 +62,8 @@ public class ProductDAO {
      * @return
      * @throws SQLException
      */
-    
     public static String getProductName(int productId, Connection conn) throws SQLException {
-        String query = "SELECT product_name FROM products WHERE product_id = ?";
+        String query = "SELECT * FROM products WHERE product_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, productId);

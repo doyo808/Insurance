@@ -24,5 +24,6 @@ public class Session {
 
         loggedInCustomer = null;
         loggedIn_id = null;
+
     }
 }
