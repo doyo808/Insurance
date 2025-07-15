@@ -68,10 +68,10 @@ public class ProductIntroducePanel extends JPanel {
 		searchBar.add(searchBtn);
 		
 		
-		JTable table = new JTable();
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-		table.setShowVerticalLines(false);
-		table.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
+		JTable productInfoTable = new JTable();
+		productInfoTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+		productInfoTable.setShowVerticalLines(false);
+		productInfoTable.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
 		
 		
 		//#############################------------------------------------------------------
@@ -103,7 +103,7 @@ public class ProductIntroducePanel extends JPanel {
 		
 		//################################----------------------------------------------------
 		
-		table.setModel(new DefaultTableModel(
+		productInfoTable.setModel(new DefaultTableModel(
 			models,
 			new String[] {
 				"\uBC88\uD638", "\uBD84\uB958", "\uC0C1\uD488\uBA85", "\uC57D\uAD00", "\uC0C1\uD488\uC124\uBA85\uC11C"
@@ -123,14 +123,14 @@ public class ProductIntroducePanel extends JPanel {
 		
 		// 테이블의 행마다 더블클릭을 하면 해당 상세페이지로 넘어가는 이벤트
 		
-		table.addMouseListener(new MouseAdapter() {
+		productInfoTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
             	if(e.getClickCount() == 2) {
             		if (listener != null) {
-            			int row = table.getSelectedRow(); // 선택된 행 인덱스
+            			int row = productInfoTable.getSelectedRow(); // 선택된 행 인덱스
             			if (row >= 0) {
-            				Object productId = table.getValueAt(row, 0);
+            				Object productId = productInfoTable.getValueAt(row, 0);
 //            				System.out.println("테스트중 productId = " + productId);
             				sharedProductId = (int)productId;
             			} 
@@ -140,12 +140,12 @@ public class ProductIntroducePanel extends JPanel {
             }
         });
 		
-		table.setRowHeight(30);
-		JScrollPane scrollpane = new JScrollPane(table);
+		productInfoTable.setRowHeight(30);
+		JScrollPane scrollpane = new JScrollPane(productInfoTable);
 		scrollpane.setAutoscrolls(true);
 		scrollpane.setPreferredSize(new Dimension(800, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
-		table.getTableHeader().setReorderingAllowed(false);
+		productInfoTable.getTableHeader().setReorderingAllowed(false);
 		product_table.add(scrollpane);
 		
 	}
