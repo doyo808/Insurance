@@ -145,8 +145,7 @@ public class MyPageMainPanel extends JPanel {
 //			cm = CustomerDAO.getCustomerByLoginId("hong123", conn);
 //		} catch (SQLException e) {
 //			e.printStackTrace();
-//		}
-//		
+//		}	
 				
 		if (cm != null) {
 		    tfName.setText(cm.getCustomer_name());
@@ -247,6 +246,7 @@ public class MyPageMainPanel extends JPanel {
     }
     
     public void refreshCustomerData() {
+    	//System.out.println(">>> refreshCustomerData 호출됨");
     	this.cm = Session.getCustomer();
     	loadPersonalInfo();        
         loadContractInfo();

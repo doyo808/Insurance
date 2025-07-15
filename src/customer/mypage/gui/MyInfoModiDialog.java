@@ -78,7 +78,9 @@ public class MyInfoModiDialog extends JDialog {
 
         btnCancel = new JButton("취소");
         btnCancel.setBounds(470, y + 50, 80, 30);
-        add(btnCancel);       
+        add(btnCancel);  
+        
+        btnCancel.addActionListener(e -> dispose());
 
         btnSave.addActionListener(e -> {
             try (Connection conn = InsuranceTeamConnector.getConnection()) {
@@ -99,8 +101,23 @@ public class MyInfoModiDialog extends JDialog {
 
                 int updated = pstmt.executeUpdate();
 
-                if (updated > 0) {
+                if (updated > 0) {                 
+
                     JOptionPane.showMessageDialog(this, "정보가 성공적으로 수정되었습니다.");
+                    
+                	// DB 업데이트 성공 후
+                    cm.setEmail(tfEmail.getText());
+                    cm.setPhone_number(tfPhone.getText());
+                    cm.setAddress_1(tfAddress1.getText());
+                    cm.setAddress_2(tfAddress2.getText());                    
+                    cm.setJob(tfJob.getText());
+                    cm.setCompany_name(tfCompany.getText());
+                    cm.setJob_phone_number(tfCompanyPhone.getText());
+                    cm.setJob_address1(tfWorkAddress1.getText());
+                    cm.setJob_address2(tfWorkAddress2.getText());
+                    
+                    Session.setCustomer(cm); // (만약 세션 저장소에 다시 설정해야 한다면)
+                    
                     // 새로고침
                     parentPanel.refreshCustomerData();
                     dispose();
@@ -114,7 +131,7 @@ public class MyInfoModiDialog extends JDialog {
             }
         });
         
-        btnCancel.addActionListener(e -> dispose());
+        
         
         
     }
