@@ -16,11 +16,11 @@ public class LoginService {
 	public static void main(String[] args) {
 		LoginService ls = new LoginService();
 		
-		System.out.println(ls.Login());
+		System.out.println(ls.login());
 		
 	}
 	
-	public CustomerModel Login() {
+	public static CustomerModel login() {
 		try (Connection conn = InsuranceTeamConnector.getConnection()) {
 			
 			Scanner sc = new Scanner(System.in);
@@ -55,7 +55,38 @@ public class LoginService {
 		return null;
 	}
 	
-	
+	public static CustomerModel login(String login_id, String password_input) {
+		try (Connection conn = InsuranceTeamConnector.getConnection()) {
+			
+			String inputLogin_id = login_id;
+			if (inputLogin_id == null) {
+				return null;
+			}
+			
+			String inputPassword = password_input;
+			
+			CustomerModel c = CustomerDAO.getCustomerByLoginId(inputLogin_id, conn);
+			if (c == null) {
+				return null;
+			}
+			
+			String password_salt = c.getPassword_salt();
+			String password_hash = c.getPassword_hash();
+			
+			byte[] oriSalt = Base64.getDecoder().decode(password_salt);
+			String inputPassword_hash = PasswordEncryptor.hashPassword(inputPassword, oriSalt);
+			
+			if (inputPassword_hash.equals(password_hash)) {
+				return c;
+			} else {
+				return null;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	
 	

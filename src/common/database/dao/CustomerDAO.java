@@ -79,7 +79,7 @@ public class CustomerDAO {
 
 		String query = "INSERT INTO CUSTOMERS(customer_id, customer_name"
 				+ ", personal_id, phone_number, login_id, password_hash, password_salt) "
-				+ "VALUES(SEQ_CUSTOMER_ID.nextval, ?, ?, ?, ?, ?)";
+				+ "VALUES(SEQ_CUSTOMER_ID.nextval, ?, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			pstmt.setString(1, c.getCustomer_name());

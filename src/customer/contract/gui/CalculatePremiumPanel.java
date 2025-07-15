@@ -1,0 +1,181 @@
+package customer.contract.gui;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.time.LocalDate;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import common.account.login.SessionOfProduct;
+import common.database.model.ProductModel;
+import common.method.CalculateAge;
+import common.method.CalculatePremium;
+
+public class CalculatePremiumPanel extends JPanel {
+	// 입력내용 맞는지 물어보는 팝업 띄우기
+	
+	private ProductModel product;
+	private double monthlyPremium;
+	private int year;
+	private int month;
+	private int day;
+	private LocalDate birthDate;
+	private int age;
+	private String gender;
+	
+	private JTextField textField;
+	private JTextArea textArea;
+	private JTextField textField_Year;
+	private JTextField textField_Month;
+	private JTextField textField_Date;
+	
+	public CalculatePremiumPanel(ContractMainPanel contractMP) {
+		setLayout(null);
+		
+		/// FIXME: 왼쪽 패널
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.controlHighlight);
+		panel.setBounds(158, 73, 512, 574);
+		add(panel);
+		panel.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("예상 보험료");
+		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 28));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(62, 29, 385, 49);
+		panel.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setBackground(SystemColor.controlShadow);
+		
+		textField.setFont(new Font("굴림", Font.BOLD, 20));
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBounds(62, 92, 385, 71);
+		panel.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("보장내역");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setFont(new Font("굴림", Font.BOLD, 28));
+		lblNewLabel_1.setBounds(62, 181, 385, 49);
+		panel.add(lblNewLabel_1);
+		
+		// 버그발생주의 -> 텍스트에리어 대체 컴포넌트 찾기
+		JTextArea textArea = new JTextArea();
+		textArea.setBackground(SystemColor.controlShadow);
+		textArea.setBounds(62, 240, 385, 296);
+		textArea.setText("보장내역목록");
+		panel.add(textArea);
+		
+		/// FIXME: 오른쪽 패널
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(SystemColor.controlHighlight);
+		panel_1.setBounds(701, 73, 512, 574);
+		add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel_2 = new JLabel("생년월일 입력");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setFont(new Font("굴림", Font.BOLD, 28));
+		lblNewLabel_2.setBounds(65, 28, 385, 49);
+		panel_1.add(lblNewLabel_2);
+
+		JLabel lblNewLabel_Year = new JLabel("년");
+		lblNewLabel_Year.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblNewLabel_Year.setBounds(85, 107, 28, 23);
+		panel_1.add(lblNewLabel_Year);
+		
+		JLabel lblNewLabel_Month = new JLabel("월");
+		lblNewLabel_Month.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblNewLabel_Month.setBounds(219, 107, 57, 23);
+		panel_1.add(lblNewLabel_Month);
+		
+		JLabel lblNewLabel_Date = new JLabel("일");
+		lblNewLabel_Date.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblNewLabel_Date.setBounds(353, 107, 17, 23);
+		panel_1.add(lblNewLabel_Date);
+		
+		textField_Year = new JTextField();
+		textField_Year.setBounds(111, 108, 81, 21);
+		panel_1.add(textField_Year);
+		textField_Year.setColumns(4);
+		
+		textField_Month = new JTextField();
+		textField_Month.setColumns(2);
+		textField_Month.setBounds(255, 108, 28, 21);
+		panel_1.add(textField_Month);
+		
+		textField_Date = new JTextField();
+		textField_Date.setColumns(2);
+		textField_Date.setBounds(382, 108, 28, 21);
+		panel_1.add(textField_Date);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("성별");
+		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2_1.setFont(new Font("굴림", Font.BOLD, 28));
+		lblNewLabel_2_1.setBounds(65, 194, 385, 49);
+		panel_1.add(lblNewLabel_2_1);
+
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("남성");
+		rdbtnNewRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
+		rdbtnNewRadioButton.setBounds(167, 261, 64, 23);
+		panel_1.add(rdbtnNewRadioButton);
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("여성");
+		rdbtnNewRadioButton_1.setHorizontalAlignment(SwingConstants.CENTER);
+		rdbtnNewRadioButton_1.setBounds(272, 261, 64, 23);
+		panel_1.add(rdbtnNewRadioButton_1);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(rdbtnNewRadioButton);
+		group.add(rdbtnNewRadioButton_1);
+		
+		JButton btnNewButton = new JButton("확인");
+		btnNewButton.setBackground(new Color(144, 238, 144));
+		btnNewButton.setBounds(65, 343, 385, 59);
+		panel_1.add(btnNewButton);
+
+		addActions();
+	}
+
+	public void updateProduct() {
+		product = SessionOfProduct.getProduct();
+		
+		if (product != null) {
+			monthlyPremium = product.getBasePremium();
+			
+			textField.setText(String.format("월 %,.0f원", monthlyPremium));
+		}
+	}
+	
+	void addActions() {
+		textField_Date.addActionListener(e -> {
+			this.year = Integer.parseInt(textField_Year.getText());
+			this.month = Integer.parseInt(textField_Month.getText());
+			this.day = Integer.parseInt(textField_Date.getText());
+			try {
+				this.birthDate = LocalDate.of(year, month, day);
+				int age = CalculateAge.CalculateAge(birthDate);
+				System.out.println(age);
+				gender = "M";
+				monthlyPremium = CalculatePremium.CalculatePremiumByAge_Gender(monthlyPremium, age, gender);
+				System.out.println(monthlyPremium);
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(this, "잘못된 입력입니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
+			}
+		});
+	}
+}
+
+
+

@@ -1,5 +1,6 @@
 package common.database.model;
 
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -16,13 +17,14 @@ public class ProductModel {
     private String product_manual_path;
     private Double base_premium;
     private Double premium_constant;
+    private Blob product_introduce;
 
     // 전체 필드를 이용한 생성자
     public ProductModel(Integer product_id, String division, String product_name,
                    Integer join_age_low, Integer join_age_high,
                    Integer join_limit_low, Integer join_limit_high,
                    String term_and_conditions_path, String product_manual_path,
-                   Double base_premium, Double premium_constant) {
+                   Double base_premium, Double premium_constant, Blob product_introduce) {
         this.product_id = product_id;
         this.division = division;
         this.product_name = product_name;
@@ -34,6 +36,7 @@ public class ProductModel {
         this.product_manual_path = product_manual_path;
         this.base_premium = base_premium;
         this.premium_constant = premium_constant;
+        this.setProduct_introduce(product_introduce);
     }
 
     // ResultSet으로부터 객체를 생성하는 생성자
@@ -49,6 +52,7 @@ public class ProductModel {
         this.product_manual_path = rs.getString("product_manual_path");
         this.base_premium = rs.getDouble("base_premium");
         this.premium_constant = rs.getDouble("premium_constant");
+        this.setProduct_introduce(rs.getBlob("product_introduce"));
     }
 
     // Getter & Setter
@@ -139,6 +143,14 @@ public class ProductModel {
     public void setPremiumConstant(Double premium_constant) {
         this.premium_constant = premium_constant;
     }
+    
+    public Blob getProduct_introduce() {
+		return product_introduce;
+	}
+
+	public void setProduct_introduce(Blob product_introduce) {
+		this.product_introduce = product_introduce;
+	}
 
     @Override
     public String toString() {
@@ -152,6 +164,9 @@ public class ProductModel {
                 + ", term_and_conditions_path=" + term_and_conditions_path
                 + ", product_manual_path=" + product_manual_path
                 + ", base_premium=" + base_premium
-                + ", premium_constant=" + premium_constant + "]";
+                + ", premium_constant=" + premium_constant
+                + ", product_introduce=" + product_introduce + "]";
     }
+
+	
 }
