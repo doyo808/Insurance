@@ -81,6 +81,16 @@ public class MyPageMainPanel extends JPanel {
         btnEdit = new JButton("수정");
         btnEdit.setBounds(1300, y, 80, 30);
         add(btnEdit);
+        
+        btnEdit.addActionListener(e -> {
+            MyInfoModiDialog dialog = new MyInfoModiDialog(this, cm);
+            dialog.setVisible(true);
+        });
+
+        
+        
+        
+        
 
         // ==== 테이블 UI 구성 ====
         JLabel contractLabel = new JLabel("보험 계약 정보");
@@ -234,6 +244,13 @@ public class MyPageMainPanel extends JPanel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}        paymentTable.setModel(model);
+    }
+    
+    public void refreshCustomerData() {
+    	this.cm = Session.getCustomer();
+    	loadPersonalInfo();
+    	loadContractInfo();
+    	loadPaymentHistory();
     }
 	
 	
