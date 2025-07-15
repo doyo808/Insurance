@@ -13,11 +13,13 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -29,8 +31,6 @@ public class ClaimSituationPanel extends JPanel {
 	
 	private JPanel parentCardPanel;
 	
-	 // 콤보박스를 담는 패널
-    private JPanel comboBoxContainer;
 	
     private String[] 상황_1 = {"병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요"}; //"여행 중 사고가 발생했어요"는 다른거 다 만들고 추가...
     private String[] 병원_2 = {"아팠어요(질병)", "다쳤어요(상해)"};
@@ -54,10 +54,10 @@ public class ClaimSituationPanel extends JPanel {
 	        add(title, BorderLayout.NORTH);
 	        
 	        // 중앙 콤보박스 영역을 담을 패널
-	        comboBoxContainer = new JPanel();
+	        JPanel comboBoxContainer = new JPanel();
 	        comboBoxContainer.setLayout(new BoxLayout(comboBoxContainer, BoxLayout.Y_AXIS));
 	        comboBoxContainer.setBorder(BorderFactory.createEmptyBorder(50, 300, 50, 300));
-	       add(comboBoxContainer);
+	       add(comboBoxContainer, BorderLayout.CENTER);
 	        
 	       
 	       // 교통사고에서도 - 어디서 발생했는지 이후 적는칸 있음, 
@@ -78,6 +78,14 @@ public class ClaimSituationPanel extends JPanel {
 				입력칸 없이 계좌이체로 넘어감
 	        */
 
+	       // ⬅️ 가운데 패널 구성
+	       JPanel centerPanel = new JPanel(new BorderLayout()); // comboBoxContainer.setVisible(false);이 되어야 하는데 그럼 이전 버튼으로 전 패널로 돌아가게 해야겠지
+	       centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
+	       add(centerPanel, BorderLayout.CENTER);
+	       
+	       centerPanel.add(comboBoxContainer, BorderLayout.NORTH);
+	       
+	       
 	       JComboBoxMaker 상황콤보박스 = new JComboBoxMaker(상황_1);
 	       comboBoxContainer.add(상황콤보박스);
 	       상황콤보박스.setVisible(true);
@@ -104,6 +112,8 @@ public class ClaimSituationPanel extends JPanel {
 	       comboBoxContainer.add(다친상황_입력창); 
 	       다친상황_입력창.setMaximumSize(new Dimension(600, 40));
 	       다친상황_입력창.setVisible(false);
+	       
+	       
 	       
 	       부상유형선택콤보박스.addActionListener((e) -> {
 	    	    if (부상유형선택콤보박스.getSelectedItem() == null) return;
@@ -176,6 +186,15 @@ public class ClaimSituationPanel extends JPanel {
 	    	   }
 	       });
 	       
+	       // 입력 패널 (직접입력 선택 시만 보여짐)
+	       JPanel 다른사람_다쳤어요_사고내용_어디서사고발생_피해정보 = new JPanel(new GridBagLayout());
+	       다른사람_다쳤어요_사고내용_어디서사고발생_피해정보.setBorder(BorderFactory.createTitledBorder("피해정보"));
+	       다른사람_다쳤어요_사고내용_어디서사고발생_피해정보.setMaximumSize(new Dimension(400, 200)); // 크기 제한
+	       다른사람_다쳤어요_사고내용_어디서사고발생_피해정보.setVisible(false);
+	       
+	       centerPanel.add(다른사람_다쳤어요_사고내용_어디서사고발생_피해정보, BorderLayout.CENTER);
+	       
+	       
 	       다른사람콤보박스.addActionListener ((e) -> {
 	    	   Object selected = 다른사람콤보박스.getSelectedItem();
 	    	    if (selected == null) return; // null이면 처리하지 않음
@@ -184,7 +203,9 @@ public class ClaimSituationPanel extends JPanel {
 	    	    
 	    	   notVisible(병원콤보박스, 병원_아팠어요_진단내용콤보박스, 다친신체부위콤보박스, 부상유형선택콤보박스,
 	    			   다친신체부위콤보박스, 부상유형선택콤보박스);
+	    	   
 	    	   if ("다쳤어요(신체)".equals(다른사람선택값)) {
+	    		   다른사람_다쳤어요_사고내용_어디서사고발생_피해정보.setVisible(true);
 	    	   } else if ("재산피해를 입혔어요(재물)".equals(다른사람선택값)) {
 	    		   
 	    	   }
@@ -206,18 +227,18 @@ public class ClaimSituationPanel extends JPanel {
 	        */
 	       
 	       
-//	       // ⬅️ 가운데 패널 구성
-//	       JPanel centerPanel = new JPanel(new BorderLayout()); // comboBoxContainer.setVisible(false);이 되어야 하는데 그럼 이전 버튼으로 전 패널로 돌아가게 해야겠지
-//	       centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
-//	       add(centerPanel, BorderLayout.CENTER);
-//	       
-//	       // 입력 패널 (직접입력 선택 시만 보여짐)
-//	       JPanel 계좌번호직접입력패널 = new JPanel(new GridBagLayout());
-//	       계좌번호직접입력패널.setBorder(BorderFactory.createTitledBorder("계좌 정보 입력"));
-//	       계좌번호직접입력패널.setMaximumSize(new Dimension(400, 200)); // 크기 제한
-//	       계좌번호직접입력패널.setVisible(false);
-//	      
-//	       centerPanel.add(계좌번호직접입력패널, BorderLayout.CENTER);
+//	    // 라디오 버튼
+//			JPanel radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+//			JRadioButton customerChButton = new JRadioButton(" 계약자(본인)");
+//			JRadioButton insuredChButton = new JRadioButton(" 다른사람");
+//
+//			ButtonGroup chButtonGroup = new ButtonGroup();
+//			chButtonGroup.add(customerChButton);
+//			chButtonGroup.add(insuredChButton);
+//
+//			radioButtonPanel.add(customerChButton);
+//			radioButtonPanel.add(insuredChButton);
+//			centerPanel.add(radioButtonPanel, BorderLayout.NORTH);
 //	       
 //	       GridBagConstraints gbc = new GridBagConstraints();
 //	       gbc.insets = new Insets(30, 30, 30, 10);
@@ -230,10 +251,8 @@ public class ClaimSituationPanel extends JPanel {
 //	       JLabel 계좌번호라벨 = new JLabel("계좌번호:");
 //	       JTextField 계좌번호필드 = new JTextField(15);
 //	       계좌번호필드.setFont(new Font("굴림", Font.PLAIN, 18));
-//
-//	       JLabel 예금주라벨 = new JLabel("예금주:");
-//	       JTextField 연락처필드 = new JTextField(15);
-//	       연락처필드.setFont(new Font("굴림", Font.PLAIN, 18));
+
+//	    
 //
 //	       // 은행명 필드 이벤트(필요시 추가)
 //	       은행명필드.addFocusListener(new FocusAdapter() {
@@ -244,11 +263,6 @@ public class ClaimSituationPanel extends JPanel {
 //	          }
 //	       });
 //	       
-	       
-	       
-	       
-	       
-	       
 	       
 	       // 재산피해를 입혔어요(재물)
 	       String 다른사람_재산피해_사고내용; // // 고객이 직접 입력하는 JTextField 활용예정 (ex 배관 공사 중 실수로 이웃집에 누수를 발생시켰어요, 주차 실수로 이웃차량을 심하게 파손했어요, 화재를 내서 이웃집 벽을 태웠어요)
