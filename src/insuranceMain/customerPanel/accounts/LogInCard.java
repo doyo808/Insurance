@@ -20,10 +20,10 @@ import common.gui.HomeButton;
 import insuranceMain.customerPanel.CustomerMainPanel;
 import insuranceMain.customerPanel.services.ServicesMainPanel;
 
-public class AccountsCard4 extends JPanel {
+public class LogInCard extends JPanel {
 	private JTextField textField;
 	
-	public AccountsCard4(AccountsMainPanel parentPanel, ServicesMainPanel smp, CustomerMainPanel cmp) {
+	public LogInCard(AccountsMainPanel parentPanel, ServicesMainPanel smp, CustomerMainPanel cmp) {
 		addComponents(parentPanel, smp);
 		add(new HomeButton(cmp, 700, 10));
 	}

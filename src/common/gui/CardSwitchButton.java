@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 public class CardSwitchButton extends JButton {
 	
 	
-	public CardSwitchButton(String buttonName,JPanel parentCardPanel, String cardName, int width, int height) {
+	public CardSwitchButton(String buttonName, JPanel parentCardPanel, String cardName, int width, int height) {
 		setText(buttonName);
 //		setBackground(Color.BLACK);
 //		setFont(new Font("맑은고딕", Font.BOLD, 15));

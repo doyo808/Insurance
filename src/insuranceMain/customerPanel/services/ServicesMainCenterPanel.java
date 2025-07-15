@@ -5,13 +5,14 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import customer.claim.gui.ClaimMainPanel;
+import customer.contract.gui.ContractMainPanel;
 import customer.mypage.gui.MyPageMainPanel;
 import customer.payment.gui.PaymentMainPanel;
 import customer.product.gui.ProductMainPanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class ServicesMainCenterPanel extends JPanel {
-	CardLayout c = new CardLayout();
+	public CardLayout c = new CardLayout();
 	private CustomerMainPanel cmp;
 
 	public ServicesMainCenterPanel(CustomerMainPanel cmp) {
@@ -25,7 +26,7 @@ public class ServicesMainCenterPanel extends JPanel {
 		add(new MyPageMainPanel(cmp), "마이페이지");
 	}
 	
-	public void showCard(String string) {
-		c.show(this, string);
+	public void showCard(String name) {
+		c.show(this, name);
 	}
 }
