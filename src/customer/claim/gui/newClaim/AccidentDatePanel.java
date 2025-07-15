@@ -1,23 +1,37 @@
-package customer.claim.gui;
+package customer.claim.gui.newClaim;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField.AbstractFormatter;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import org.jdatepicker.impl.*;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import common.database.model.NewClaimDataModel;
+import customer.claim.gui.TitlePanel;
 
 public class AccidentDatePanel extends JPanel {
 
    private JPanel parentCardPanel;
-   private JLabel 사고일확인라벨;
+   private JLabel accidentDateChLabel;
 
-   public AccidentDatePanel(JPanel parentCardPanel) {
+   public AccidentDatePanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
       this.parentCardPanel = parentCardPanel;
       CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
       setSize(1440, 700);      
@@ -37,9 +51,9 @@ public class AccidentDatePanel extends JPanel {
       JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
       datePicker.getJFormattedTextField().setFont(new Font("굴림", Font.PLAIN, 20));
 
-      사고일확인라벨 = new JLabel("");
-      사고일확인라벨.setHorizontalAlignment(JLabel.CENTER);
-      사고일확인라벨.setFont(new Font("굴림", Font.PLAIN, 20));
+      accidentDateChLabel = new JLabel("");
+      accidentDateChLabel.setHorizontalAlignment(JLabel.CENTER);
+      accidentDateChLabel.setFont(new Font("굴림", Font.PLAIN, 20));
 
    // DatePickerPanel 내부만 GridBagLayout으로 구성
       JPanel DatePickerPanel = new JPanel(new GridBagLayout());
@@ -54,12 +68,12 @@ public class AccidentDatePanel extends JPanel {
       DatePickerPanel.add(datePicker, gbc);
 
       // 2. 사고일확인라벨 초기화 및 추가
-      사고일확인라벨 = new JLabel("");
-      사고일확인라벨.setHorizontalAlignment(JLabel.CENTER);
-      사고일확인라벨.setFont(new Font("굴림", Font.PLAIN, 20));
+      accidentDateChLabel = new JLabel("");
+      accidentDateChLabel.setHorizontalAlignment(JLabel.CENTER);
+      accidentDateChLabel.setFont(new Font("굴림", Font.PLAIN, 20));
 
       gbc.gridy = 1;
-      DatePickerPanel.add(사고일확인라벨, gbc);
+      DatePickerPanel.add(accidentDateChLabel, gbc);
 
       // DatePickerPanel 전체를 가운데에 추가
       add(DatePickerPanel, BorderLayout.CENTER);
@@ -67,9 +81,12 @@ public class AccidentDatePanel extends JPanel {
       // 날짜 선택 이벤트
       datePicker.addActionListener(e -> {
          Date selectedDate = (Date) datePicker.getModel().getValue();
-         Date today = removeTime(new Date());
 
          if (selectedDate == null) return;
+         
+         Date selectedDateWithoutTime = removeTime(selectedDate);
+         Date today = removeTime(new Date());
+         
 
          Calendar cal = Calendar.getInstance();
          cal.setTime(selectedDate);
@@ -77,14 +94,15 @@ public class AccidentDatePanel extends JPanel {
          int month = cal.get(Calendar.MONTH) + 1;
          int day = cal.get(Calendar.DAY_OF_MONTH);
 
-         사고일확인라벨.setVisible(true);
-         사고일확인라벨.setText(String.format("%d년 %d월 %d일이 맞습니까?", year, month, day));
+         accidentDateChLabel.setVisible(true);
+         accidentDateChLabel.setText(String.format("%d년 %d월 %d일이 맞습니까?", year, month, day));
 
-         if (selectedDate.after(today)) {
-            JOptionPane.showMessageDialog(this, "해당 일은 현재보다 미래입니다!", "안내", JOptionPane.INFORMATION_MESSAGE);
-            datePicker.getModel().setValue(null);
-            사고일확인라벨.setText("");
-         }
+        	 if (selectedDateWithoutTime.after(today)) {
+        		 JOptionPane.showMessageDialog(this, "해당 일은 현재보다 미래입니다!", "안내", JOptionPane.WARNING_MESSAGE);
+        		 datePicker.getModel().setValue(null);
+        		 accidentDateChLabel.setText("");
+        		 return;
+        	 }
       });
       
       
@@ -92,27 +110,37 @@ public class AccidentDatePanel extends JPanel {
 
       // -------------------- 하단 버튼 패널 --------------------
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-      JButton 이전 = new JButton("이전");
-      JButton 다음 = new JButton("다음");
-      buttonPanel.add(이전);
-      buttonPanel.add(다음);
+      JButton previousButton = new JButton("이전");
+      JButton nextButton = new JButton("다음");
+      buttonPanel.add(previousButton);
+      buttonPanel.add(nextButton);
       add(buttonPanel, BorderLayout.SOUTH);
 
       // 이전 버튼: 초기화
-      이전.addActionListener((e) -> {
+      previousButton.addActionListener((e) -> {
          cl.show(parentCardPanel, "ClaimTargetPanel");
          datePicker.getModel().setValue(null);
-         사고일확인라벨.setText("");
+         accidentDateChLabel.setText("");
       });
 
       // 다음 버튼: 유효성 체크
-      다음.addActionListener((e) -> {
+      nextButton.addActionListener((e) -> {
          Date selectedDate = (Date) datePicker.getModel().getValue();
-         if (selectedDate != null) {
-            cl.show(parentCardPanel, "ClaimSituationPanel");
+         if (selectedDate == null) {
+        	 JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.WARNING_MESSAGE);
+        	 return;
+
+        	 
+         
          } else {
-            JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
+        	 claimData.setAccidentDate(selectedDate);
          }
+         
+			System.out.println(claimData.toString()); // 디버깅용
+         
+         cl.show(parentCardPanel, "ClaimSituationPanel");
+         
+        
       });
    }
 
