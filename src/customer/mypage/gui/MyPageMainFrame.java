@@ -4,7 +4,10 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 
-public class MyPageMainFrame extends JFrame {
+
+//개별화면 개발 테스트용 메인플레임
+// 2025.07.15 프로젝트 메인프레임 통합 후 필요없어짐 -- 패널 추가 부분 주석처리되어 있음
+public class MyPageMainFrame extends JFrame {	
 	
 	public MyPageMainFrame() {
 		

@@ -21,6 +21,7 @@ public class Session {
     }    
     
     public static void clear() {
+
         loggedInCustomer = null;
         loggedIn_id = null;
     }
