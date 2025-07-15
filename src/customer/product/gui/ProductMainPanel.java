@@ -1,6 +1,7 @@
 package customer.product.gui;
 
 import java.awt.CardLayout;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,32 +19,26 @@ public class ProductMainPanel extends JPanel {
 		cl = new CardLayout();
 		setLayout(cl);
 		
-//		ProductIntroDetailPanel detail = new ProductIntroDetailPanel();
-//		ProductIntroducePanel intro = new ProductIntroducePanel();
-//		
-//		add(intro, "intro");
-//		add(detail, "detail");
-//		
-//		intro.setMouseClickListener(new ProductIntroducePanel.MouseClickListener() {
-//            @Override
-//            public void onChildPanelClicked(MouseEvent e) {
-//            	// 상품 리스트에서 더블클릭한 열의 상품 번호를 가져옴
-//            	int num = intro.getProductId();
-//            	// 테스트용 상품번호 출력
-//            	System.out.println(num);
-//            	
-//
-//            	// TODO 해당 상품번호를 통해 세부정보를 조회해야함
-//            	cl.show(ProductMainPanel.this, "detail");
-//            }
-//        });
-//		
-//		cl.show(this, "intro");
+		ProductIntroDetailPanel detail = new ProductIntroDetailPanel();
+		ProductIntroducePanel intro = new ProductIntroducePanel();
 		
-		JPanel dummy = new JPanel();
-		dummy.add(new JLabel("불러올 상품 정보 없음"));
-		add(dummy, "dummy");
+		add(intro, "intro");
+		add(detail, "detail");
+		
+		intro.setMouseClickListener(new ProductIntroducePanel.MouseClickListener() {
+            @Override
+            public void onChildPanelClicked(MouseEvent e) {
+            	// 상품 리스트에서 더블클릭한 열의 상품 번호를 가져옴
+            	int num = intro.getProductId();
+            	// 테스트용 상품번호 출력
+            	System.out.println(num);
+            	
 
-		cl.show(this, "dummy");
+            	// TODO 해당 상품번호를 통해 세부정보를 조회해야함
+            	cl.show(ProductMainPanel.this, "detail");
+            }
+        });
+		
+		
 	}
 }

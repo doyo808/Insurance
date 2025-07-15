@@ -25,8 +25,8 @@ public class AccountsMainPanel extends JPanel {
 		this.smp = smp;
 		this.cmp = cmp;
 		
-//		add(new AccountsCard1(this), "비회원_메인");
-		add(ac2 = new AccountsCard2(this, smp, cmp), "비회원_메인");
+		add(new AccountsCard1(this), "비회원_메인");
+		add(ac2 = new AccountsCard2(this, smp, cmp), "회원_메인");
 		add(new AccountsCard3(this), "회원가입_메인");
 		add(new AccountsCard4(this, cmp), "로그인");
 		
