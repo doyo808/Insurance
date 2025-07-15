@@ -32,14 +32,15 @@ public class AccountsMainPanel extends JPanel {
 		
 		c.show(this, "비회원_메인");
 		
-		testing();
+		testing(smp);
 	}
 	
-	void testing() {
+	void testing(ServicesMainPanel smp) {
 		if (MainFrame.TEST) {
 			CustomerModel c = TestUserProvider.getTestUser(MainFrame.LOGIN_ID);
 			if (c != null) {
 				Session.setCustomer(c);
+				smp.refreshPanels();
 				showCard("회원_메인");
 			} else {
 				System.out.println("회원아이디를 확인하세요!");

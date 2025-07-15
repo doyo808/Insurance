@@ -10,8 +10,10 @@ import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class ServicesMainPanel extends JPanel {
 	private ServicesMainCenterPanel smcp;
+	private CustomerMainPanel cmp;
 	
 	public ServicesMainPanel(CustomerMainPanel cmp) {
+		this.cmp = cmp;
 		setLayout(new BorderLayout());
 		
 		add(smcp = new ServicesMainCenterPanel(cmp), BorderLayout.CENTER);
@@ -22,5 +24,13 @@ public class ServicesMainPanel extends JPanel {
 	public ServicesMainCenterPanel getSmcp() {
 		return smcp;
 	}
-
+	
+	public void refreshPanels() {
+        // 기존 패널 제거 후 새로 생성
+        remove(smcp);
+        smcp = new ServicesMainCenterPanel(cmp);
+        add(smcp, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
 }
