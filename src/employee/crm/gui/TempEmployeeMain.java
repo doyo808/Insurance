@@ -24,7 +24,7 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
         setTitle("KB손해보험 다이렉트 센터");
         setBounds(0, 0, 1440, 1024);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);        
         setLayout(new BorderLayout());
 
         initTopMenu();
@@ -32,6 +32,8 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
 
         setVisible(true);
     }
+    
+    //메뉴버튼 사이즈 150, 50
 
     private void initTopMenu() {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 30));
@@ -45,11 +47,12 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
         String[] menuItems = {"보험상품관리", "보험계약관리", "보험료납부관리", "보험금청구관리", "고객관리", "사용자관리"};
 
         for (String item : menuItems) {
-            JButton btn = new JButton(item);            
+            JButton btn = new JButton(item);                        
             btn.setActionCommand(item);
             btn.addActionListener(this);
             topPanel.add(btn);
-        }
+            
+        }     
 
         add(topPanel, BorderLayout.NORTH);
     }
