@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import javax.swing.JPanel;
 
+import insuranceMain.customerPanel.CustomerMainPanel;
+
 public class PaymentMainPanel extends DefaultPanel implements CardSwitcher {
 
 	private static final long serialVersionUID = 1L;

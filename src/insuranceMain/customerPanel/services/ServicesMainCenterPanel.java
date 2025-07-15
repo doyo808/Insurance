@@ -22,7 +22,7 @@ public class ServicesMainCenterPanel extends JPanel {
 		add(new ProductMainPanel(cmp), "보험상품조회");
 		add(new ContractMainPanel(cmp), "보험상품가입");
 		add(new ClaimMainPanel(cmp), "보험금청구");
-		add(new PaymentMainPanel(cmp), "보험료납부");
+//		add(new PaymentMainPanel(cmp), "보험료납부");
 		add(new MyPageMainPanel(cmp), "마이페이지");
 	}
 	
