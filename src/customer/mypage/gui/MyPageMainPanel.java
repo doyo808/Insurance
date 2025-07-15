@@ -248,9 +248,9 @@ public class MyPageMainPanel extends JPanel {
     
     public void refreshCustomerData() {
     	this.cm = Session.getCustomer();
-    	loadPersonalInfo();
-    	loadContractInfo();
-    	loadPaymentHistory();
+    	loadPersonalInfo();        
+        loadContractInfo();
+        loadPaymentHistory();
     }
 	
 	

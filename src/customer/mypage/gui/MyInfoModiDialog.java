@@ -1,6 +1,8 @@
 package customer.mypage.gui;
 
+import java.awt.Color;
 import java.awt.Dialog.ModalityType;
+import java.awt.Font;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -28,11 +30,17 @@ public class MyInfoModiDialog extends JDialog {
         this.cm = cm;
 
         setLayout(null);
-        setSize(600, 500);
+        setSize(600, 550);
         setLocationRelativeTo(parentPanel);
+        
+        JLabel lbTitle = new JLabel("KD손해보험 다이렉트 센터");
+        lbTitle.setBounds(20, 10, 200, 25);
+        lbTitle.setFont(new Font("", Font.BOLD, 16));
+        lbTitle.setForeground(Color.RED);
+        add(lbTitle);       
+        
 
         int labelW = 100, fieldW = 400, h = 25, y = 20, spacingY = 35;
-
         addLabelAndField("이름", tfName = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("생년월일", tfBirth = new JTextField(), 20, y += spacingY, labelW, fieldW);        
         addLabelAndField("이메일", tfEmail = new JTextField(), 20, y += spacingY, labelW, fieldW);
@@ -48,11 +56,11 @@ public class MyInfoModiDialog extends JDialog {
 
         // 기존 정보 설정
         tfName.setText(cm.getCustomer_name());
-        tfBirth.setText(cm.getPersonal_id());
-        tfAddress1.setText(cm.getAddress_1());
-        tfAddress2.setText(cm.getAddress_2());
-        tfPhone.setText(cm.getPhone_number());
+        tfBirth.setText(cm.getPersonal_id());        
         tfEmail.setText(cm.getEmail());
+        tfPhone.setText(cm.getPhone_number());
+        tfAddress1.setText(cm.getAddress_1());
+        tfAddress2.setText(cm.getAddress_2());        
         tfJob.setText(cm.getJob());
         tfCompany.setText(cm.getCompany_name());
         tfCompanyPhone.setText(cm.getJob_phone_number());        
@@ -70,20 +78,18 @@ public class MyInfoModiDialog extends JDialog {
 
         btnCancel = new JButton("취소");
         btnCancel.setBounds(470, y + 50, 80, 30);
-        add(btnCancel);
-
-        btnCancel.addActionListener(e -> dispose());
+        add(btnCancel);       
 
         btnSave.addActionListener(e -> {
             try (Connection conn = InsuranceTeamConnector.getConnection()) {
-                String sql = "UPDATE customers SET address_1 = ?, address_2 = ?, phone_number = ?, email = ?, job = ?, " +
+                String sql = "UPDATE customers SET email = ?, phone_number = ?, address_1 = ?, address_2 = ?, job = ?, " +
                              "company_name = ?, job_phone_number = ?, job_address1 = ?, job_address2 = ? WHERE customer_id = ?";
-                PreparedStatement pstmt = conn.prepareStatement(sql);               
-
-                pstmt.setString(1, tfAddress1.getText());
-                pstmt.setString(2, tfAddress2.getText());
-                pstmt.setString(3, tfPhone.getText());
-                pstmt.setString(4, tfEmail.getText());
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                
+                pstmt.setString(1, tfEmail.getText());
+                pstmt.setString(2, tfPhone.getText());
+                pstmt.setString(3, tfAddress1.getText());
+                pstmt.setString(4, tfAddress2.getText());                
                 pstmt.setString(5, tfJob.getText());
                 pstmt.setString(6, tfCompany.getText());
                 pstmt.setString(7, tfCompanyPhone.getText());                
@@ -95,10 +101,8 @@ public class MyInfoModiDialog extends JDialog {
 
                 if (updated > 0) {
                     JOptionPane.showMessageDialog(this, "정보가 성공적으로 수정되었습니다.");
-
                     // 새로고침
                     parentPanel.refreshCustomerData();
-
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "수정에 실패했습니다.");
@@ -109,6 +113,10 @@ public class MyInfoModiDialog extends JDialog {
                 JOptionPane.showMessageDialog(this, "오류 발생: " + ex.getMessage());
             }
         });
+        
+        btnCancel.addActionListener(e -> dispose());
+        
+        
     }
 
     private void addLabelAndField(String label, JTextField field, int x, int y, int labelWidth, int fieldWidth) {
