@@ -19,24 +19,30 @@ import common.account.login.SessionOfProduct;
 import common.database.model.ProductModel;
 import common.method.CalculateAge;
 import common.method.CalculatePremium;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CalculatePremiumPanel extends JPanel {
 	// 입력내용 맞는지 물어보는 팝업 띄우기
 	
 	private ProductModel product;
-	private double monthlyPremium;
+	private double monthlyPremiumInput;
+	private double monthlyPremiumOutput;
 	private int year;
 	private int month;
 	private int day;
 	private LocalDate birthDate;
 	private int age;
-	private String gender;
+	private String gender = "F";
 	
 	private JTextField textField;
 	private JTextArea textArea;
 	private JTextField textField_Year;
 	private JTextField textField_Month;
 	private JTextField textField_Date;
+	private JButton btnNewButton_1;
+	private JRadioButton rdbtnMale;
+	private JRadioButton rdbtnFemale;
 	
 	public CalculatePremiumPanel(ContractMainPanel contractMP) {
 		setLayout(null);
@@ -86,63 +92,72 @@ public class CalculatePremiumPanel extends JPanel {
 		JLabel lblNewLabel_2 = new JLabel("생년월일 입력");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2.setFont(new Font("굴림", Font.BOLD, 28));
-		lblNewLabel_2.setBounds(65, 28, 385, 49);
+		lblNewLabel_2.setBounds(65, 211, 385, 49);
 		panel_1.add(lblNewLabel_2);
 
 		JLabel lblNewLabel_Year = new JLabel("년");
 		lblNewLabel_Year.setFont(new Font("굴림", Font.PLAIN, 14));
-		lblNewLabel_Year.setBounds(85, 107, 28, 23);
+		lblNewLabel_Year.setBounds(78, 291, 28, 23);
 		panel_1.add(lblNewLabel_Year);
 		
 		JLabel lblNewLabel_Month = new JLabel("월");
 		lblNewLabel_Month.setFont(new Font("굴림", Font.PLAIN, 14));
-		lblNewLabel_Month.setBounds(219, 107, 57, 23);
+		lblNewLabel_Month.setBounds(212, 291, 28, 23);
 		panel_1.add(lblNewLabel_Month);
 		
 		JLabel lblNewLabel_Date = new JLabel("일");
 		lblNewLabel_Date.setFont(new Font("굴림", Font.PLAIN, 14));
-		lblNewLabel_Date.setBounds(353, 107, 17, 23);
+		lblNewLabel_Date.setBounds(288, 291, 17, 23);
 		panel_1.add(lblNewLabel_Date);
 		
 		textField_Year = new JTextField();
-		textField_Year.setBounds(111, 108, 81, 21);
+		textField_Year.setBounds(104, 292, 81, 21);
 		panel_1.add(textField_Year);
 		textField_Year.setColumns(4);
 		
 		textField_Month = new JTextField();
 		textField_Month.setColumns(2);
-		textField_Month.setBounds(255, 108, 28, 21);
+		textField_Month.setBounds(248, 292, 28, 21);
 		panel_1.add(textField_Month);
 		
 		textField_Date = new JTextField();
 		textField_Date.setColumns(2);
-		textField_Date.setBounds(382, 108, 28, 21);
+		textField_Date.setBounds(317, 292, 28, 21);
 		panel_1.add(textField_Date);
+		
+		btnNewButton_1 = new JButton("확인");
+		btnNewButton_1.setBounds(364, 291, 97, 23);
+		panel_1.add(btnNewButton_1);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("성별");
 		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_2_1.setFont(new Font("굴림", Font.BOLD, 28));
-		lblNewLabel_2_1.setBounds(65, 194, 385, 49);
+		lblNewLabel_2_1.setBounds(65, 83, 385, 49);
 		panel_1.add(lblNewLabel_2_1);
 
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("남성");
-		rdbtnNewRadioButton.setHorizontalAlignment(SwingConstants.CENTER);
-		rdbtnNewRadioButton.setBounds(167, 261, 64, 23);
-		panel_1.add(rdbtnNewRadioButton);
+		rdbtnMale = new JRadioButton("남성");
+		rdbtnMale.setHorizontalAlignment(SwingConstants.CENTER);
+		rdbtnMale.setBounds(167, 150, 64, 23);
+		panel_1.add(rdbtnMale);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("여성");
-		rdbtnNewRadioButton_1.setHorizontalAlignment(SwingConstants.CENTER);
-		rdbtnNewRadioButton_1.setBounds(272, 261, 64, 23);
-		panel_1.add(rdbtnNewRadioButton_1);
+		rdbtnFemale = new JRadioButton("여성");
+		rdbtnFemale.setHorizontalAlignment(SwingConstants.CENTER);
+		rdbtnFemale.setBounds(272, 150, 64, 23);
+		panel_1.add(rdbtnFemale);
 		
 		ButtonGroup group = new ButtonGroup();
-		group.add(rdbtnNewRadioButton);
-		group.add(rdbtnNewRadioButton_1);
+		group.add(rdbtnMale);
+		group.add(rdbtnFemale);
 		
-		JButton btnNewButton = new JButton("확인");
+		JButton btnNewButton = new JButton("이전");
 		btnNewButton.setBackground(new Color(144, 238, 144));
-		btnNewButton.setBounds(65, 343, 385, 59);
+		btnNewButton.setBounds(85, 407, 153, 59);
 		panel_1.add(btnNewButton);
+		
+		JButton btnNewButton_2 = new JButton("다음");
+		btnNewButton_2.setBackground(new Color(144, 238, 144));
+		btnNewButton_2.setBounds(286, 407, 153, 59);
+		panel_1.add(btnNewButton_2);
 
 		addActions();
 	}
@@ -151,29 +166,36 @@ public class CalculatePremiumPanel extends JPanel {
 		product = SessionOfProduct.getProduct();
 		
 		if (product != null) {
-			monthlyPremium = product.getBasePremium();
-			
-			textField.setText(String.format("월 %,.0f원", monthlyPremium));
+			monthlyPremiumInput = product.getBasePremium();
+			monthlyPremiumOutput = monthlyPremiumInput;
+			textField.setText(String.format("월 %,.0f원", monthlyPremiumOutput));
 		}
 	}
 	
 	void addActions() {
-		textField_Date.addActionListener(e -> {
+		btnNewButton_1.addActionListener(e -> {
 			this.year = Integer.parseInt(textField_Year.getText());
 			this.month = Integer.parseInt(textField_Month.getText());
 			this.day = Integer.parseInt(textField_Date.getText());
 			try {
 				this.birthDate = LocalDate.of(year, month, day);
-				int age = CalculateAge.CalculateAge(birthDate);
-				System.out.println(age);
-				gender = "M";
-				monthlyPremium = CalculatePremium.CalculatePremiumByAge_Gender(monthlyPremium, age, gender);
-				System.out.println(monthlyPremium);
+				this.age = CalculateAge.CalculateAge(birthDate);
+				monthlyPremiumOutput = CalculatePremium.CalculatePremiumByAge(monthlyPremiumInput, age);
+				
+				setSelectedGender();
+				if (gender.equals("M")) monthlyPremiumOutput *= 1.05;
+				
+				textField.setText(String.format("월 %,.0f원", monthlyPremiumOutput));
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(this, "잘못된 입력입니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
 				ex.printStackTrace();
 			}
 		});
+	}
+	
+	private void setSelectedGender() {
+	    if (rdbtnMale.isSelected()) this.gender = "M";
+	    else if (rdbtnFemale.isSelected()) this.gender = "F";
 	}
 }
 
