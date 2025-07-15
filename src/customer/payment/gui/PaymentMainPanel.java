@@ -35,8 +35,13 @@ public class PaymentMainPanel extends DefaultPanel implements CardSwitcher {
 
 	// ✅ AutoPaymentPanel1에서 선택된 계약 정보를 넘겨줄 메서드
 	public void showAutoPayment2(String[] contractData) {
-	
-	    autoPaymentPanel2.displayRegisteredAccount(selected_contract_id);
+	    autoPaymentPanel2.setSelectedData(contractData);
+        // 3. 값 들어가는 기능
+        if (contractData != null) {
+	        autoPaymentPanel2.displayContractInfo(contractData);
+	        int contract_id = Integer.valueOf(contractData[2]);
+	        autoPaymentPanel2.displayRegisteredAccount(contract_id);
+        }
 	    showCard("AutoPayment2");
 	}
 }

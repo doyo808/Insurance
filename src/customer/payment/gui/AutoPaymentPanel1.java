@@ -70,9 +70,9 @@ public class AutoPaymentPanel1 extends DefaultPanel {
 		chkbtn.addActionListener(e -> {
 			selected = ((ContractTablePanel) contractPanel).getSelectedContract();
 			
-			if (selected != null) {
+			if (selected != null && switcher instanceof PaymentMainPanel panel) {
 				System.out.println("선택된 계약: " + Arrays.toString(selected));
-				switcher.showCard("AutoPayment2");
+				panel.showAutoPayment2(selected);
             } else {
                 System.out.println("계약이 선택되지 않았습니다.");
             }

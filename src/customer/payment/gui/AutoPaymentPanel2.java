@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,7 +32,7 @@ public class AutoPaymentPanel2 extends JPanel {
     // UI 컴포넌트에 사용할 폰트
     private static final Font LABEL_FONT = new Font("맑은 고딕", Font.PLAIN, 13);
     private static final Font VALUE_FONT = new Font("맑은 고딕", Font.BOLD, 13);
-
+    private String[] selected = null;
     // 정보 표시 및 입력용 컴포넌트
     private JLabel valProductName, valContractId, valStartDate, valEndDate, valPaymentType, valPremium;
     private JLabel lblRegisteredBank, valRegisteredBank, lblRegisteredAccount, valRegisteredAccount;
@@ -55,6 +56,8 @@ public class AutoPaymentPanel2 extends JPanel {
         // 2. 기능별 패널 생성 및 메인 패널에 추가
         add(createContractInfoPanel(), "growx, wrap"); // 가로로 꽉 채우고 줄바꿈
         add(createAccountInputPanel(), "grow");      // 가로/세로로 꽉 채움
+        
+
     }
 
     /**
@@ -156,12 +159,14 @@ public class AutoPaymentPanel2 extends JPanel {
     }
     
     public void displayContractInfo(String[] contractData) {
+    	if (contractData != null) {
         valProductName.setText(contractData[1]);
         valContractId.setText(contractData[2]);
         valStartDate.setText(contractData[3]);
         valEndDate.setText(contractData[4]);
         valPaymentType.setText(contractData[5]);
         valPremium.setText(contractData[6]);
+    	}
     }
     
     public void displayRegisteredAccount(Integer contract_id) {
@@ -183,27 +188,15 @@ public class AutoPaymentPanel2 extends JPanel {
                 valRegisteredBank.setText(bank);
                 valRegisteredAccount.setText(accountNumber);
             }
-    	}
+    	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame f = new JFrame("자동이체 신청 (MigLayout 버전)");
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.setMinimumSize(new Dimension(800, 600));
-
-            AutoPaymentPanel2 panel = new AutoPaymentPanel2();
-            f.getContentPane().add(panel);
-
-            String[] testData = {"", "스마트 건강보험", "2024-001234", "2024-01-15", "2044-01-15", "자동이체", "50,000원", "홍길동"};
-            panel.displayContractInfo(testData);
-
-
-             panel.displayRegisteredAccount(Session.getCustomer());
-
-            f.pack();
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        });
-    }
+    
+    
+    public void setSelectedData(String[] selected) {
+		this.selected = selected;
+	}
 }
