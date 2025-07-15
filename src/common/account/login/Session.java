@@ -16,6 +16,6 @@ public class Session {
     }
 
     public static void clear() {
-        loggedInCustomer = null;
+        //loggedInCustomer = null;
     }
 }

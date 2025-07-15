@@ -35,6 +35,7 @@ public class MyPageMainPanel extends JPanel {
 	private JTextField tfName, tfAddress, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfWorkAddress, tfCompanyPhone;
 	private JTable contractTable, paymentTable;
 	private JButton btnEdit;
+	private CustomerModel cm;
 
 	
 	public MyPageMainPanel(CustomerMainPanel cmp) {
@@ -103,6 +104,7 @@ public class MyPageMainPanel extends JPanel {
         add(paymentScroll);
 
         // ==== 데이터 로드 ====
+        this.cm = Session.getCustomer();
         loadPersonalInfo();        
         loadContractInfo();
         loadPaymentHistory();
@@ -135,7 +137,7 @@ public class MyPageMainPanel extends JPanel {
 //			e.printStackTrace();
 //		}
 //		
-		CustomerModel cm = Session.getCustomer(); //공통 로그인 세션 사용시
+				
 		if (cm != null) {
 		    tfName.setText(cm.getCustomer_name());
 		    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
@@ -149,7 +151,7 @@ public class MyPageMainPanel extends JPanel {
 		}
     }
 
-    private void loadContractInfo() {
+    private void loadContractInfo() {    	
     	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
     		@Override
     		public boolean isCellEditable(int row, int column) {
@@ -157,7 +159,14 @@ public class MyPageMainPanel extends JPanel {
     			//특정 컬럼을 수정하고 싶을 때
     			//return column == 0;
     		}
-    	};
+    	};    	
+
+        if (cm == null) {
+            //System.out.println("로그인된 고객 정보가 없습니다.");
+            return;
+        }
+
+        int customerId = cm.getCustomer_id(); // 고객 ID 가져오기   	
     	
     	try (Connection conn = InsuranceTeamConnector.getConnection()){			
 			
@@ -165,7 +174,8 @@ public class MyPageMainPanel extends JPanel {
 					+ "FROM contracts c, products p "
 					+ "WHERE c.product_id = p.product_id AND customer_id = ?";			
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, 1);
+			pstmt.setInt(1, customerId);		
+			
 			
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next()) {
@@ -187,13 +197,20 @@ public class MyPageMainPanel extends JPanel {
         contractTable.setModel(model);
     }
 
-    private void loadPaymentHistory() {
+    private void loadPaymentHistory() {    	
     	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0) {
     		@Override
     		public boolean isCellEditable(int row, int column) {
     			return false;
     		}
-    	};
+    	};    	
+
+        if (cm == null) {
+            //System.out.println("로그인된 고객 정보가 없습니다.");
+            return;
+        }
+
+        int customerId = cm.getCustomer_id(); // 고객 ID 가져오기
     	
     	try(Connection conn = InsuranceTeamConnector.getConnection();) {
     		
@@ -201,7 +218,7 @@ public class MyPageMainPanel extends JPanel {
     				+ "FROM payments p, contracts c "
     				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
     		PreparedStatement pstmt = conn.prepareStatement(sql);
-    		pstmt.setInt(1, 1);
+    		pstmt.setInt(1, customerId);
     		
     		ResultSet rs = pstmt.executeQuery();
     		while(rs.next()) {
