@@ -15,42 +15,41 @@ public class ClaimFirstPanel extends JPanel {
         setBackground(Color.WHITE);
 
         // ▶ 좌측: 청구내역조회 버튼 (원래 크기 + 왼쪽 여백)
-        JPanel 첫번째패널왼쪽 = new JPanel(new BorderLayout());
-        첫번째패널왼쪽.setBackground(Color.WHITE);
-        첫번째패널왼쪽.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0)); // 왼쪽 간격
+        JPanel 왼쪽패널 = new JPanel(new BorderLayout());
+        왼쪽패널.setBackground(Color.WHITE);
+        왼쪽패널.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // 상, 좌, 하, 우
 
         JPanel 왼쪽패널버튼넣는패널 = new JPanel(new GridBagLayout()); // 가운데 정렬
         왼쪽패널버튼넣는패널.setBackground(Color.WHITE);
 
         CardSwitchButton 청구내역조회버튼 = new CardSwitchButton(
                 "보험금 청구내역 조회(진행상태 및 결과 조회)",
-                parentCardPanel, "", 400, 350); // 원래 크기 유지
+                parentCardPanel, "", 350, 250); // 원래 크기 유지
 
         왼쪽패널버튼넣는패널.add(청구내역조회버튼);
-        첫번째패널왼쪽.add(왼쪽패널버튼넣는패널, BorderLayout.CENTER);
-        add(첫번째패널왼쪽, BorderLayout.WEST);
+        왼쪽패널.add(왼쪽패널버튼넣는패널, BorderLayout.CENTER);
+        add(왼쪽패널, BorderLayout.WEST);
 
         // ▶ 오른쪽 2x2 버튼 영역 (작은 버튼들)
-        JPanel 첫번째패널오른쪽 = new JPanel(new GridLayout(2, 2, 20, 20));
-        첫번째패널오른쪽.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 30));
-        첫번째패널오른쪽.setBackground(Color.WHITE);
+        JPanel 오른쪽패널 = new JPanel(new GridLayout(2, 2, 50, 50));
+        오른쪽패널.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        오른쪽패널.setBackground(Color.WHITE);
 
         // 패널이름추가하기!!!!!!!!
-        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 300, 130);
-        CardSwitchButton 추가청구버튼 = new CardSwitchButton("이전에 청구했던 질병, 사고 추가 청구하기", parentCardPanel, "", 300, 130);
-        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "", 300, 130);
-
-        JButton 상황별필요서류버튼 = new JButton("상황별 필요서류 안내");
-	    상황별필요서류버튼.setSize(300, 130);
-        RequiredDocumentsInfo infoPanel = new RequiredDocumentsInfo(parentCardPanel, "ClaimFirstPanel");
-        parentCardPanel.add(infoPanel, "RequiredDocumentsInfoFromClaimFirstPanel");
+        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 200, 80);
+        CardSwitchButton 추가청구버튼 = new CardSwitchButton("이전에 청구했던 질병, 사고 추가 청구하기", parentCardPanel, "", 200, 80);
+        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 80);
+        CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 80);
         
-        첫번째패널오른쪽.add(신규청구버튼);
-        첫번째패널오른쪽.add(추가청구버튼);
-        첫번째패널오른쪽.add(청구방법버튼);
-        첫번째패널오른쪽.add(상황별필요서류버튼);
+//        RequiredDocumentsInfo infoPanel = new RequiredDocumentsInfo(parentCardPanel, "ClaimFirstPanel");
+//        parentCardPanel.add(infoPanel, "RequiredDocumentsInfoFromClaimFirstPanel");
+        
+        오른쪽패널.add(신규청구버튼);
+        오른쪽패널.add(추가청구버튼);
+        오른쪽패널.add(청구방법버튼);
+        오른쪽패널.add(상황별필요서류버튼);
 
-        add(첫번째패널오른쪽, BorderLayout.CENTER);
+        add(오른쪽패널, BorderLayout.CENTER);
 
         // ▶ 하단 안내문
         JTextArea 안내문 = new JTextArea(

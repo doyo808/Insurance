@@ -6,13 +6,14 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.*;
 
+import common.database.model.NewClaimDataModel;
 import common.gui.CardSwitchButton;
 import common.method.Validators;
 
 public class EnterBankAccountPanel extends JPanel {
    private JPanel parentCardPanel;
 
-   public EnterBankAccountPanel(JPanel parentCardPanel) {
+   public EnterBankAccountPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
       this.parentCardPanel = parentCardPanel;
       CardLayout cl = (CardLayout)(parentCardPanel.getLayout());
       setLayout(new BorderLayout());
@@ -111,12 +112,12 @@ public class EnterBankAccountPanel extends JPanel {
       
       JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
 
-      JButton 이전 = new JButton("이전");
-      JButton 다음 = new JButton("다음");
-      buttonPanel.add(이전);
-      buttonPanel.add(다음);
+      JButton previousButton = new JButton("이전");
+      JButton nextButton = new JButton("다음");
+      buttonPanel.add(previousButton);
+      buttonPanel.add(nextButton);
 
-      이전.addActionListener((e) -> {
+      previousButton.addActionListener((e) -> {
          cl.show(parentCardPanel, "ClaimTypePanel");
          선택버튼그룹.clearSelection();
          은행명필드.setText("");
@@ -125,21 +126,21 @@ public class EnterBankAccountPanel extends JPanel {
          계좌번호직접입력패널.setVisible(false);
       });
 
-      다음.addActionListener((e) -> {
+      nextButton.addActionListener((e) -> {
          if (선택버튼그룹.getSelection() == null) {
-            JOptionPane.showMessageDialog(this, "계좌정보를 선택해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "계좌정보를 선택해주세요.", "안내", JOptionPane.WARNING_MESSAGE);
          } else if (계좌번호직접입력버튼.isSelected() &&
                (은행명필드.getText().trim().isEmpty() ||
                 연락처필드.getText().trim().isEmpty() ||
                 계좌번호필드.getText().trim().isEmpty())) {
-            JOptionPane.showMessageDialog(this, "모든 계좌정보를 입력해주세요", "안내", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "모든 계좌정보를 입력해주세요", "안내", JOptionPane.WARNING_MESSAGE);
          } else {
             cl.show(parentCardPanel, "DocumentRegistrationPanel"); // TODO: 다음 패널 이름으로 변경
          }
       });
 
-      buttonPanel.add(이전);
-      buttonPanel.add(다음);
+      buttonPanel.add(previousButton);
+      buttonPanel.add(nextButton);
       add(buttonPanel, BorderLayout.SOUTH);
    }
 }

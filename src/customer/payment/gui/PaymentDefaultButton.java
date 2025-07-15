@@ -6,8 +6,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.border.Border;
 
-public class PaymentMenuButton extends JButton {
-    public PaymentMenuButton(String txt) {
+public class PaymentDefaultButton extends JButton {
+    public PaymentDefaultButton(String txt) {
         setText(txt);
         setFont(new Font("맑은 고딕", Font.BOLD, 14));
         setForeground(Color.WHITE);
@@ -17,8 +17,9 @@ public class PaymentMenuButton extends JButton {
         setContentAreaFilled(false); // 내부 배경 직접 그림
         setOpaque(false);            // 배경 투명 (우리가 직접 그림)
 
-        setBorder(new RoundedBorder(20));
-        setPreferredSize(new Dimension(350, 35));
+        setBorder(new RoundedBorder(10));
+        setPreferredSize(new Dimension(100, 20));
+        
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
