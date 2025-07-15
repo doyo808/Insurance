@@ -12,8 +12,10 @@ import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class ServicesMainCenterPanel extends JPanel {
 	CardLayout c = new CardLayout();
+	private CustomerMainPanel cmp;
 
 	public ServicesMainCenterPanel(CustomerMainPanel cmp) {
+		this.cmp = cmp;
 		setLayout(c);
 		
 		add(new ProductMainPanel(cmp), "보험상품조회");

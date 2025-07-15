@@ -18,16 +18,17 @@ import common.database.model.CustomerModel;
 import common.gui.FooterImagePanel;
 import common.gui.HomeButton;
 import insuranceMain.customerPanel.CustomerMainPanel;
+import insuranceMain.customerPanel.services.ServicesMainPanel;
 
 public class AccountsCard4 extends JPanel {
 	private JTextField textField;
 	
-	public AccountsCard4(AccountsMainPanel parentPanel, CustomerMainPanel cmp) {
-		addComponents(parentPanel);
+	public AccountsCard4(AccountsMainPanel parentPanel, ServicesMainPanel smp, CustomerMainPanel cmp) {
+		addComponents(parentPanel, smp);
 		add(new HomeButton(cmp, 700, 10));
 	}
 	
-	void addComponents(AccountsMainPanel parentPanel) {
+	void addComponents(AccountsMainPanel parentPanel, ServicesMainPanel smp) {
 		setLayout(null);
 
 		/// FIXME: 라벨
@@ -99,6 +100,7 @@ public class AccountsCard4 extends JPanel {
 				errorLabel.setVisible(true);
 			} else {
 				Session.setCustomer(c);
+				smp.refreshPanels();
 				parentPanel.showCard("회원_메인");
 			}
 			textField.setText("아이디");
@@ -119,6 +121,7 @@ public class AccountsCard4 extends JPanel {
 				errorLabel.setVisible(true);
 			} else {
 				Session.setCustomer(c);
+				smp.refreshPanels();
 				parentPanel.showCard("회원_메인");
 			}
 			textField.setText("아이디");
