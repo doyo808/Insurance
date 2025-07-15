@@ -130,9 +130,8 @@ public class ProductIntroducePanel extends JPanel {
             		if (listener != null) {
             			int row = table.getSelectedRow(); // 선택된 행 인덱스
             			if (row >= 0) {
-            				
             				Object productId = table.getValueAt(row, 0);
-            				System.out.println("테스트중 productId = " + productId);
+//            				System.out.println("테스트중 productId = " + productId);
             				sharedProductId = (int)productId;
             			} 
             			listener.onChildPanelClicked(e);  // 부모에게 알림

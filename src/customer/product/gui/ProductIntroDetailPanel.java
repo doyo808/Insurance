@@ -80,6 +80,10 @@ public class ProductIntroDetailPanel extends JPanel {
 		});
 	}
 	
+	/***
+	 * 이 객체(ProductIntroducePanel)에
+	 * 상품 상세 정보를 담은 카드레이아웃을 만듬
+	 */
 	public void setCardlayout() {
 		cl = new CardLayout();
 		displayDetails = new JPanel(cl);
@@ -99,14 +103,15 @@ public class ProductIntroDetailPanel extends JPanel {
 		
 		try (Connection conn = InsuranceTeamConnector.getConnection()){
 			
-			// TODO 이전 페이지에서 올바른 상품번호를 가져와야함
+			
+			// 이 객체의 인스턴스에 저장된 상품번호를 통해 PRODUCTS테이블의 정보를 가져옴
 			product = ProductDAO.getProduct(sharedProductId, conn);
 			
 			if(product != null) {
 				InputStream input = product.getProduct_introduce().getBinaryStream();
 				image = ImageIO.read(input);
 			} else {
-				System.out.println("상품이 존재하지않음");
+//				System.out.println("상품이 존재하지않음");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -120,8 +125,9 @@ public class ProductIntroDetailPanel extends JPanel {
 		if (image != null) {
 			icon = new ImageIcon(image);
 		} else {
-			System.out.println("이미지가 비어있음");
+//			System.out.println("이미지가 비어있음");
 			lblNewLabel = new JLabel("이미지가 비어있음");
+			cardPanel1.add(lblNewLabel);
 		}
 		
 		// 상품소개란에 이미지 띄우기
@@ -138,7 +144,9 @@ public class ProductIntroDetailPanel extends JPanel {
 		cardPanel2.add(lblNewLabel_1);
 	}
 	
-	
+	/***
+	 * 이 객체의 인스턴스에 상품번호를 저장 함 
+	 */
 	public void setSharedProductId(int productId) {
 		this.sharedProductId = productId;
 	}
