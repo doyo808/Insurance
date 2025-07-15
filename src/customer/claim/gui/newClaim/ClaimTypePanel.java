@@ -1,4 +1,4 @@
-package customer.claim.gui;
+package customer.claim.gui.newClaim;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import customer.claim.gui.TitlePanel;
 
 public class ClaimTypePanel extends JPanel {
 	private JPanel parentCardPanel;
@@ -46,20 +48,20 @@ public class ClaimTypePanel extends JPanel {
 	        // ===== 하단 영역 (이전 / 다음 버튼) =====
 	        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
 	        bottomPanel.setBounds(96, 227, 264, 63);
-	        JButton 이전버튼 = new JButton("이전");
-	        JButton 다음버튼 = new JButton("다음");
-	        bottomPanel.add(이전버튼);
-	        bottomPanel.add(다음버튼);
+	        JButton previousButton = new JButton("이전");
+	        JButton nextButton = new JButton("다음");
+	        bottomPanel.add(previousButton);
+	        bottomPanel.add(nextButton);
 	        add(bottomPanel, BorderLayout.SOUTH);
 
-	        이전버튼.addActionListener(e -> {
+	        previousButton.addActionListener(e -> {
 	        	for (ClaimTypeCheckBox ctcb : claimTypeList) {
 	        		ctcb.setSelected(false);
 	        	}
 	            cl.show(parentCardPanel, "ClaimSituationPanel");
 	        });
 
-	        다음버튼.addActionListener(e -> {
+	        nextButton.addActionListener(e -> {
 	        	boolean selected = claimTypeList.stream().anyMatch(JCheckBox::isSelected);
 	            if (!selected) {
 	                JOptionPane.showMessageDialog(chckPanel, "청구유형을 하나 이상 선택해주세요.", "알림", JOptionPane.WARNING_MESSAGE);

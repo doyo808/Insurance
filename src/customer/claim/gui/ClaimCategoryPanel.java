@@ -49,19 +49,18 @@ public class ClaimCategoryPanel extends JPanel {
 
         // ===== 하단 영역 (이전 / 다음 버튼) =====
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-        JButton 이전버튼 = new JButton("이전");
-        JButton 다음버튼 = new JButton("다음");
-        bottomPanel.add(이전버튼);
-        bottomPanel.add(다음버튼);
+        JButton previousButton = new JButton("이전");
+        JButton nextButton = new JButton("다음");
+        bottomPanel.add(previousButton);
+        bottomPanel.add(nextButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // 버튼 이벤트
-        이전버튼.addActionListener(e -> {
+        previousButton.addActionListener(e -> {
             cl.show(parentCardPanel, "AccidentDatePanel");
             group.clearSelection();
         });
 
-        다음버튼.addActionListener(e -> {
+        nextButton.addActionListener(e -> {
             if (group.getSelection() == null) {
                 JOptionPane.showMessageDialog(this, "청구유형을 선택해주세요.", "안내", JOptionPane.INFORMATION_MESSAGE);
             } else {
