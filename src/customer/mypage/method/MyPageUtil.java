@@ -1,0 +1,69 @@
+package customer.mypage.method;
+
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+
+public class MyPageUtil {
+	
+	// 주민번호를 생년월일로 변화하는 Method
+	public static String convertJuminToBirth(String juminNumber) {
+		if(juminNumber == null || juminNumber.length() < 7) {
+			return "잘못된 형식입니다!";
+		}
+		
+		try {
+			String birthPart = juminNumber.substring(0, 6);
+			char genderCode = juminNumber.charAt(7);
+			
+			int yearPrefix;
+			switch(genderCode) {
+				case '1' : case '2' : yearPrefix = 1900; break;
+				case '3' : case '4' : yearPrefix = 2000; break;
+				default: return "잘못된 형식입니다!";
+			}
+			
+			int year = yearPrefix + Integer.parseInt(birthPart.substring(0, 2));
+			String month = birthPart.substring(2, 4);
+			String day = birthPart.substring(4, 6);
+			return String.format("%04d년 %s월 %s일", year, month, day);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "변환 오류";
+		}		
+	}
+	
+	
+	// 이메일 분리/합치기
+	
+	// 이메일을 아이디/도메인으로 분할하여 필드에 설정
+	public static void splitEmailToFields(String email, JTextField idField, JComboBox<String> domainBox) {
+		if(email == null || !email.contains("@")) return;
+		
+		String[] parts = email.split("@");
+		idField.setText(parts[0]);
+		
+		String domain = parts[1];
+		boolean found = false;
+		
+		for(int i = 0; i < domainBox.getItemCount(); i++) {
+			if(domainBox.getItemAt(i).equalsIgnoreCase(domain)) {
+				domainBox.setSelectedIndex(i);
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			domainBox.addItem(domain);
+			domainBox.setSelectedItem(domain);
+		}
+	}
+	
+	// 아이디 + 도메인 조합하여 전체 이메일 반환
+	public static String combineEmail(String idPart, Object domainPart) {
+		if(idPart == null || domainPart == null) return "";
+		return idPart.trim() + "@" + domainPart.toString().trim();
+	}
+
+}

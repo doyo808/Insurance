@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,12 +17,14 @@ import javax.swing.SwingUtilities;
 import common.account.login.Session;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.mypage.method.MyPageUtil;
 
 public class MyInfoModiDialog extends JDialog {
 
-    private JTextField tfName, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
+    private JTextField tfName, tfBirth, tfPhone, tfEmail, tfEmailId, tfEmailDomain, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
     private JButton btnSave, btnCancel;
     private MyPageMainPanel parentPanel;
+    private JComboBox<String> cbEmailDomain;
     private CustomerModel cm;
 
     public MyInfoModiDialog(MyPageMainPanel parentPanel, CustomerModel cm) {
@@ -44,6 +47,21 @@ public class MyInfoModiDialog extends JDialog {
         addLabelAndField("이름", tfName = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("생년월일", tfBirth = new JTextField(), 20, y += spacingY, labelW, fieldW);        
         addLabelAndField("이메일", tfEmail = new JTextField(), 20, y += spacingY, labelW, fieldW);
+//        addLabelAndField("이메일", tfEmailId = new JTextField(), 20, y += spacingY, labelW, fieldW);
+        
+//        JLabel lbAt = new JLabel("@");
+//        lbAt.setBounds(20, y += spacingY, labelW, fieldW);
+//        add(lbAt);
+//        
+//        // 이메일 도메인 콤보박스
+//        String[] domains = {"gmail.com", "naver.com", "hanmail.net", "hotmail.com", "직접입력"};
+//        cbEmailDomain = new JComboBox<>(domains);
+//        cbEmailDomain.setEditable(false);
+//        cbEmailDomain.setBounds(20, y += spacingY, labelW, fieldW);
+//        add(cbEmailDomain);       
+        
+        
+        
         addLabelAndField("전화번호", tfPhone = new JTextField(), 20, y += spacingY, labelW, fieldW);        
         addLabelAndField("기본주소", tfAddress1 = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("상세주소", tfAddress2 = new JTextField(), 20, y += spacingY, labelW, fieldW);
@@ -56,7 +74,7 @@ public class MyInfoModiDialog extends JDialog {
 
         // 기존 정보 설정
         tfName.setText(cm.getCustomer_name());
-        tfBirth.setText(cm.getPersonal_id());        
+        tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()));        
         tfEmail.setText(cm.getEmail());
         tfPhone.setText(cm.getPhone_number());
         tfAddress1.setText(cm.getAddress_1());

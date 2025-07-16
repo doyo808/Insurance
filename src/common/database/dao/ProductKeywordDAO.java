@@ -35,21 +35,19 @@ public class ProductKeywordDAO {
     }
 
     public static int insert(ProductKeywordModel model, Connection conn) throws SQLException {
-        String query = "INSERT INTO PRODUCT_KEYWORD (product_keyword_id, product_id, keyword_name) VALUES (?, ?, ?)";
+        String query = "INSERT INTO PRODUCT_KEYWORD (product_keyword_id, product_id, keyword_name) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, model.getProduct_keyword_id());
-            pstmt.setInt(2, model.getProduct_id());
-            pstmt.setString(3, model.getKeyword_name());
+            pstmt.setString(2, model.getKeyword_name());
             return pstmt.executeUpdate();
         }
     }
 
     public static int update(ProductKeywordModel model, Connection conn) throws SQLException {
-        String query = "UPDATE PRODUCT_KEYWORD SET product_id = ?, keyword_name = ? WHERE product_keyword_id = ?";
+        String query = "UPDATE PRODUCT_KEYWORD SET keyword_name = ? WHERE product_keyword_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, model.getProduct_id());
-            pstmt.setString(2, model.getKeyword_name());
-            pstmt.setInt(3, model.getProduct_keyword_id());
+            pstmt.setString(1, model.getKeyword_name());
+            pstmt.setInt(2, model.getProduct_keyword_id());
             return pstmt.executeUpdate();
         }
     }

@@ -1,7 +1,13 @@
 package employee.crm.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,6 +25,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import common.method.InsuranceTeamConnector;
@@ -35,13 +43,13 @@ public class SearchCrmPanel extends JPanel {
 		
 		setLayout(null);
 		
-		JSeparator seperator = new JSeparator(SwingConstants.HORIZONTAL);
-		seperator.setBounds(0, 0, 1440, 700);
-		seperator.setForeground(Color.RED);
-		add(seperator);
+		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+		separator.setBounds(0, 0, 1440, 700);
+		separator.setForeground(Color.RED);
+		add(separator);
 		
 		int labelW = 80, fieldW = 200, height = 25;
-        int x1 = 30, x2 = 400, x3 = 770, x4 = 1140;
+        int x1 = 30, x2 = 380, x3 = 750, x4 = 1120;
         int y = 30, spacingY = 40;
         
      // ====== 조건 입력 필드 ======
@@ -83,26 +91,76 @@ public class SearchCrmPanel extends JPanel {
         add(tfContractId);
 
         JButton btnSearch = new JButton("조회");
-        btnSearch.setBounds(x3 + labelW + 10, y, 100, height);
+        btnSearch.setBounds(x4 + labelW + 10, y, 100, height);
         add(btnSearch);
+        
+        
+        
 
         // ====== 테이블 ======
         String[] columns = {
             "고객ID", "이름", "생년월일", "아이디", "휴대폰", "이메일", "주소", "계약번호"
         };
-        tableModel = new DefaultTableModel(columns, 0);
+        tableModel = new DefaultTableModel(columns, 0) {
+        	
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
+        		return false;
+        	}
+        };
+        
         resultTable = new JTable(tableModel);
         JScrollPane scroll = new JScrollPane(resultTable);
         scroll.setBounds(30, 150, 1380, 500);
         add(scroll);
+        
+        
+        
+        
+        // ====== 이벤트 ======
+        resultTable.addMouseListener(new MouseAdapter() {
+        	
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		
+        		int selectedRow = resultTable.getSelectedRow();
+        		
+        		if(selectedRow != -1) {
+        			int customerId = (int) resultTable.getValueAt(selectedRow, 0);
+        			
+        			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SearchCrmPanel.this);
+        			for(Component comp : frame.getContentPane().getComponents()) {
+        				if(comp instanceof JPanel) {
+        					JPanel parentPanel = (JPanel) comp;
+        					if(BorderLayout.CENTER.equals(((BorderLayout) frame.getContentPane().getLayout()).getConstraints(comp))) {
+        						
+        						parentPanel.removeAll();
+        						parentPanel.setLayout(new BorderLayout());
+        						parentPanel.add(new DetailCrmPanel(customerId), BorderLayout.CENTER);
+        						parentPanel.revalidate();
+        						parentPanel.repaint();
+        						break;
+        					}
+        				}
+        			}
+        		}
+        	}
+		});
 
         // ====== 이벤트 ======
-        btnSearch.addActionListener(e -> searchCustomers());
+        btnSearch.addActionListener(e -> {
+        	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        	searchCustomers();
+        	setCursor(Cursor.getDefaultCursor());
+        });
+        
+        
     }
 	
 	private void searchCustomers() {
         tableModel.setRowCount(0); // 기존 결과 초기화
 
+        //조회조건
         String name = tfName.getText().trim();
         String birth = tfBirth.getText().trim();
         String userId = tfUserId.getText().trim();
@@ -110,10 +168,10 @@ public class SearchCrmPanel extends JPanel {
         String contractId = tfContractId.getText().trim();
 
         StringBuilder sql = new StringBuilder(
-            "SELECT c.customer_id, c.customer_name, c.personal_id, c.user_id, c.phone_number, c.email, " +
+            "SELECT c.customer_id, c.customer_name, c.personal_id, c.login_id, c.phone_number, c.email, " +
             "CONCAT(c.address_1, c.address_2) AS full_address, ct.contract_id " +
             "FROM customers c " +
-            "LEFT JOIN contracts ct ON c.customer_id = ct.customer_id WHERE 1=1"
+            "LEFT JOIN contracts ct ON c.customer_id = ct.customer_id WHERE 1 = 1"
         );
 
         List<Object> params = new ArrayList<>();
@@ -127,7 +185,7 @@ public class SearchCrmPanel extends JPanel {
             params.add(birth + "%");  // 앞자리 조회
         }
         if (!userId.isEmpty()) {
-            sql.append(" AND c.user_id LIKE ?");
+            sql.append(" AND c.login_id LIKE ?");
             params.add("%" + userId + "%");
         }
         if (!phone.isEmpty()) {
@@ -138,6 +196,8 @@ public class SearchCrmPanel extends JPanel {
             sql.append(" AND ct.contract_id = ?");
             params.add(contractId);
         }
+        
+        sql.append(" ORDER BY c.customer_id");
 
         try (Connection conn = InsuranceTeamConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
@@ -152,7 +212,7 @@ public class SearchCrmPanel extends JPanel {
                     rs.getInt("customer_id"),
                     rs.getString("customer_name"),
                     rs.getString("personal_id"),
-                    rs.getString("user_id"),
+                    rs.getString("login_id"),
                     rs.getString("phone_number"),
                     rs.getString("email"),
                     rs.getString("full_address"),

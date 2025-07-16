@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.account.login.Session;
+import common.database.dao.AutoPaymentDAO;
 import common.database.dao.ContractDAO;
 import common.database.dao.CustomerDAO;
 import common.database.dao.ProductDAO;
@@ -32,7 +33,8 @@ public class AutoPaymentInquire {
 				data[2] = String.valueOf(model.getContract_id());
 				data[3] = String.valueOf(model.getSignup_date());
 				data[4] = String.valueOf(model.getCoverage_end_date());
-				data[5] = String.valueOf(ProductPaymentCycleDAO.getById(model.getProduct_payment_cycle_id(), conn).getPayment_cycle_month());
+				data[5] = String.valueOf(
+						AutoPaymentDAO.getAutoPaymentsByContId(model.getContract_id(), conn) == null ? "수동이체" : "자동이체");
 				data[6] = String.valueOf(model.getPremium());
 				datas.add(data);
 			}

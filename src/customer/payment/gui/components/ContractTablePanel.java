@@ -1,4 +1,4 @@
-package customer.payment.gui;
+package customer.payment.gui.components;
 
 import javax.swing.*;
 import java.awt.*;
