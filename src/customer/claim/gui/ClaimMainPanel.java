@@ -33,7 +33,7 @@ public class ClaimMainPanel extends JPanel {
       AccidentDatePanel 사고일선택패널 = new AccidentDatePanel(카드패널, claimdata);
       ClaimSituationPanel 청구상황선택패널 = new ClaimSituationPanel(카드패널, claimdata);
       EnterBankAccountPanel 계좌입력패널 = new EnterBankAccountPanel(카드패널, claimdata);
-      ClaimTypePanel 청구타입패널 = new ClaimTypePanel(카드패널);
+      ClaimTypePanel 청구타입패널 = new ClaimTypePanel(카드패널, claimdata);
       DocumentRegistrationPanel 서류등록패널_계좌입력 = new DocumentRegistrationPanel(카드패널, "EnterBankAccountPanel",claimdata);
       DocumentRegistrationPanel 서류등록패널_청구상황 = new DocumentRegistrationPanel(카드패널, "ClaimSituationPanel",claimdata);
       
@@ -61,10 +61,10 @@ public class ClaimMainPanel extends JPanel {
       
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-		cl.show(카드패널, "ClaimFirstPanel");
+//		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
 //		cl.show(카드패널, "AccidentDatePanel");
-//		cl.show(카드패널, "ClaimSituationPanel");
+		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");
 //		cl.show(카드패널, "DocumentRegistrationPanel");
