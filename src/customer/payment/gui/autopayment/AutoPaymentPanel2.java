@@ -1,4 +1,4 @@
-package customer.payment.gui;
+package customer.payment.gui.autopayment;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,19 +10,22 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import common.account.login.Session;
 import common.database.dao.AutoPaymentDAO;
 import common.database.model.AutoPaymentModel;
-import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.payment.gui.PaymentMainPanel;
+import customer.payment.gui.components.PaymentDefaultButton;
+import customer.payment.method.AccountRegistrator;
 import net.miginfocom.swing.MigLayout; // MigLayout import
 
 public class AutoPaymentPanel2 extends JPanel {
@@ -32,7 +35,7 @@ public class AutoPaymentPanel2 extends JPanel {
     // UI 컴포넌트에 사용할 폰트
     private static final Font LABEL_FONT = new Font("맑은 고딕", Font.PLAIN, 13);
     private static final Font VALUE_FONT = new Font("맑은 고딕", Font.BOLD, 13);
-    private String[] selected = null;
+    private String[] selectedData = null;
     // 정보 표시 및 입력용 컴포넌트
     private JLabel valProductName, valContractId, valStartDate, valEndDate, valPaymentType, valPremium;
     private JLabel lblRegisteredBank, valRegisteredBank, lblRegisteredAccount, valRegisteredAccount;
@@ -42,7 +45,7 @@ public class AutoPaymentPanel2 extends JPanel {
     private JPasswordField tfPassword2Digits;
     private JButton regiBtn;
 
-    public AutoPaymentPanel2() {
+    public AutoPaymentPanel2(PaymentMainPanel pmp) {
     	
         // 1. 메인 패널 레이아웃: 1열로 구성, 아래쪽 패널이 남은 공간 모두 차지
         super(new MigLayout(
@@ -55,7 +58,7 @@ public class AutoPaymentPanel2 extends JPanel {
 
         // 2. 기능별 패널 생성 및 메인 패널에 추가
         add(createContractInfoPanel(), "growx, wrap"); // 가로로 꽉 채우고 줄바꿈
-        add(createAccountInputPanel(), "grow");      // 가로/세로로 꽉 채움
+        add(createAccountInputPanel(pmp), "grow");      // 가로/세로로 꽉 채움
         
 
     }
@@ -117,8 +120,8 @@ public class AutoPaymentPanel2 extends JPanel {
     /**
      * 자동이체 계좌 정보 입력 패널을 생성합니다.
      */
-    private JPanel createAccountInputPanel() {
-        JPanel panel = new JPanel(new MigLayout("fillx", "[][grow][][grow][][grow]"));
+    private JPanel createAccountInputPanel(PaymentMainPanel pmp) {
+    	JPanel panel = new JPanel(new MigLayout("fillx", "[][grow][][grow][][grow]"));
         panel.setBackground(new Color(255, 255, 255));
         panel.setBorder(BorderFactory.createTitledBorder("자동이체 계좌 변경/신규 등록"));
 
@@ -131,24 +134,54 @@ public class AutoPaymentPanel2 extends JPanel {
         tfPassword2Digits.setFont(new Font("맑은 고딕", Font.BOLD, 15));
         tfPassword2Digits.setPreferredSize(new Dimension(100, 30));
         tfPassword2Digits.setMargin(new Insets(0, 5, 5, 0));
-        
+
         regiBtn = new PaymentDefaultButton("등록");
+        regiBtn.setEnabled(false); // 처음엔 비활성화
         regiBtn.addActionListener(e -> {
             String selectedBank = (String) cbBank.getSelectedItem();
             String accountNumber = tfAccountNumber.getText();
-            
+            String password = new String(tfPassword2Digits.getPassword());
+            System.out.println(selectedBank);
+            System.out.println(accountNumber);
+            if(AccountRegistrator.register(Session.getCustomer(), Integer.valueOf(selectedData[2]), accountNumber, selectedBank)) {
+                pmp.showCard("AutoPayment3");
+            } else {
+            	JOptionPane.showMessageDialog(panel,
+                    "계좌번호가 유효하지않습니다. 다시입력해주세요",
+                    "등록 실패",
+                    JOptionPane.WARNING_MESSAGE);
+            }
         });
-        
-        
+
+        // 입력 필드 상태 감시 리스너 등록
+        DocumentListener inputListener = new DocumentListener() {
+            private void checkInputFields() {
+                String accountNumber = tfAccountNumber.getText().trim();
+                String password = new String(tfPassword2Digits.getPassword()).trim();
+                boolean allFilled = !accountNumber.isEmpty() && password.length() == 2;
+                regiBtn.setEnabled(allFilled);
+            }
+
+            public void insertUpdate(DocumentEvent e) { checkInputFields(); }
+            public void removeUpdate(DocumentEvent e) { checkInputFields(); }
+            public void changedUpdate(DocumentEvent e) { checkInputFields(); }
+        };
+
+        tfAccountNumber.getDocument().addDocumentListener(inputListener);
+        tfPassword2Digits.getDocument().addDocumentListener(inputListener);
+
+        // 컴포넌트 추가 (예시, MigLayout 기준)
         panel.add(new JLabel("은행"));
-        panel.add(cbBank, "growx");
+        panel.add(cbBank, "wrap");
         panel.add(new JLabel("계좌번호"));
-        panel.add(tfAccountNumber, "growx");
+        panel.add(tfAccountNumber, "wrap");
         panel.add(new JLabel("비밀번호 앞 2자리"));
-        panel.add(tfPassword2Digits, "growx");
-        panel.add(regiBtn);
-        
+        panel.add(tfPassword2Digits, "wrap");
+        panel.add(regiBtn, "span, center");
+
         return panel;
+        
+        
     }
     
     private JLabel createValueLabel() {
@@ -196,7 +229,7 @@ public class AutoPaymentPanel2 extends JPanel {
 
     
     
-    public void setSelectedData(String[] selected) {
-		this.selected = selected;
+    public void setSelectedData(String[] selectedData) {
+		this.selectedData = selectedData;
 	}
 }

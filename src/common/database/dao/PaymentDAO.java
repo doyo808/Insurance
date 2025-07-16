@@ -11,10 +11,10 @@ import common.database.model.PaymentModel;
 
 public class PaymentDAO {
 
-    public static PaymentModel getById(int id, Connection conn) throws SQLException {
+    public static PaymentModel getById(int payment_id, Connection conn) throws SQLException {
         String sql = "SELECT * FROM PAYMENTS WHERE payment_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, payment_id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 return rs.next() ? new PaymentModel(rs) : null;
             }
@@ -31,6 +31,22 @@ public class PaymentDAO {
             }
         }
         return list;
+    }
+    
+    public static ArrayList<PaymentModel> getAllByContId(Integer contract_id, Connection conn) throws SQLException {
+		String sql = "SELECT * FROM payments WHERE contract_id = ?";
+		ArrayList<PaymentModel> list = new ArrayList<PaymentModel>();
+		
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);){
+        	pstmt.setInt(1, contract_id);
+        	try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new PaymentModel(rs));
+                }
+        	}   
+       }
+       return list;
+    	
     }
 
     public static int insert(PaymentModel payment, Connection conn) throws SQLException {

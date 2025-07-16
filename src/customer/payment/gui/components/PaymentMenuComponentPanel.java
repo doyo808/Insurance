@@ -1,4 +1,4 @@
-package customer.payment.gui;
+package customer.payment.gui.components;
 
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -19,19 +19,19 @@ public class PaymentMenuComponentPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public PaymentMenuComponentPanel() {
-		setBackground(new Color(255, 255, 255));
-		setSize(350, 80);
-		setLayout(null);
-		button.setBackground(new Color(0, 0, 0));
-		button.setBounds(0, 45, 350, 35);
-		add(button);
-		
-		
+	
 		label.setBackground(new Color(255, 255, 255));
 		label.setBounds(0, 0, 350, 35);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		add(label);
+		
+		setBackground(new Color(255, 255, 255));
+		setSize(350, 80);
+		setLayout(null);
+		button.setBackground(new Color(0, 0, 0));
+		button.setBounds(0, 45, 350, 45);
+		add(button);
 
 	}
 	

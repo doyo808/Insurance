@@ -7,6 +7,9 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import customer.payment.gui.components.CardSwitcher;
+import customer.payment.gui.components.DefaultPanel;
+import customer.payment.gui.components.PaymentMenuComponentPanel;
 import net.miginfocom.swing.MigLayout;
 
 public class PaymentMenuPanel extends DefaultPanel{
@@ -27,14 +30,14 @@ public class PaymentMenuPanel extends DefaultPanel{
             e.printStackTrace();
         }
 		setBackground(new Color(255, 255, 255));
-		setLayout(new MigLayout("", "[30.00][350px]", "[30][80px][30][80px][30][80px]"));
+		setLayout(new MigLayout("", "[30.00][350px]", "[30][100px][30][100px][30][100px]"));
 		
 		PaymentMenuComponentPanel menu1 = new PaymentMenuComponentPanel();
 		add(menu1, "cell 1 1,grow");
 		menu1.setButtonText("조회");
         menu1.setLabelText("보험료 납부 내역 조회");
         menu1.addButtonListener(e -> {
-        	switcher.showCard("AutoPayment1");
+        	switcher.showCard("Inquire1");
         });
         
         
