@@ -30,7 +30,7 @@ public class PaymentMenuPanel extends DefaultPanel{
             e.printStackTrace();
         }
 		setBackground(new Color(255, 255, 255));
-		setLayout(new MigLayout("", "[30.00][350px]", "[30][80px][30][80px][30][80px]"));
+		setLayout(new MigLayout("", "[30.00][350px]", "[30][100px][30][100px][30][100px]"));
 		
 		PaymentMenuComponentPanel menu1 = new PaymentMenuComponentPanel();
 		add(menu1, "cell 1 1,grow");

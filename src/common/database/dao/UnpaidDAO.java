@@ -30,7 +30,6 @@ public class UnpaidDAO {
         return result;
     }
     // 고객의 미납내역 한개를 조회
-
     public static UnpaidModel getUnpaidByCustomer(int customer_id, int unpaid_id, Connection conn) throws SQLException {
         String query = "SELECT * FROM unpaids WHERE customer_id = ? AND unpaid_id = ?";
 
@@ -42,6 +41,19 @@ public class UnpaidDAO {
             }
         }
     }
+    
+    // 미납id로 조회
+    public static UnpaidModel getUnpaidByUnpaidId(int unpaid_id, Connection conn) throws SQLException {
+        String query = "SELECT * FROM unpaids WHERE npaid_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, unpaid_id);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? new UnpaidModel(rs) : null; 
+            }
+        }
+    }
+    
     
     // 모든 미납 내역 조회
     public static List<UnpaidModel> getAllUnpaids(Connection conn) throws SQLException {

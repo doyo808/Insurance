@@ -260,7 +260,7 @@ public class AccountVerifier {
         System.out.println("===== Bank Account Validation Test (Revised) =====");
         for (String acc : accountNumbers) {
             String bank = validator.detectBank(acc);
-            System.out.printf("Account: %-25s -> Bank: %s%n", acc, bank);
+            System.out.printf("%s%n", bank);
         }
     }
 }
