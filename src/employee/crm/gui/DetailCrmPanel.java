@@ -1,11 +1,269 @@
 package employee.crm.gui;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+
+import common.account.login.Session;
+import common.database.model.CustomerModel;
+import common.method.InsuranceTeamConnector;
+
 
 public class DetailCrmPanel extends JPanel {
 	
-	public DetailCrmPanel() {
-		// TODO Auto-generated constructor stub
-	}
+	private JLabel lbName, lbAddress, lbBirth, lbPhone, lbEmail, lbJob, lbCompany, lbWorkAddress, lbCompanyPhone;
+	private JTextField tfName, tfAddress, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfWorkAddress, tfCompanyPhone;
+	private JTable contractTable, paymentTable;
+	private JButton btnBack, btnEdit;
+	private CustomerModel cm;
 
+	
+	public DetailCrmPanel() {
+		setPreferredSize(new Dimension(1440, 700));
+		setBounds(0, 162, 1440, 700);
+		
+		setLayout(null);
+		
+		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+        separator.setBounds(0, 0, 1440, 700); // x, y, width, height
+        separator.setForeground(Color.RED); // 구분선 색상
+        add(separator);	
+        
+		        
+        int labelW = 80, fieldW = 200, height = 25;        
+        int x1 = 30, x2 = 530, x3 = 1010;        
+        int y = 30, spacingY = 15;
+
+        // 1행: 이름, 주소
+        tfName = addLabeledField(lbName = new JLabel("이름"), x1, y, labelW, fieldW);
+        tfAddress = addLabeledField(lbAddress = new JLabel("주소"), x2, y, labelW, fieldW + 480);
+
+        // 2행: 생년월일, 휴대폰, 이메일
+        y += height + spacingY;
+        tfBirth = addLabeledField(lbBirth = new JLabel("생년월일"), x1, y, labelW, fieldW);
+        tfPhone = addLabeledField(lbPhone = new JLabel("휴대폰"), x2, y, labelW, fieldW);
+        tfEmail = addLabeledField(lbEmail = new JLabel("이메일"), x3, y, labelW, fieldW);
+
+        // 3행: 직업, 회사명, 직장연락처
+        y += height + spacingY;
+        tfJob = addLabeledField(lbJob = new JLabel("직업"), x1, y, labelW, fieldW);
+        tfCompany = addLabeledField(lbCompany = new JLabel("회사명"), x2, y, labelW, fieldW);
+        tfCompanyPhone = addLabeledField(lbCompanyPhone = new JLabel("회사연락처"), x3, y, labelW, fieldW);
+
+        // 4행: 회사주소 (중앙 정렬)
+        y += height + spacingY;       
+        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 960);       
+
+        // 5행: 수정 버튼
+        y += height + spacingY;
+        btnBack = new JButton("LIST");
+        btnBack.setBounds(1200, y, 80, 30);
+        add(btnBack);
+        
+        btnEdit = new JButton("수정");
+        btnEdit.setBounds(1300, y, 80, 30);       
+        add(btnEdit);
+        
+        
+        btnBack.addActionListener(e -> goBackToSearch());
+                
+        btnEdit.addActionListener(e -> {
+            //MyInfoModiDialog dialog = new MyInfoModiDialog(this, cm);
+            //dialog.setVisible(true);
+        });        
+        
+        
+
+        // ==== 테이블 UI 구성 ====
+        JLabel contractLabel = new JLabel("보험 계약 정보");
+        contractLabel.setBounds(50, 250, 300, 25);
+        contractLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        add(contractLabel);
+
+        contractTable = new JTable();
+        JScrollPane contractScroll = new JScrollPane(contractTable);
+        contractScroll.setBounds(50, 280, 1340, 150);
+        add(contractScroll);
+
+        JLabel paymentLabel = new JLabel("납입 내역");
+        paymentLabel.setBounds(50, 440, 300, 25);
+        paymentLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        add(paymentLabel);
+
+        paymentTable = new JTable();
+        JScrollPane paymentScroll = new JScrollPane(paymentTable);
+        paymentScroll.setBounds(50, 470, 1340, 180);
+        add(paymentScroll);
+
+        // ==== 데이터 로드 ====
+        this.cm = Session.getCustomer();
+        loadPersonalInfo();        
+        loadContractInfo();
+        loadPaymentHistory();
+    }
+	
+	private JTextField addLabeledField(JLabel label, int x, int y, int labelWidth, int fieldWidth) {
+        label.setBounds(x, y, labelWidth, 25);
+        add(label);
+
+        JTextField field = new JTextField();
+        field.setBounds(x + labelWidth + 10, y, fieldWidth, 25);
+        field.setEditable(false);
+        add(field);
+        return field;
+    }
+	
+	
+	private void loadPersonalInfo() {
+				
+		if (cm != null) {
+		    tfName.setText(cm.getCustomer_name());
+		    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
+		    tfBirth.setText(cm.getPersonal_id());
+		    tfPhone.setText(cm.getPhone_number());
+		    tfEmail.setText(cm.getEmail());
+		    tfJob.setText(cm.getJob());
+		    tfCompany.setText(cm.getCompany_name());
+		    tfCompanyPhone.setText(cm.getJob_phone_number());
+		    tfWorkAddress.setText(cm.getJob_address1() + cm.getJob_address2());
+		}
+    }
+
+    private void loadContractInfo() {    	
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
+    		@Override
+    		public boolean isCellEditable(int row, int column) {
+    			return false;
+    			//특정 컬럼을 수정하고 싶을 때
+    			//return column == 0;
+    		}
+    	};    	
+
+        if (cm == null) {
+            //System.out.println("로그인된 고객 정보가 없습니다.");
+            return;
+        }
+
+        int customerId = cm.getCustomer_id(); // 고객 ID 가져오기   	
+    	
+    	try (Connection conn = InsuranceTeamConnector.getConnection()){			
+			
+			String sql = "SELECT contract_id, product_name, premium, signup_date, effective_date, payment_end_date, coverage_end_date, status "
+					+ "FROM contracts c, products p "
+					+ "WHERE c.product_id = p.product_id AND customer_id = ?";			
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, 1);		
+			
+			
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				model.addRow(new Object[]{
+						rs.getInt("contract_id"),
+						rs.getString("product_name"),
+						rs.getInt("premium"),
+						rs.getString("signup_date"),
+						rs.getString("effective_date"),
+						rs.getString("payment_end_date"),
+						rs.getString("coverage_end_date"),
+						rs.getString("status")				
+				});
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        contractTable.setModel(model);
+    }
+
+    private void loadPaymentHistory() {    	
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "납입월", "상품명", "납부금액", "납입상태"}, 0) {
+    		@Override
+    		public boolean isCellEditable(int row, int column) {
+    			return false;
+    		}
+    	};    	
+
+        if (cm == null) {
+            //System.out.println("로그인된 고객 정보가 없습니다.");
+            return;
+        }
+
+        int customerId = cm.getCustomer_id(); // 고객 ID 가져오기
+    	
+    	try(Connection conn = InsuranceTeamConnector.getConnection();) {
+    		
+    		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
+    				+ "FROM payments p, contracts c "
+    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
+    		PreparedStatement pstmt = conn.prepareStatement(sql);
+    		pstmt.setInt(1, 1);
+    		
+    		ResultSet rs = pstmt.executeQuery();
+    		while(rs.next()) {
+    			model.addRow(new Object[] {
+    					rs.getInt("contract_id"),
+    					rs.getString("payment_date"),
+    					rs.getString("product_name"),
+    					rs.getInt("paid_amount"),
+    					rs.getString("pay_status")   					
+    			});
+    		}   				
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}        paymentTable.setModel(model);
+    }
+    
+    public void refreshCustomerData() {
+    	//System.out.println(">>> refreshCustomerData 호출됨");
+    	this.cm = Session.getCustomer();
+    	loadPersonalInfo();        
+        loadContractInfo();
+        loadPaymentHistory();
+    }
+    
+    private void goBackToSearch() {
+        // 1. 현재 패널이 포함된 JFrame 참조 얻기
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // 2. contentPanel을 찾아서 기존 DetailCrmPanel 제거 후 새로운 SearchCrmPanel 추가
+        for (Component comp : frame.getContentPane().getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel parentPanel = (JPanel) comp;
+                if (BorderLayout.CENTER.equals(((BorderLayout) frame.getContentPane().getLayout()).getConstraints(comp))) {
+
+                    // 패널 내부 초기화 및 교체
+                    parentPanel.removeAll();
+                    parentPanel.setLayout(new BorderLayout());
+                    parentPanel.add(new SearchCrmPanel(), BorderLayout.CENTER);
+                    parentPanel.revalidate();
+                    parentPanel.repaint();
+                    break;
+                }
+            }
+        }
+    }
+
+    
+	
+	
 }

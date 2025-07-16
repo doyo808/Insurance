@@ -1,8 +1,11 @@
 package employee.crm.gui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -103,6 +106,33 @@ public class SearchCrmPanel extends JPanel {
         JScrollPane scroll = new JScrollPane(resultTable);
         scroll.setBounds(30, 150, 1380, 500);
         add(scroll);
+        
+        
+        // ====== 이벤트 ======
+        resultTable.addMouseListener(new MouseAdapter() {
+        	
+        	@Override
+        	public void mouseClicked(MouseEvent e) {
+        		if(e.getClickCount() == 1 && resultTable.getSelectedRow() != -1) {
+        			int row = resultTable.getSelectedRow();
+        			Object[] rowData = new Object[resultTable.getColumnCount()];
+        			for(int i = 0; i < rowData.length; i++) {
+        				rowData[i] = resultTable.getValueAt(row, i);
+        			}
+        			
+        			DetailCrmPanel detailPanel = new DetailCrmPanel();
+        			//detailPanel.setcu
+        			
+        			//패널 전환 처리
+        			Container parent = SearchCrmPanel.this.getParent();
+        			parent.removeAll();
+        			parent.add(detailPanel);
+        			parent.revalidate();
+        			parent.repaint();
+        		}
+        		
+        	}
+		});
 
         // ====== 이벤트 ======
         btnSearch.addActionListener(e -> {
@@ -110,6 +140,8 @@ public class SearchCrmPanel extends JPanel {
         	searchCustomers();
         	setCursor(Cursor.getDefaultCursor());
         });
+        
+        
     }
 	
 	private void searchCustomers() {
