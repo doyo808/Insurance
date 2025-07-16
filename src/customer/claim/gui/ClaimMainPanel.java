@@ -3,6 +3,7 @@ package customer.claim.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
@@ -14,6 +15,8 @@ import insuranceMain.customerPanel.CustomerMainPanel;
 // 청구업무 메인부모패널 (카드레이아웃 패널의 부모패널)
 public class ClaimMainPanel extends JPanel {
 
+	public JFrame fr = new JFrame();
+	
 	public JPanel 카드패널;
 	
    public ClaimMainPanel(CustomerMainPanel cmp) {
@@ -72,6 +75,7 @@ public class ClaimMainPanel extends JPanel {
 		
       setVisible(true);
       
+      fr.add(this);
       
 
    }
