@@ -1,6 +1,8 @@
 package customer.product.gui;
 
 import java.awt.EventQueue;
+import insuranceMain.customerPanel.CustomerMainPanel;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -83,14 +85,14 @@ public class ProductTestFrame extends JFrame {
 		
 		*/
 		
-//		contentPane.add(new HeaderBar(contentPane), BorderLayout.NORTH);
+		contentPane.add(new HeaderBar(contentPane, new CustomerMainPanel()), BorderLayout.NORTH);
 		
 //		ProductIntroducePanel pip = new ProductIntroducePanel(contentPane);
 //		contentPane.add(pip);
 
 //		contentPane.add(new ProductIntroDetailPanel(), BorderLayout.CENTER);
 		
-//		contentPane.add(new ProductMainPanel(), BorderLayout.CENTER);
+		contentPane.add(new ProductMainPanel(new CustomerMainPanel()), BorderLayout.CENTER);
 		
 //		contentPane.setVisible(true);
 	}
