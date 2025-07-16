@@ -25,7 +25,7 @@ public class PaymentMainFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 1440, 1024);
 		
-		add(new PaymentMainPanel());
+//		add(new PaymentMainPanel());
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		

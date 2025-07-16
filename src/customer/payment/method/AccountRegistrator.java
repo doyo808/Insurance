@@ -68,7 +68,7 @@ public class AccountRegistrator {
 	public static void main(String[] args) throws SQLException {
 		try (Connection conn = InsuranceTeamConnector.getConnection();) 
 		{
-			register(CustomerDAO.getCustomerByLoginId("hong123", conn), 1, "1002145651171232138", "우리은asdf행");
+			register(CustomerDAO.getCustomerByLoginId("hong123", conn), 1, "1002145651178", "우리은행");
 		}
 		
 	}

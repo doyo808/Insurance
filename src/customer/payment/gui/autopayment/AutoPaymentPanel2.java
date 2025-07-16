@@ -1,4 +1,4 @@
-package customer.payment.gui;
+package customer.payment.gui.autopayment;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,6 +23,7 @@ import common.database.dao.AutoPaymentDAO;
 import common.database.model.AutoPaymentModel;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.payment.gui.components.PaymentDefaultButton;
 import net.miginfocom.swing.MigLayout; // MigLayout import
 
 public class AutoPaymentPanel2 extends JPanel {
