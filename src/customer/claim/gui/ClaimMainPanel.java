@@ -18,7 +18,7 @@ public class ClaimMainPanel extends JPanel {
 	
 	
 	// 임시로 만들어서 진행할 때에는 변수 없애기 (CustomerMainPanel cmp)
-   public ClaimMainPanel() {
+   public ClaimMainPanel(CustomerMainPanel cmp) {
 
 	   NewClaimDataModel claimdata = new NewClaimDataModel();
 	   
