@@ -1,6 +1,7 @@
 package employee.crm.gui;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,10 +36,10 @@ public class SearchCrmPanel extends JPanel {
 		
 		setLayout(null);
 		
-		JSeparator seperator = new JSeparator(SwingConstants.HORIZONTAL);
-		seperator.setBounds(0, 0, 1440, 700);
-		seperator.setForeground(Color.RED);
-		add(seperator);
+		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+		separator.setBounds(0, 0, 1440, 700);
+		separator.setForeground(Color.RED);
+		add(separator);
 		
 		int labelW = 80, fieldW = 200, height = 25;
         int x1 = 30, x2 = 380, x3 = 750, x4 = 1120;
@@ -91,7 +92,9 @@ public class SearchCrmPanel extends JPanel {
             "고객ID", "이름", "생년월일", "아이디", "휴대폰", "이메일", "주소", "계약번호"
         };
         tableModel = new DefaultTableModel(columns, 0) {
-        	public boolean isCellEditable(int row, int coloumn) {
+        	
+        	@Override
+        	public boolean isCellEditable(int row, int column) {
         		return false;
         	}
         };
@@ -102,7 +105,11 @@ public class SearchCrmPanel extends JPanel {
         add(scroll);
 
         // ====== 이벤트 ======
-        btnSearch.addActionListener(e -> searchCustomers());
+        btnSearch.addActionListener(e -> {
+        	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        	searchCustomers();
+        	setCursor(Cursor.getDefaultCursor());
+        });
     }
 	
 	private void searchCustomers() {
@@ -144,6 +151,8 @@ public class SearchCrmPanel extends JPanel {
             sql.append(" AND ct.contract_id = ?");
             params.add(contractId);
         }
+        
+        sql.append(" ORDER BY c.customer_id");
 
         try (Connection conn = InsuranceTeamConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
