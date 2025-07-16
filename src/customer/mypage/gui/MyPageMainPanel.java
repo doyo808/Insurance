@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import common.account.login.Session;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.mypage.method.MyPageUtil;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 
@@ -146,8 +147,8 @@ public class MyPageMainPanel extends JPanel {
 				
 		if (cm != null) {
 		    tfName.setText(cm.getCustomer_name());
-		    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());
-		    tfBirth.setText(cm.getPersonal_id());
+		    tfAddress.setText(cm.getAddress_1() + cm.getAddress_2());		    
+		    tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()));
 		    tfPhone.setText(cm.getPhone_number());
 		    tfEmail.setText(cm.getEmail());
 		    tfJob.setText(cm.getJob());
