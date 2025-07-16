@@ -35,10 +35,12 @@ public class ProductIntroDetailPanel extends JPanel {
 
 	private int sharedProductId = 0;
 	private static final long serialVersionUID = 1L;
+	private MouseClickListener listener;
 	
 	JPanel headerButtons;
 	JButton btn1;
 	JButton btn2;
+	JButton btn3;
 	
 	CardLayout cl;
 	JPanel displayDetails;
@@ -76,6 +78,12 @@ public class ProductIntroDetailPanel extends JPanel {
 		btn2.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		headerButtons.add(btn2);
 		
+		btn3 = new JButton("상품목록으로");
+		btn3.setBackground(new Color(128, 128, 128));
+		btn3.setForeground(new Color(255, 255, 255));
+		btn3.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		headerButtons.add(btn3);
+		
 		btn1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -87,6 +95,13 @@ public class ProductIntroDetailPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				cl.show(displayDetails, "card2");
+			}
+		});
+		
+		btn3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				listener.onChildPanelClicked(e);
 			}
 		});
 	}
@@ -152,22 +167,22 @@ public class ProductIntroDetailPanel extends JPanel {
 		coverDetailTable.setShowVerticalLines(false);
 		coverDetailTable.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
 		
-		Object[][] models = null;
+		Object[][] columns = null;
 		
 		int tableSize = productDetail.size();
 		
 		if(tableSize != 0) {
-			models = new Object[tableSize][5];
+			columns = new Object[tableSize][5];
 			for (int i = 0; i < tableSize; i++) {
-				models[i][0] = productDetail.get(i).getProductCoverName();
-				models[i][1] = productDetail.get(i).getProductCoverDetail();
+				columns[i][0] = productDetail.get(i).getProductCoverName();
+				columns[i][1] = productDetail.get(i).getProductCoverDetail();
 			}
 		} else {
-			models = new Object[][] {};
+			columns = new Object[][] {};
 		}
 		
 		coverDetailTable.setModel(new DefaultTableModel(
-			models,
+			columns,
 			new String[] {
 				"담보명", "보장내용"
 			}
@@ -203,4 +218,14 @@ public class ProductIntroDetailPanel extends JPanel {
 	public void setSharedProductId(int productId) {
 		this.sharedProductId = productId;
 	}
+	
+	// 부모가 등록할 리스너
+    public void setMouseClickListener(MouseClickListener listener) {
+        this.listener = listener;
+    }
+
+    // 리스너 인터페이스 정의
+    public interface MouseClickListener {
+        void onChildPanelClicked(MouseEvent e);
+    }
 }
