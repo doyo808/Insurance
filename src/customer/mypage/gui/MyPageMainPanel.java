@@ -85,10 +85,7 @@ public class MyPageMainPanel extends JPanel {
         btnEdit.addActionListener(e -> {
             MyInfoModiDialog dialog = new MyInfoModiDialog(this, cm);
             dialog.setVisible(true);
-        });
-
-        
-        
+        });       
         
         
 

@@ -1,6 +1,8 @@
 package employee.crm.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -22,6 +25,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import common.method.InsuranceTeamConnector;
@@ -89,6 +93,9 @@ public class SearchCrmPanel extends JPanel {
         JButton btnSearch = new JButton("조회");
         btnSearch.setBounds(x4 + labelW + 10, y, 100, height);
         add(btnSearch);
+        
+        
+        
 
         // ====== 테이블 ======
         String[] columns = {
@@ -108,29 +115,35 @@ public class SearchCrmPanel extends JPanel {
         add(scroll);
         
         
+        
+        
         // ====== 이벤트 ======
         resultTable.addMouseListener(new MouseAdapter() {
         	
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		if(e.getClickCount() == 1 && resultTable.getSelectedRow() != -1) {
-        			int row = resultTable.getSelectedRow();
-        			Object[] rowData = new Object[resultTable.getColumnCount()];
-        			for(int i = 0; i < rowData.length; i++) {
-        				rowData[i] = resultTable.getValueAt(row, i);
-        			}
-        			
-        			DetailCrmPanel detailPanel = new DetailCrmPanel();
-        			//detailPanel.setcu
-        			
-        			//패널 전환 처리
-        			Container parent = SearchCrmPanel.this.getParent();
-        			parent.removeAll();
-        			parent.add(detailPanel);
-        			parent.revalidate();
-        			parent.repaint();
-        		}
         		
+        		int selectedRow = resultTable.getSelectedRow();
+        		
+        		if(selectedRow != -1) {
+        			int customerId = (int) resultTable.getValueAt(selectedRow, 0);
+        			
+        			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(SearchCrmPanel.this);
+        			for(Component comp : frame.getContentPane().getComponents()) {
+        				if(comp instanceof JPanel) {
+        					JPanel parentPanel = (JPanel) comp;
+        					if(BorderLayout.CENTER.equals(((BorderLayout) frame.getContentPane().getLayout()).getConstraints(comp))) {
+        						
+        						parentPanel.removeAll();
+        						parentPanel.setLayout(new BorderLayout());
+        						parentPanel.add(new DetailCrmPanel(customerId), BorderLayout.CENTER);
+        						parentPanel.revalidate();
+        						parentPanel.repaint();
+        						break;
+        					}
+        				}
+        			}
+        		}
         	}
 		});
 
@@ -158,7 +171,7 @@ public class SearchCrmPanel extends JPanel {
             "SELECT c.customer_id, c.customer_name, c.personal_id, c.login_id, c.phone_number, c.email, " +
             "CONCAT(c.address_1, c.address_2) AS full_address, ct.contract_id " +
             "FROM customers c " +
-            "LEFT JOIN contracts ct ON c.customer_id = ct.customer_id WHERE 1=1"
+            "LEFT JOIN contracts ct ON c.customer_id = ct.customer_id WHERE 1 = 1"
         );
 
         List<Object> params = new ArrayList<>();
