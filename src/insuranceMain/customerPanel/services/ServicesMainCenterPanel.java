@@ -5,7 +5,7 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 
 import customer.claim.gui.ClaimMainPanel;
-import customer.contract.gui.ContractMainPanel;
+import customer.contract.ContractMainPanel;
 import customer.mypage.gui.MyPageMainPanel;
 import customer.payment.gui.PaymentMainPanel;
 import customer.product.gui.ProductMainPanel;

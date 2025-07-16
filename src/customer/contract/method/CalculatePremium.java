@@ -1,4 +1,4 @@
-package common.method;
+package customer.contract.method;
 
 public class CalculatePremium {
 	public static double CalculatePremiumByAge(double input, int age) {
