@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import employee.product.ProductManageMainPanel;
+
 
 
 
@@ -78,7 +78,7 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
 
         switch (cmd) {
             case "보험상품관리":
-                setContentPanel(new ProductManageMainPanel());
+                //setContentPanel(new ProductManageMainPanel());
                 break;
             case "보험계약관리":
                 //setContentPanel(new ProductJoinPanel());
