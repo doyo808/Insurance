@@ -16,6 +16,8 @@ public class ClaimMainPanel extends JPanel {
 
 	public JPanel 카드패널;
 	
+	
+	// 임시로 만들어서 진행할 때에는 변수 없애기 (CustomerMainPanel cmp)
    public ClaimMainPanel(CustomerMainPanel cmp) {
 
 	   NewClaimDataModel claimdata = new NewClaimDataModel();
@@ -43,6 +45,8 @@ public class ClaimMainPanel extends JPanel {
       RequiredDocumentsInfo 필수서류_서류등록패널 = new RequiredDocumentsInfo(카드패널, "DocumentRegistrationPanel");
       ClaimMethodInfo 보험금청구방법패널 = new ClaimMethodInfo(카드패널);
       
+      ClaimHistoryPanel 청구내역조회패널 = new ClaimHistoryPanel(카드패널, claimdata); // 아마 여기는 데이터 값으로 다른 클래스가 들어가야하지 않을까........!!
+      
 //      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
       // 카드패널에 각 패널 등록(카드 이름 지정 필수)
       카드패널.add(청구첫번째패널, "ClaimFirstPanel");
@@ -59,12 +63,14 @@ public class ClaimMainPanel extends JPanel {
       카드패널.add(필수서류_서류등록패널, "RequiredDocumentsInfoFromDocReg");
       카드패널.add(보험금청구방법패널, "ClaimMethodInfo");
       
+      카드패널.add(청구내역조회패널, "ClaimHistoryPanel");
+      
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-//		cl.show(카드패널, "ClaimFirstPanel");
+		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
 //		cl.show(카드패널, "AccidentDatePanel");
-		cl.show(카드패널, "ClaimSituationPanel");
+//		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");
 //		cl.show(카드패널, "DocumentRegistrationPanel");

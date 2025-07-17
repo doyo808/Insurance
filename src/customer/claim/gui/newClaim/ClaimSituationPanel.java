@@ -296,7 +296,6 @@ public class ClaimSituationPanel extends JPanel {
 	    		   
 	    	   }
 	    	   
-	    	   
 	       });
 	       
 //	       ----- 하단 버튼 패널 -------------------------------------

@@ -10,6 +10,7 @@ public class EventController {
 	private final ProductInfoModel model;
 	private final ProductManageMainPanel view;
 	
+	// TODO 이곳에서 상품 페이지의 이벤트들을 추가한다
 	public EventController(ProductInfoModel model, ProductManageMainPanel view) {
 		this.model = model;
 		this.view = view;
@@ -54,7 +55,32 @@ public class EventController {
 		
 		//################################################################
 		//RegistPanel의 이벤트들
+		view.card3.bottom.prev.addActionListener(e -> {
+			view.showCard("show");
+		});
 		
+		view.card3.center.termsBrowseButton.addActionListener(e -> {
+			// 파일 탐색기를 연다
+			
+			// 파일 탐색기에서 선택된 파일정보를 File view.card3.termsAndConditions에 담아둔다
+		});
+		
+		view.card3.center.manualBrowseButton.addActionListener(e -> {
+			// 파일 탐색기를 연다
+			
+			// 파일 탐색기에서 선택된 파일정보를 File view.card3.manual에 담아둔다
+		});
+		
+		view.card3.center.imageUploadButton.addActionListener(e -> {
+			// 파일 탐색기를 연다
+			
+			// 파일 탐색기에서 선택된 이미지 파일을 File view.card3.image에 담아둔다
+		});
+		
+		view.card3.bottom.regist.addActionListener(e -> {
+			// card3.center패널에 있는 정보들을 DB에 보낸다
+			// 단 하나라도 빠진 정보가 있는지 체크 후에 넘어간다
+		});
 		// end
 		//################################################################
 		
@@ -62,7 +88,9 @@ public class EventController {
 		
 		//################################################################
 		//EditPanel의 이벤트들
-		
+		view.card2.bottom.prev.addActionListener(e -> {
+			view.showCard("show");
+		});
 		// end
 		//################################################################
 		

@@ -9,10 +9,13 @@ import employee.product.view.center.EditPanelCenter;
 
 public class EditPanel extends JPanel{
 	
-	public EditPanelCenter center;
-	public EditPanelBottom bottom;
+	public EditPanelCenter center = new EditPanelCenter();
+	public EditPanelBottom bottom = new EditPanelBottom();
 	
 	public EditPanel() {
 		setLayout(new BorderLayout());
+		
+		add(center, BorderLayout.CENTER);
+		add(bottom, BorderLayout.SOUTH);
 	}
 }
