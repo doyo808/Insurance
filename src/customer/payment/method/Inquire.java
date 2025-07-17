@@ -25,7 +25,6 @@ public class Inquire {
 	 * @param start 조회 시작일
 	 * @param end 조회 종료일
 	 */
-	
 	public static void inquire(CustomerModel cm, Integer contract_id, Date start, Date end) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 		String product_name = "";

@@ -16,10 +16,12 @@ import javax.swing.SwingUtilities;
 
 
 
+
+
 public class TempEmployeeMain extends JFrame implements ActionListener {
 	
 	private JPanel contentPanel;
-
+ 
     public TempEmployeeMain() {
         setTitle("KB손해보험 다이렉트 센터");
         setBounds(0, 0, 1440, 1024);
@@ -76,7 +78,7 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
 
         switch (cmd) {
             case "보험상품관리":
-                //setContentPanel(new ProductViewPanel());
+                //setContentPanel(new ProductManageMainPanel());
                 break;
             case "보험계약관리":
                 //setContentPanel(new ProductJoinPanel());

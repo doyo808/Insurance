@@ -41,9 +41,17 @@ public class ProductMainPanel extends JPanel {
             	detail.setHeaderButton();
             	detail.setCardlayout();
         		cl.show(ProductMainPanel.this, "detail");
+        		
             }
         });
 		
+		detail.setMouseClickListener(new ProductIntroDetailPanel.MouseClickListener() {
+			
+			@Override
+			public void onChildPanelClicked(MouseEvent e) {
+				cl.show(ProductMainPanel.this, "intro");
+			}
+		});
 		
 	}
 }

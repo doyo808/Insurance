@@ -36,4 +36,8 @@ public class CustomerMainPanel extends JPanel {
 	public AccountsMainPanel getAMP() {
 		return accountsPanel;
 	}
+	
+	public ServicesMainPanel getSMP() {
+		return servicesPanel;
+	}
 }

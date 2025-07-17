@@ -1,23 +1,22 @@
 package common.database.dao;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.database.model.ClaimsModel;
-import common.database.model.CustomerModel;
+import common.database.model.NewClaimDataModel;
 
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
-//		// 이어서 만들예정
-//		// 고객이 입력한 정보를 토대로 다른 테이블과 연결해 claims 테이블에 값이 들어가야함 (이클립스->DB)	
+		// 이어서 만들예정
+		// 고객이 입력한 정보를 토대로 다른 테이블과 연결해 claims 테이블에 값이 들어가야함 (이클립스->DB)	
 
 		// 고객이 청구대상을 '다른사람'으로 선택하면 그 대상이 가입한 보험계약 정보를 가지고 와야함
 		// 청구테이블(계약ID) JOIN 계약테이블(고객ID) JOIN 고객테이블(이름, 주민번호, 전화번호)
-		// 피보험자테이블로 다시 수정하기 
 		
 		/*
 			[보험금 청구 내역 조회 페이지]
@@ -28,9 +27,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 				여기에 피보험자인지 수익자인지 조건 함께 설정...하자...
 				- 조회기간(청구일자) 설정
 				: SELECT claim_date FROM CLAIMS WHERE (여기에 입력값1 ~ 입력값2 사이값을 나타내는 조건 알아보기)
-				
-				- 청구 결과 목록 (List 반환)
-				: 접수번호/청구일자/진단명('감기')/피보험자이름 + 재해자(=피보험자),물보상구분/상품명 +증권번호(없으면 pass)/ 보상담당직원 이름 + 보상담당직원 연락처/ 처리상태('접수')
+			
 				
 				: SELECT 
 				
@@ -54,61 +51,65 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		// 고객이 하나 이상의 계약이 꼭 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
 		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
-		public static ClaimsModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
-			String query = "SELECT customer_name, personal_id, phone_number FROM CUSTOMERS WHERE login_id = ?";
+		public static NewClaimDataModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
+			NewClaimDataModel customerInfo = new NewClaimDataModel();
+			String query = "SELECT cu.customer_name, cu.personal_id, cu.phone_number "
+					+ "FROM customers cu "
+					+ "WHERE cu.login_id = ? ";
 			
-//			String query = "SELECT cs.customer_name, cs.personal_id, cs.phone_number, pr.product_name "
-//					+ "FROM normal_logs "
-//					+ "INNER JOIN customers cs USING(customer_id)"
-//					+ "INNER JOIN contracts ct USING(customer_id) "
-//					+ "INNER JOIN products pr USING(product_id) "
-//					+ "WHERE login_id = ?";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-				pstmt.setString(1, login_id);
-				
-				try (ResultSet rs = pstmt.executeQuery()) { 
-					return rs.next() ? new ClaimsModel(rs) : null;
-				}
-			}
+		        pstmt.setString(1, login_id);
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            while (rs.next()) {
+		            	customerInfo.setName(rs.getString("customer_name"));
+		            	customerInfo.setPersonalId(rs.getString("personal_id"));
+		            	customerInfo.setPhoneNumber(rs.getString("phone_number"));
+		            }
+		        }
+		    }
+		    return customerInfo;
 		}
-	
 	
 		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
-		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회
-		public static List<ClaimsModel> getClaims(String login_id, Connection conn) throws SQLException {
-			List<ClaimsModel> claimList = new ArrayList<>();
-			String query = "SELECT * FROM CLAIMS "
-					+ "INNER JOIN CONTRACTS USING(contract_id) "
-					+ "INNER JOIN CUSTOMERS USING(customer_id) "
-					+ "WHERE login_id = ? ORDER BY claim_date DESC";
-			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-				pstmt.setString(1, login_id);
-				
-				try (ResultSet rs = pstmt.executeQuery()) {
-					while (rs.next()) {
-						claimList.add(new ClaimsModel(rs));
-					}
-				}
-			}
-			return claimList;
+		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회 (하고 싶지만 다 하고 시간되면)
+		public static List<ClaimsModel> getClaims(String login_id, Date startDate, Date endDateStr, Connection conn) throws SQLException {
+		    List<ClaimsModel> claimList = new ArrayList<>();
+		    String query = "SELECT c.claim_id, c.claim_date, d.diagnosis_name, i.insured_name, p.product_name, e.employee_name, c.claim_status "
+		            + "FROM claims c "
+		            + "INNER JOIN diagnosis_codes d ON c.diagnosis_cd = d.diagnosis_cd "
+		            + "INNER JOIN contracts ct ON c.contract_id = ct.contract_id "
+		            + "INNER JOIN insureds i ON ct.insured_id = i.insured_id "
+		            + "INNER JOIN products p ON ct.product_id = p.product_id "
+		            + "INNER JOIN employees e ON c.employee_id = e.employee_id "
+		            + "INNER JOIN customers cu ON ct.customer_id = cu.customer_id "
+		            + "WHERE cu.login_id = ? "
+		            + "AND c.claim_date BETWEEN ? AND ? ";
+
+		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setString(1, login_id);
+		        pstmt.setDate(2, new java.sql.Date(startDate.getTime()));
+		        pstmt.setDate(3, new java.sql.Date(endDateStr.getTime()));
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            while (rs.next()) {
+		                ClaimsModel claim = new ClaimsModel(
+		                    rs.getInt("claim_id"),
+		                    rs.getDate("claim_date"),
+		                    rs.getString("diagnosis_name"),
+		                    rs.getString("insured_name"),
+		                    rs.getString("product_name"),
+		                    rs.getString("employee_name"),
+		                    rs.getString("claim_status")
+		                );
+		                claimList.add(claim);
+		            }
+		        }
+		    }
+		    return claimList;
 		}
+
 		
-//		// 모든 고객 조회
-//		public static List<CustomerModel> getAllCustomers(Connection conn) throws SQLException {
-//			String query = "SELECT * FROM CUSTOMERS";
-//			
-//			try (Statement stmt = conn.prepareStatement(query);
-//				 ResultSet rs = stmt.executeQuery(query)){
-//
-//				List<CustomerModel> CustomerModels = new ArrayList<>();
-//				
-//				while (rs.next()) {
-//					CustomerModels.add(new CustomerModel(rs));
-//				}
-//				return CustomerModels;
-//			}		
-//		}
-//		
 //		// 수신동의여부로 검색하기
 //		public static List<CustomerModel> findCustomerByAgree_yn(String yn, Connection conn) throws SQLException {
 //			String query = "SELECT * FROM CUSTOMERS WHERE agree_yn = ?";

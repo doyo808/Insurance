@@ -25,13 +25,13 @@ public class AccountRegistrator {
 	 * @param bank_account
 	 * @param bank_name
 	 */
-	public static void register(CustomerModel cm, Integer contract_id, String bank_account, String bank_name) {
+	public static boolean register(CustomerModel cm, Integer contract_id, String bank_account, String bank_name) {
 		try (Connection conn = InsuranceTeamConnector.getConnection();) 
 		{
 			// 입력된 은행이름과 계좌번호를 통해 받은 은행이름이 동일한지 확인
 			if (!bank_name.equals(AccountVerifier.detectBank(bank_account))) {
 				System.out.println("유효하지 않은 계좌번호입니다");
-				return;
+				return false;
 			}
 			AutoPaymentModel apm = null;
 		if (AutoPaymentDAO.getAutoPaymentsByContId(contract_id, conn) == null) {
@@ -43,6 +43,7 @@ public class AccountRegistrator {
 				Timestamp.valueOf(LocalDateTime.now()),
 				contract_id);
 			AutoPaymentDAO.insertAutoPayment(apm, conn);
+			return true;
 		} else {
 			// 자동이체 계좌가 있는 경우 (수정되는거임)
 			apm = new AutoPaymentModel(
@@ -52,23 +53,19 @@ public class AccountRegistrator {
 					Timestamp.valueOf(LocalDateTime.now()),
 					contract_id);
 			AutoPaymentDAO.updateAutoPayment(apm, conn);
+			return true;
 		}
-			
-		
-		
-		// 최종적으로 결제 계좌 추가
-		
-			
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public static void main(String[] args) throws SQLException {
 		try (Connection conn = InsuranceTeamConnector.getConnection();) 
 		{
-			register(CustomerDAO.getCustomerByLoginId("hong123", conn), 1, "1002145651171232138", "우리은asdf행");
+			System.out.println(register(CustomerDAO.getCustomerByLoginId("hong123", conn), 1, "1002145651178", "우리은행"));
 		}
 		
 	}

@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -17,11 +19,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import common.account.login.Session;
+import common.database.dao.ClaimDAO;
+import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
+import common.method.InsuranceTeamConnector;
 import customer.claim.gui.TitlePanel;
 
 public class ClaimTargetPanel extends JPanel {
-	
+
 	private JPanel parentCardPanel;
 
 	public ClaimTargetPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
@@ -81,7 +87,7 @@ public class ClaimTargetPanel extends JPanel {
 		JLabel dashLabel = new JLabel("-");
 		JTextField perNumFieldF = new JTextField(6);
 		JTextField perNumFieldB = new JTextField(7);
-		
+
 //		perNumField.addFocusListener(new FocusAdapter() {
 //			@Override
 //			public void focusLost(FocusEvent e) {
@@ -118,12 +124,12 @@ public class ClaimTargetPanel extends JPanel {
 		insuredInfoPanel.add(phoneNumLabel, gbc);
 		gbc.gridx = 1;
 		insuredInfoPanel.add(phoneNumField, gbc);
-		
+
 		JPanel perNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); // 간격 좁게
 		perNumPanel.add(perNumFieldF);
 		perNumPanel.add(dashLabel);
 		perNumPanel.add(perNumFieldB);
-		
+
 		// 주민번호 라벨 + 입력패널
 		gbc.gridx = 0;
 		gbc.gridy = 1;
@@ -132,7 +138,7 @@ public class ClaimTargetPanel extends JPanel {
 
 		gbc.gridx = 1;
 		insuredInfoPanel.add(perNumPanel, gbc);
-		
+
 		customerChButton.addActionListener(e -> {
 			insuredInfoPanel.setVisible(false);
 			revalidate();
@@ -144,7 +150,7 @@ public class ClaimTargetPanel extends JPanel {
 			revalidate();
 			repaint();
 		});
-		
+
 		// 하단 버튼
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
 		JButton previousButton = new JButton("이전");
@@ -171,16 +177,32 @@ public class ClaimTargetPanel extends JPanel {
 					JOptionPane.showMessageDialog(this, "모든 정보를 입력해주세요", "안내", JOptionPane.WARNING_MESSAGE);
 					return;
 				}
-
 				claimData.setSelf(false);
 				claimData.setName(nameField.getText());
 				claimData.setPersonalId(perNumFieldF.getText() + "-" + perNumFieldB.getText());
 				claimData.setPhoneNumber(phoneNumField.getText());
 			} else if (customerChButton.isSelected()) {
 				claimData.setSelf(true); // 로그인 정보에서 값을 가져와 저장한다.
+
+				try (Connection conn = InsuranceTeamConnector.getConnection()) {
+					CustomerModel cm = Session.getCustomer();
+					
+					NewClaimDataModel customerInfo = ClaimDAO.getCustomerInfo(cm.getLogin_id(), conn);
+					if (customerInfo != null) {
+						claimData.setName(customerInfo.getName());
+						claimData.setPersonalId(customerInfo.getPersonalId());
+						claimData.setPhoneNumber(customerInfo.getPhoneNumber());
+					} else {
+						JOptionPane.showMessageDialog(this, "고객 정보를 찾을 수 없습니다.");
+						return;
+					}
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 
-//			System.out.println(claimData.toString()); // 디버깅용
+			System.out.println(claimData.toString()); // 디버깅용
 
 			cl.show(parentCardPanel, "AccidentDatePanel");
 		});

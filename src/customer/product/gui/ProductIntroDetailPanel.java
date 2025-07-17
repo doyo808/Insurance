@@ -35,19 +35,20 @@ public class ProductIntroDetailPanel extends JPanel {
 
 	private int sharedProductId = 0;
 	private static final long serialVersionUID = 1L;
+	private MouseClickListener listener;
 	
 	JPanel headerButtons;
 	JButton btn1;
 	JButton btn2;
+	JButton btn3;
 	
-	CardLayout cl;
 	JPanel displayDetails;
-	JPanel cardPanel1;
-	JPanel cardPanel2;
+	CardLayout cl;
+	JPanel introduce_image_card;
+	JPanel product_details_card;
 	
 	ImageIcon icon;
 	JLabel productIntroImage;
-//	JLabel coverDetails;
 	JTable coverDetailTable;
 	JScrollPane scrollpane;
 	
@@ -76,6 +77,12 @@ public class ProductIntroDetailPanel extends JPanel {
 		btn2.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		headerButtons.add(btn2);
 		
+		btn3 = new JButton("상품목록으로");
+		btn3.setBackground(new Color(128, 128, 128));
+		btn3.setForeground(new Color(255, 255, 255));
+		btn3.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		headerButtons.add(btn3);
+		
 		btn1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -89,6 +96,13 @@ public class ProductIntroDetailPanel extends JPanel {
 				cl.show(displayDetails, "card2");
 			}
 		});
+		
+		btn3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				listener.onChildPanelClicked(e);
+			}
+		});
 	}
 	
 	/***
@@ -100,12 +114,12 @@ public class ProductIntroDetailPanel extends JPanel {
 		displayDetails = new JPanel(cl);
 		displayDetails.setPreferredSize(new Dimension(800, 700));
 		add(displayDetails);
-		cardPanel1 = new JPanel();
-		cardPanel2 = new JPanel();
-		cardPanel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		cardPanel2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		displayDetails.add(cardPanel1, "card1");
-		displayDetails.add(cardPanel2, "card2");
+		introduce_image_card = new JPanel();
+		product_details_card = new JPanel();
+		introduce_image_card.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		product_details_card.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		displayDetails.add(introduce_image_card, "card1");
+		displayDetails.add(product_details_card, "card2");
 		
 		//############################################
 		// 데이터베이스에서 이미지파일 및 텍스트내용들에 대한 정보를 담아옴
@@ -136,38 +150,34 @@ public class ProductIntroDetailPanel extends JPanel {
 		} else {
 //			System.out.println("이미지가 비어있음");
 			productIntroImage = new JLabel("이미지가 비어있음");
-			cardPanel1.add(productIntroImage);
+			introduce_image_card.add(productIntroImage);
 		}
 		
 		// 상품소개란에 이미지 띄우기
 		productIntroImage = new JLabel(icon);
 		productIntroImage.setFont(new Font("맑은 고딕", Font.BOLD, 30));
-
-		// 상품 보장내용들 보여주기
-//		coverDetails = new JLabel("보장내용들");
-//		coverDetails.setFont(new Font("맑은 고딕", Font.BOLD, 30));
 		
 		coverDetailTable = new JTable();
 		coverDetailTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		coverDetailTable.setShowVerticalLines(false);
 		coverDetailTable.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
 		
-		Object[][] models = null;
+		Object[][] columns = null;
 		
 		int tableSize = productDetail.size();
 		
 		if(tableSize != 0) {
-			models = new Object[tableSize][5];
+			columns = new Object[tableSize][5];
 			for (int i = 0; i < tableSize; i++) {
-				models[i][0] = productDetail.get(i).getProductCoverName();
-				models[i][1] = productDetail.get(i).getProductCoverDetail();
+				columns[i][0] = productDetail.get(i).getProductCoverName();
+				columns[i][1] = productDetail.get(i).getProductCoverDetail();
 			}
 		} else {
-			models = new Object[][] {};
+			columns = new Object[][] {};
 		}
 		
 		coverDetailTable.setModel(new DefaultTableModel(
-			models,
+			columns,
 			new String[] {
 				"담보명", "보장내용"
 			}
@@ -187,14 +197,13 @@ public class ProductIntroDetailPanel extends JPanel {
 		coverDetailTable.setRowHeight(30);
 		scrollpane = new JScrollPane(coverDetailTable);
 		scrollpane.setAutoscrolls(true);
-		scrollpane.setPreferredSize(new Dimension(800, 600));
+		scrollpane.setPreferredSize(new Dimension(1100, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		coverDetailTable.getTableHeader().setReorderingAllowed(false);
 		
 		// 각 패널에 컴포넌트 추가
-		cardPanel1.add(productIntroImage);
-//		cardPanel2.add(coverDetails);
-		cardPanel2.add(scrollpane);
+		introduce_image_card.add(productIntroImage);
+		product_details_card.add(scrollpane);
 	}
 	
 	/***
@@ -203,4 +212,14 @@ public class ProductIntroDetailPanel extends JPanel {
 	public void setSharedProductId(int productId) {
 		this.sharedProductId = productId;
 	}
+	
+	// 부모가 등록할 리스너
+    public void setMouseClickListener(MouseClickListener listener) {
+        this.listener = listener;
+    }
+
+    // 리스너 인터페이스 정의
+    public interface MouseClickListener {
+        void onChildPanelClicked(MouseEvent e);
+    }
 }
