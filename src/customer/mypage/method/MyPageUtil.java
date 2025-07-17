@@ -65,5 +65,26 @@ public class MyPageUtil {
 		if(idPart == null || domainPart == null) return "";
 		return idPart.trim() + "@" + domainPart.toString().trim();
 	}
+	
+	//전화번호 분리
+	public static void splitPhoneToFields(String phoneNumber, JComboBox<String> cbPhoneLocal, JTextField tfPhoneMid, JTextField tfPhoneLast) {
+		if ( phoneNumber == null || phoneNumber.isEmpty()) return;
+		
+		String[] parts = phoneNumber.split("-");
+		if(parts.length == 3) {
+			cbPhoneLocal.setSelectedItem(parts[0]);
+			tfPhoneMid.setText(parts[1]);
+			tfPhoneLast.setText(parts[2]);		
+		}
+	}
+	
+	//전화번호 병합
+	
+	public static String combinePhone(Object cbValue, String mid, String last) {
+		String localNum = cbValue != null ? cbValue.toString().trim() : "";
+		mid = mid !=null ? mid.trim() : "";
+		last = last !=null ? last.trim() : "";
+		return localNum + "-" + mid + "-" + last;
+	}
 
 }
