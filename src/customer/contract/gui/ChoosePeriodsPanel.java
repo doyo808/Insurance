@@ -1,23 +1,33 @@
+
 package customer.contract.gui;
 
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
 
 public class ChoosePeriodsPanel extends JPanel {
 	// 상품에 따라 기간선택지가 달라져야 하지만 선택지를 고정해놓은 상태
 	private ContractMainPanel contractMP;
+	private ContractInfo ci;
+	private int cardNumber = 3;
+	
+	private List<JButton> coverageButtons = new ArrayList<>();
+	private List<JButton> paymentButtons = new ArrayList<>();
 	
 	public ChoosePeriodsPanel(ContractMainPanel contractMP) {
 		this.contractMP = contractMP;
+		ci = contractMP.getContractInfo();
+		
 		setLayout(null);
 		addComponents();
 	}
@@ -52,32 +62,34 @@ public class ChoosePeriodsPanel extends JPanel {
 		btn80.setBounds(52, 88, 175, 62);
 		panel.add(btn80);
 		
+		JButton btn90 = new JButton("90세");
+		btn90.setFont(new Font("굴림", Font.BOLD, 18));
+		btn90.setBackground(OurColors.UNSELECTED);
+		btn90.setBounds(248, 88, 175, 62);
+		panel.add(btn90);
+		
 		JButton btn100 = new JButton("100세");
 		btn100.setFont(new Font("굴림", Font.BOLD, 18));
-		btn100.setBackground(OurColors.UNSELECTED);
-		btn100.setBounds(248, 88, 175, 62);
+		btn100.setBackground(OurColors.SELECTED);
+		btn100.setBounds(447, 88, 175, 62);
 		panel.add(btn100);
 		
-		JButton btnLifeTime = new JButton("평생");
-		btnLifeTime.setFont(new Font("굴림", Font.BOLD, 18));
-		btnLifeTime.setBackground(OurColors.SELECTED);
-		btnLifeTime.setBounds(447, 88, 175, 62);
-		panel.add(btnLifeTime);
+		coverageButtons.add(btn80);
+		coverageButtons.add(btn90);
+		coverageButtons.add(btn100);
 		
-		JButton[] btns = {btn80, btn100, btnLifeTime};
-
-		for (int i = 0; i < btns.length; i++) {
-		    final int index = i;
-
-		    btns[i].addActionListener(e -> {
-		        for (int j = 0; j < btns.length; j++) {
-		            if (j == index) {
-		                btns[j].setBackground(OurColors.SELECTED);
-		            } else {
-		                btns[j].setBackground(OurColors.UNSELECTED);
-		            }
-		        }
-		    });
+		for (int i = 0; i < coverageButtons.size(); i++) {
+			final int index = i;
+			
+			coverageButtons.get(index).addActionListener(e -> {
+				for (int j = 0; j < coverageButtons.size(); j++) {
+					if (j == index) {
+						coverageButtons.get(j).setBackground(OurColors.SELECTED);
+					} else {
+						coverageButtons.get(j).setBackground(OurColors.UNSELECTED);
+					}
+				}
+			});
 		}
 		
 		
@@ -122,20 +134,23 @@ public class ChoosePeriodsPanel extends JPanel {
 		btn30.setBounds(494, 80, 142, 62);
 		panel_1.add(btn30);
 		
-		JButton[] btns2 = {btn10, btn15, btn20, btn30};
-
-		for (int i = 0; i < btns2.length; i++) {
-		    final int index = i;
-
-		    btns2[i].addActionListener(e -> {
-		        for (int j = 0; j < btns2.length; j++) {
-		            if (j == index) {
-		                btns2[j].setBackground(OurColors.SELECTED);
-		            } else {
-		                btns2[j].setBackground(OurColors.UNSELECTED);
-		            }
-		        }
-		    });
+		paymentButtons.add(btn10);
+		paymentButtons.add(btn15);
+		paymentButtons.add(btn20);
+		paymentButtons.add(btn30);
+		
+		for (int i = 0; i < paymentButtons.size(); i++) {
+			final int index = i;
+			
+			paymentButtons.get(index).addActionListener(e -> {
+				for (int j = 0; j < paymentButtons.size(); j++) {
+					if (j == index) {
+						paymentButtons.get(j).setBackground(OurColors.SELECTED);
+					} else {
+						paymentButtons.get(j).setBackground(OurColors.UNSELECTED);
+					}
+				}
+			});
 		}
 		addBackButton();
 		addConfirmButton();
@@ -148,7 +163,7 @@ public class ChoosePeriodsPanel extends JPanel {
 		btnNewButton.setBounds(442, 543, 267, 33);
 		
 		btnNewButton.addActionListener(e -> {
-			contractMP.ShowCard(contractMP.cardNames[2]);
+			contractMP.ShowCard(contractMP.cardNames[cardNumber - 1]);
 		});
 		add(btnNewButton);
 	}
@@ -160,9 +175,27 @@ public class ChoosePeriodsPanel extends JPanel {
 		btnNewButton_2.setBounds(721, 543, 288, 33);
 		
 		btnNewButton_2.addActionListener(e -> {
-			contractMP.ShowCard(contractMP.cardNames[4]);
+			updateContractInfo();
+			contractMP.ShowCard(contractMP.cardNames[cardNumber + 1]);
 		});
 		add(btnNewButton_2);
 	}
+
+	private void updateContractInfo() {
+		for (JButton j : coverageButtons) {
+			if (j.getBackground() == OurColors.SELECTED) {
+				Integer period = Integer.parseInt(j.getText().substring(0,2));
+				ci.setProduct_coverage_period(period);
+			}
+		}
+		
+		for (JButton j : paymentButtons) {
+			if (j.getBackground() == OurColors.SELECTED) {
+				Integer period = Integer.parseInt(j.getText().substring(0,2));
+				ci.setProduct_payment_period(period);
+			}
+		}
+	}
+	
 	
 }
