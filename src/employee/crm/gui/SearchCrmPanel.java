@@ -29,12 +29,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import common.method.InsuranceTeamConnector;
+import customer.mypage.method.MyPageUtil;
 
 public class SearchCrmPanel extends JPanel {
 	
 	private JTextField tfName, tfBirth, tfUserId, tfPhone, tfContractId;
     private JTable resultTable;
     private DefaultTableModel tableModel;
+    private int currentPage = 1;
+    private int rowsPerPage = 10;
+    private int totalRows = 0;
 
 	
 	public SearchCrmPanel() {
@@ -149,10 +153,16 @@ public class SearchCrmPanel extends JPanel {
 
         // ====== 이벤트 ======
         btnSearch.addActionListener(e -> {
+        	currentPage = 1;
         	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         	searchCustomers();
         	setCursor(Cursor.getDefaultCursor());
         });
+        
+        
+        //화면이 열리자 마자 데이터가 조회되게 하는 방법
+        currentPage = 1;
+        searchCustomers();
         
         
     }
@@ -211,7 +221,7 @@ public class SearchCrmPanel extends JPanel {
                 tableModel.addRow(new Object[]{
                     rs.getInt("customer_id"),
                     rs.getString("customer_name"),
-                    rs.getString("personal_id"),
+                    MyPageUtil.convertJuminToBirth(rs.getString("personal_id")),                    
                     rs.getString("login_id"),
                     rs.getString("phone_number"),
                     rs.getString("email"),

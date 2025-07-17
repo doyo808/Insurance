@@ -1,5 +1,6 @@
 package employee.product.view.center;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -19,8 +20,6 @@ public class ShowPanelCenter extends JPanel{
 	private DefaultTableModel model;
 	public JScrollPane jpane;
 
-	
-	Object[][] columns = null;
 	List<ProductModel> products = null;
 	
 	public ShowPanelCenter() {
@@ -40,11 +39,13 @@ public class ShowPanelCenter extends JPanel{
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		jpane = new JScrollPane(table);
+		jpane.setPreferredSize(new Dimension(1000, 400));
 		jpane.setAutoscrolls(true);
 		jpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		add(jpane);
 		
 		setTableData();
+		
 	}
 	
 	/***
@@ -53,7 +54,7 @@ public class ShowPanelCenter extends JPanel{
 	public void setTableData() {
 		// 기존에 테이블에 데이터가있다면 내용제거
 		if (model.getRowCount() != 0) {
-			model.setRowCount(0);			
+			model.setRowCount(0);
 		}
 		// db에서 데이터불러오고 테이블에 추가
 		try (Connection conn = InsuranceTeamConnector.getConnection()){

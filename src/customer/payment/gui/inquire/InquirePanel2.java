@@ -29,6 +29,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import common.gui.MainPageButton;
+import customer.payment.gui.PaymentMainPanel;
 import customer.payment.gui.components.PaymentDefaultButton;
 import customer.payment.method.DateLabelFormatter;
 import customer.payment.method.InquirePanel2Handler;
@@ -47,7 +48,7 @@ public class InquirePanel2 extends JPanel {
     private JLabel valProductName, valContractId, valStartDate, valEndDate, valPaymentType, valPremium;
     private static final Font VALUE_FONT = new Font("맑은 고딕", Font.BOLD, 13);
     
-    public InquirePanel2(CustomerMainPanel cmp) {
+    public InquirePanel2(PaymentMainPanel pmp, CustomerMainPanel cmp) {
     	setPreferredSize(new Dimension(1440, 700));
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -222,7 +223,17 @@ public class InquirePanel2 extends JPanel {
         tf.setForeground(Color.BLACK);
         tf.setBackground(Color.WHITE);
         tf.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-        picker.setPreferredSize(new Dimension(120, 30));
+        tf.setColumns(12);
+        tf.setPreferredSize(new Dimension(140, 30));
+
+        // 전체 Picker 크기 조정
+        picker.setPreferredSize(new Dimension(200, 30)); // 🔹 전체 박스 크기 증가
+
+        // 버튼 텍스트 및 크기 변경
+        if (picker.getComponent(1) instanceof JButton button) {
+            button.setText("달력");
+            button.setPreferredSize(new Dimension(60, 30));
+        }
 
         return picker;
     }

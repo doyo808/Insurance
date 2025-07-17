@@ -46,7 +46,7 @@ public class PaymentMenuPanel extends DefaultPanel{
 		menu2.setButtonText("납부");
 		menu2.setLabelText("보험료 납부");
 		menu2.addButtonListener(e -> {
-        	switcher.showCard("AutoPayment1");
+        	switcher.showCard("pay1");
         });
 		
 		PaymentMenuComponentPanel menu3 = new PaymentMenuComponentPanel();

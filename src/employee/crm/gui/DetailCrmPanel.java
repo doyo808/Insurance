@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import common.account.login.Session;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.mypage.method.MyPageUtil;
 
 
 public class DetailCrmPanel extends JPanel {
@@ -169,7 +170,7 @@ public class DetailCrmPanel extends JPanel {
 			if(rs.next()) {
 				tfName.setText(rs.getString("customer_name"));
 			    tfAddress.setText(rs.getString("address_1") + rs.getString("address_2"));
-			    tfBirth.setText(rs.getString("personal_id"));
+			    tfBirth.setText(MyPageUtil.convertJuminToBirth(rs.getString("personal_id")));
 			    tfPhone.setText(rs.getString("phone_number"));
 			    tfEmail.setText(rs.getString("email"));
 			    tfJob.setText(rs.getString("job"));
@@ -207,11 +208,11 @@ public class DetailCrmPanel extends JPanel {
 				model.addRow(new Object[]{
 						rs.getInt("contract_id"),
 						rs.getString("product_name"),
-						rs.getInt("premium"),
-						rs.getString("signup_date"),
-						rs.getString("effective_date"),
-						rs.getString("payment_end_date"),
-						rs.getString("coverage_end_date"),
+						String.format("%,d", rs.getInt("premium")),
+						MyPageUtil.formatDate(rs.getString("signup_date")),
+						MyPageUtil.formatDate(rs.getString("effective_date")),
+						MyPageUtil.formatDate(rs.getString("payment_end_date")),
+						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
 						rs.getString("status")				
 				});
 			}
@@ -242,9 +243,9 @@ public class DetailCrmPanel extends JPanel {
     		while(rs.next()) {
     			model.addRow(new Object[] {
     					rs.getInt("contract_id"),
-    					rs.getString("payment_date"),
+    					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
-    					rs.getInt("paid_amount"),
+    					String.format("%,d", rs.getInt("paid_amount")),
     					rs.getString("pay_status")   					
     			});
     		}   				

@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -158,7 +160,7 @@ public class MyPageMainPanel extends JPanel {
 		}
     }
 
-    private void loadContractInfo() {    	
+    private void loadContractInfo() {   			
     	DefaultTableModel model = new DefaultTableModel(new String[] {"계약번호", "상품명", "보험료", "가입일", "효력일", "결제만기일", "보장만기일", "계약상태"}, 0) {
     		@Override
     		public boolean isCellEditable(int row, int column) {
@@ -185,15 +187,16 @@ public class MyPageMainPanel extends JPanel {
 			
 			
 			ResultSet rs = pstmt.executeQuery();
-			while(rs.next()) {
+			while(rs.next()) {	
+				
 				model.addRow(new Object[]{
 						rs.getInt("contract_id"),
 						rs.getString("product_name"),
-						rs.getInt("premium"),
-						rs.getString("signup_date"),
-						rs.getString("effective_date"),
-						rs.getString("payment_end_date"),
-						rs.getString("coverage_end_date"),
+						String.format("%,d", rs.getInt("premium")), 
+						MyPageUtil.formatDate(rs.getString("signup_date")),
+						MyPageUtil.formatDate(rs.getString("effective_date")),
+						MyPageUtil.formatDate(rs.getString("payment_end_date")),
+						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
 						rs.getString("status")				
 				});
 			}
@@ -223,7 +226,8 @@ public class MyPageMainPanel extends JPanel {
     		
     		String sql = "SELECT p.contract_id, p.payment_date, (SELECT product_name FROM products WHERE product_id = c.product_id) AS product_name, paid_amount, pay_status "
     				+ "FROM payments p, contracts c "
-    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ?";
+    				+ "WHERE p.contract_id = c.contract_id AND p.customer_id = ? "
+    				+ "ORDER BY payment_date DESC";
     		PreparedStatement pstmt = conn.prepareStatement(sql);
     		pstmt.setInt(1, customerId);
     		
@@ -231,9 +235,9 @@ public class MyPageMainPanel extends JPanel {
     		while(rs.next()) {
     			model.addRow(new Object[] {
     					rs.getInt("contract_id"),
-    					rs.getString("payment_date"),
+    					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
-    					rs.getInt("paid_amount"),
+    					String.format("%,d", rs.getInt("paid_amount")),
     					rs.getString("pay_status")   					
     			});
     		}   				

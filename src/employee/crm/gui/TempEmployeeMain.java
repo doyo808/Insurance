@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 public class TempEmployeeMain extends JFrame implements ActionListener {
 	
 	private JPanel contentPanel;
-
+ 
     public TempEmployeeMain() {
         setTitle("KB손해보험 다이렉트 센터");
         setBounds(0, 0, 1440, 1024);
