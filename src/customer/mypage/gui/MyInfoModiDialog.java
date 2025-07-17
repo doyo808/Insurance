@@ -21,7 +21,7 @@ import customer.mypage.method.MyPageUtil;
 
 public class MyInfoModiDialog extends JDialog {
 
-    private JTextField tfName, tfBirth, tfPhone, tfEmail, tfEmailId, tfEmailDomain, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
+    private JTextField tfName, tfBirth, tfPhone, tfEmailId, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
     private JButton btnSave, btnCancel;
     private MyPageMainPanel parentPanel;
     private JComboBox<String> cbEmailDomain;
@@ -46,21 +46,33 @@ public class MyInfoModiDialog extends JDialog {
         int labelW = 100, fieldW = 400, h = 25, y = 20, spacingY = 35;
         addLabelAndField("이름", tfName = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("생년월일", tfBirth = new JTextField(), 20, y += spacingY, labelW, fieldW);        
-        addLabelAndField("이메일", tfEmail = new JTextField(), 20, y += spacingY, labelW, fieldW);
-//        addLabelAndField("이메일", tfEmailId = new JTextField(), 20, y += spacingY, labelW, fieldW);
+        //addLabelAndField("이메일", tfEmail = new JTextField(), 20, y += spacingY, labelW, fieldW);
+        addLabelAndField("이메일", tfEmailId = new JTextField(), 20, y += spacingY, labelW, 200);
         
-//        JLabel lbAt = new JLabel("@");
-//        lbAt.setBounds(20, y += spacingY, labelW, fieldW);
-//        add(lbAt);
-//        
-//        // 이메일 도메인 콤보박스
-//        String[] domains = {"gmail.com", "naver.com", "hanmail.net", "hotmail.com", "직접입력"};
-//        cbEmailDomain = new JComboBox<>(domains);
-//        cbEmailDomain.setEditable(false);
-//        cbEmailDomain.setBounds(20, y += spacingY, labelW, fieldW);
-//        add(cbEmailDomain);       
+        JLabel lbAt = new JLabel("@");
+        lbAt.setBounds(333, y, 19, 25);
+        add(lbAt);
         
+        // 이메일 도메인 콤보박스
         
+        cbEmailDomain = new JComboBox<>(new String[] {
+        		"gmail.com", "naver.com", "hanmail.net", "hotmail.com", "직접입력"
+        });
+        cbEmailDomain.setEditable(false);
+        cbEmailDomain.setBounds(351, y, 179, 25);
+        add(cbEmailDomain);
+        
+        // '직접입력' 선택 시 도메인 수동 입력 가능하도록 처리
+        cbEmailDomain.addActionListener(e -> {
+        	String selected = (String) cbEmailDomain.getSelectedItem();
+        	if ("직접입력".equals(selected)) {
+        		cbEmailDomain.setEditable(true);
+        		cbEmailDomain.setSelectedItem("");
+        	} else {
+        		cbEmailDomain.setEditable(false);
+        		
+        	}
+        });        
         
         addLabelAndField("전화번호", tfPhone = new JTextField(), 20, y += spacingY, labelW, fieldW);        
         addLabelAndField("기본주소", tfAddress1 = new JTextField(), 20, y += spacingY, labelW, fieldW);
@@ -75,7 +87,8 @@ public class MyInfoModiDialog extends JDialog {
         // 기존 정보 설정
         tfName.setText(cm.getCustomer_name());
         tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()));        
-        tfEmail.setText(cm.getEmail());
+        //tfEmail.setText(cm.getEmail());
+        MyPageUtil.splitEmailToFields(cm.getEmail(), tfEmailId, cbEmailDomain);
         tfPhone.setText(cm.getPhone_number());
         tfAddress1.setText(cm.getAddress_1());
         tfAddress2.setText(cm.getAddress_2());        
@@ -106,7 +119,8 @@ public class MyInfoModiDialog extends JDialog {
                              "company_name = ?, job_phone_number = ?, job_address1 = ?, job_address2 = ? WHERE customer_id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 
-                pstmt.setString(1, tfEmail.getText());
+                //pstmt.setString(1, tfEmail.getText());
+                pstmt.setString(1, MyPageUtil.combineEmail(tfEmailId.getText(), cbEmailDomain.getSelectedItem()));
                 pstmt.setString(2, tfPhone.getText());
                 pstmt.setString(3, tfAddress1.getText());
                 pstmt.setString(4, tfAddress2.getText());                
@@ -124,7 +138,8 @@ public class MyInfoModiDialog extends JDialog {
                     JOptionPane.showMessageDialog(this, "정보가 성공적으로 수정되었습니다.");
                     
                 	// DB 업데이트 성공 후
-                    cm.setEmail(tfEmail.getText());
+                    //cm.setEmail(tfEmail.getText());
+                    cm.setEmail(MyPageUtil.combineEmail(tfEmailId.getText(), cbEmailDomain.getSelectedItem()));
                     cm.setPhone_number(tfPhone.getText());
                     cm.setAddress_1(tfAddress1.getText());
                     cm.setAddress_2(tfAddress2.getText());                    
