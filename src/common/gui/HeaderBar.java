@@ -29,11 +29,11 @@ public class HeaderBar extends JPanel {
 		ButtonMaker.addButton(240, 1, this);
 		
 		// 여기서 parentCardPanel은 상품조회,상품가입,청구,납부,마이페이지.. 등의 패널이 다 들어간 카드레이아웃 패널입니다.
-		CardSwitchButton 보험상품조회버튼 = new CardSwitchButton("보험상품조회", parentCardPanel, "보험상품조회", 150, 60); 
-		CardSwitchButton 보험상품가입버튼 = new CardSwitchButton("보험상품가입", parentCardPanel, "보험상품가입", 150, 60); 
-		CardSwitchButton 보험금청구버튼 = new CardSwitchButton("보험금청구", parentCardPanel, "보험금청구", 150, 60);
-		CardSwitchButton 보험금납부버튼 = new CardSwitchButton("보험료납부", parentCardPanel, "보험료납부", 150, 60); 
-		CardSwitchButton 마이페이지버튼 = new CardSwitchButton("마이페이지", parentCardPanel, "마이페이지", 150, 60);
+		CardSwitchButtonSMP 보험상품조회버튼 = new CardSwitchButtonSMP("보험상품조회", parentCardPanel, "보험상품조회", 150, 60, cmp); 
+		CardSwitchButtonSMP 보험상품가입버튼 = new CardSwitchButtonSMP("보험상품가입", parentCardPanel, "보험상품가입", 150, 60, cmp); 
+		CardSwitchButtonSMP 보험금청구버튼 = new CardSwitchButtonSMP("보험금청구", parentCardPanel, "보험금청구", 150, 60, cmp);
+		CardSwitchButtonSMP 보험금납부버튼 = new CardSwitchButtonSMP("보험료납부", parentCardPanel, "보험료납부", 150, 60, cmp); 
+		CardSwitchButtonSMP 마이페이지버튼 = new CardSwitchButtonSMP("마이페이지", parentCardPanel, "마이페이지", 150, 60, cmp);
 		
 		JButton btn = new JButton("로그아웃");
 		btn.setSize(new Dimension(150, 60));
