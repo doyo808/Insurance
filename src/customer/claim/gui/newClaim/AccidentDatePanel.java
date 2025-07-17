@@ -133,7 +133,7 @@ public class AccidentDatePanel extends JPanel {
         	 
          
          } else {
-        	 claimData.setAccidentDate(selectedDate);
+        	 claimData.setAccident_date(selectedDate);
          }
          
 			System.out.println(claimData.toString()); // 디버깅용

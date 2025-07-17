@@ -335,32 +335,32 @@ public class ClaimSituationPanel extends JPanel {
 				// 기록된 정보가 객체에 저장되어야 한다.
 				if (상황1콤.getSelectedItem().equals("다른 사람에게 피해를 입혔어요")
 						&& 다른사람콤.getSelectedItem().equals("재산피해를 입혔어요(재물)")) {
-					claimData.setCompensationType('P');
+					claimData.setCompensation_type('P');
 				} else {
-					claimData.setCompensationType('H');
+					claimData.setCompensation_type('H');
 				}
 
 				String selectedSituation = (String) 상황1콤.getSelectedItem();
 				switch (selectedSituation) {
 					case "병원에 다녀왔어요(실손 등)":
 						if (병원콤.getSelectedItem().equals("아팠어요(질병)")) {
-							claimData.setClaimCategory("질병");
+							claimData.setClaim_category("질병");
 							break;
 						} else if (병원콤.getSelectedItem().equals("다쳤어요(상해)")) {
-							claimData.setClaimCategory("상해");
+							claimData.setClaim_category("상해");
 							break;
 						}
 					case "다른 사람에게 피해를 입혔어요":
-						claimData.setClaimCategory("배상책임");
+						claimData.setClaim_category("배상책임");
 						break;
 					case "교통사고로 비용이 발생했어요":
-						claimData.setClaimCategory("교통사고");
+						claimData.setClaim_category("교통사고");
 						break;
 					case "사망/장해를 입었어요":
-						claimData.setClaimCategory("사망/장해");
+						claimData.setClaim_category("사망/장해");
 						break;
 					case "내 재산에 피해가 발생했어요":
-						claimData.setClaimCategory("재산손해");
+						claimData.setClaim_category("재산손해");
 						break;
 					default:
 						break;
@@ -369,7 +369,7 @@ public class ClaimSituationPanel extends JPanel {
 				// 진단코드 (각 콤보박스를 하나씩 연결해서 그 진단코드를 다 입력해야하는거겠지...)
 
 				if (다친상황_입력창 != null && 다친상황_입력창.isValid()) {
-					claimData.setAccidentDescription(다친상황_입력창.getText());
+					claimData.setAccident_description(다친상황_입력창.getText());
 				}
 
 				// 상황에 맞는 페이지로 넘어갈 수 있도록 하고,
