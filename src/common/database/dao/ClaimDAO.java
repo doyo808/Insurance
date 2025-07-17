@@ -4,12 +4,11 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import common.database.model.ClaimsModel;
-import common.database.model.CustomerModel;
+import common.database.model.NewClaimDataModel;
 
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
@@ -52,8 +51,8 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		// 고객이 하나 이상의 계약이 꼭 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
 		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
-		public static List<CustomerModel> getCustomerInfo(String login_id, Connection conn) throws SQLException {
-			List<CustomerModel> customerInfoList = new ArrayList<>();
+		public static NewClaimDataModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
+			NewClaimDataModel customerInfo = new NewClaimDataModel();
 			String query = "SELECT cu.customer_name, cu.personal_id, cu.phone_number "
 					+ "FROM customers cu "
 					+ "WHERE cu.login_id = ? ";
@@ -63,17 +62,13 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            while (rs.next()) {
-//		            	customerInfoList.add(new CustomerModel(
-//		            		rs.getString("customer_name"),
-//		                    rs.getString("personal_id"),
-//		                    rs.getString("phone_number")
-//		                    ));
+		            	customerInfo.setName(rs.getString("customer_name"));
+		            	customerInfo.setPersonalId(rs.getString("personal_id"));
+		            	customerInfo.setPhoneNumber(rs.getString("phone_number"));
 		            }
-		        
 		        }
 		    }
-			
-		    return customerInfoList;
+		    return customerInfo;
 		}
 	
 		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
