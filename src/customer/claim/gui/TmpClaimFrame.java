@@ -11,8 +11,8 @@ public class TmpClaimFrame {
 	      fr.setBounds(0, 0, 1440, 1024);
 	      fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	      
-//	      ClaimMainPanel 메인패널 = new ClaimMainPanel();
-//	      fr.add(메인패널);
+	      ClaimMainPanel 메인패널 = new ClaimMainPanel();
+	      fr.add(메인패널);
 	      fr.setVisible(true);
 	   
 //	   // 상단 헤더 바 추가

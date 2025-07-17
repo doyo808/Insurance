@@ -3,11 +3,17 @@ package customer.claim.gui;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.*;
 
+import common.account.login.Session;
+import common.database.dao.ClaimDAO;
+import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
 import common.gui.CardSwitchButton;
+import common.method.InsuranceTeamConnector;
 import common.method.Validators;
 
 public class EnterBankAccountPanel extends JPanel {
@@ -131,6 +137,25 @@ public class EnterBankAccountPanel extends JPanel {
             return;
          } 
          
+         if (AutomaticChButton.isSelected()) {
+	        	 try (Connection conn = InsuranceTeamConnector.getConnection()) {
+					CustomerModel cm = Session.getCustomer();
+					
+					NewClaimDataModel customerBankInfo = ClaimDAO.getCustomerBankInfo(cm.getLogin_id(), conn);
+					if (customerBankInfo != null) {
+						claimData.setBank_name(customerBankInfo.getBank_name());
+						claimData.setBank_account(customerBankInfo.getBank_account());
+						claimData.setBeneficiary_name(customerBankInfo.getBeneficiary_name());
+					} else {
+						JOptionPane.showMessageDialog(this, "고객 정보를 찾을 수 없습니다.");
+						return;
+					}
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+			}
+		}
+         
          if (accountDirectInputB.isSelected() &&
             (bankNameF.getText().trim().isBlank() ||
             beneficiaryNameF.getText().trim().isBlank() ||
@@ -139,16 +164,17 @@ public class EnterBankAccountPanel extends JPanel {
          }
 
          // 은행명을 콤보박스로 선택하는건 이후에 선택...
-         if (bankNameF.isValid()) {
-        	 claimData.setBankName(bankNameF.getText());
-         }
-         if (bankAccountF.isValid()) {
-        	 claimData.setBankAccount(bankAccountF.getText());
-         }
-         if (beneficiaryNameF.isValid()) {
-        	 claimData.setBeneficiaryName(beneficiaryNameF.getText());
+         if (accountDirectInputB.isSelected() &&
+        		 bankNameF.isValid() && 
+        		 bankAccountF.isValid() && 
+        		 beneficiaryNameF.isValid()) {
+		    	 claimData.setBank_name(bankNameF.getText());
+		    	 claimData.setBank_account(bankAccountF.getText());
+		    	 claimData.setBeneficiary_name(beneficiaryNameF.getText());
          }
        
+         
+         
          cl.show(parentCardPanel, "DocumentRegistrationPanel"); 
          
          System.out.println(claimData.toString()); // 디버깅용

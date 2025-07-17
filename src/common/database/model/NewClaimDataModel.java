@@ -10,54 +10,55 @@ public class NewClaimDataModel {
 	
 	// 청구 대상 관련
     private boolean isSelf;
-    private String name;
-    private String personalId;
-    private String phoneNumber;
+    private String customer_name;
+    private String personal_id;
+    private String phone_number;
     
     // 청구 날짜 - 오늘 날짜
-	private Date claimDate;
-	
+	private Date claim_date;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 	{
 		try {
-			claimDate = sdf.parse(sdf.format(new Date()));
+			claim_date = sdf.parse(sdf.format(new Date()));
 			} catch(ParseException e) {
 				e.printStackTrace();
-				claimDate = new Date(); // 예외 발생 시 현재 날짜로 처리
+				claim_date = new Date(); // 예외 발생 시 현재 날짜로 처리
 			}
 	}
     
     // 사고 날짜
-    private Date accidentDate;
+    private Date accident_date;
     
     // 보상 구분 (인물인지:H / 재산인지:P)
-    private Character compensationType;
+    private Character compensation_type;
     
     // 청구 항목
-    private List<String> claimType;
+    private List<String> claim_type_name;
 
     // 청구 유형 (질병/일반상해/교통사고)
-    private String claimCategory;
+    private String claim_category;
     
-    // 진단코드 
-    private String diagnosis;
+    // 진단명
+    private String diagnosis_name;
     
     // 사고 내용
-    private String accidentDescription;
+    private String accident_description;
     
     // 직원누구하지
+    private String employee_name;
     
     // 청구상태 - 처음 접수할때는 다 RECEIVED
-    private String claimStatus = "RECEIVED"; // 접수
+    private String claim_status = "RECEIVED"; 
+    // 마지막 확인패널에서 한글로 나타나게 바꿀 수 있어야 할 것 같다..
+    // 조회떄에도 영어가 아닌 한글로 나타날 수 있도록
     
     // 수령 계좌
-    private String bankAccount; // 계좌번호
-    private String bankName; // 은행명
-    private String beneficiaryName; // 예금주
+    private String bank_account; // 계좌번호
+    private String bank_name; // 은행명
+    private String beneficiary_name; // 예금주
     
     // 제출 서류 목록
-    private List<String> documents = new ArrayList<>();
+    private List<String> document_type_name = new ArrayList<>();
 	
     public NewClaimDataModel() {
     	
@@ -71,136 +72,142 @@ public class NewClaimDataModel {
 		this.isSelf = isSelf;
 	}
 
-	public String getName() {
-		return name;
+	public String getCustomer_name() {
+		return customer_name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCustomer_name(String customer_name) {
+		this.customer_name = customer_name;
 	}
 
-	public String getPersonalId() {
-		return personalId;
+	public String getPersonal_id() {
+		return personal_id;
 	}
 
-	public void setPersonalId(String personalId) {
-		this.personalId = personalId;
+	public void setPersonal_id(String personal_id) {
+		this.personal_id = personal_id;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getPhone_number() {
+		return phone_number;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setPhone_number(String phone_number) {
+		this.phone_number = phone_number;
 	}
 
-	public Date getClaimDate() {
-		return claimDate;
+	public Date getClaim_date() {
+		return claim_date;
 	}
 
-	public void setClaimDate(Date claimDate) {
-		this.claimDate = claimDate;
+	public void setClaim_date(Date claim_date) {
+		this.claim_date = claim_date;
 	}
 
-	public Date getAccidentDate() {
-		return accidentDate;
+	public Date getAccident_date() {
+		return accident_date;
 	}
 
-	public void setAccidentDate(Date accidentDate) {
-		this.accidentDate = accidentDate;
+	public void setAccident_date(Date accident_date) {
+		this.accident_date = accident_date;
 	}
 
-	public Character getCompensationType() {
-		return compensationType;
+	public Character getCompensation_type() {
+		return compensation_type;
 	}
 
-	public void setCompensationType(Character compensationType) {
-		this.compensationType = compensationType;
+	public void setCompensation_type(Character compensation_type) {
+		this.compensation_type = compensation_type;
 	}
 
-	public List<String> getClaimType() {
-		return claimType;
+	public List<String> getClaim_type_name() {
+		return claim_type_name;
 	}
 
-	public void setClaimType(List<String> claimType) {
-		this.claimType = claimType;
+	public void setClaim_type_name(List<String> claim_type_name) {
+		this.claim_type_name = claim_type_name;
 	}
 
-	public String getClaimCategory() {
-		return claimCategory;
+	public String getClaim_category() {
+		return claim_category;
 	}
 
-	public void setClaimCategory(String claimCategory) {
-		this.claimCategory = claimCategory;
+	public void setClaim_category(String claim_category) {
+		this.claim_category = claim_category;
 	}
 
-	public String getDiagnosis() {
-		return diagnosis;
+	public String getDiagnosis_name() {
+		return diagnosis_name;
 	}
 
-	public void setDiagnosis(String diagnosis) {
-		this.diagnosis = diagnosis;
+	public void setDiagnosis_name(String diagnosis_name) {
+		this.diagnosis_name = diagnosis_name;
 	}
 
-	public String getAccidentDescription() {
-		return accidentDescription;
+	public String getAccident_description() {
+		return accident_description;
 	}
 
-	public void setAccidentDescription(String accidentDescription) {
-		this.accidentDescription = accidentDescription;
+	public void setAccident_description(String accident_description) {
+		this.accident_description = accident_description;
 	}
 
-	public String getClaimStatus() {
-		return claimStatus;
+	public String getEmployee_name() {
+		return employee_name;
 	}
 
-	public void setClaimStatus(String claimStatus) {
-		this.claimStatus = claimStatus;
+	public void setEmployee_name(String employee_name) {
+		this.employee_name = employee_name;
 	}
 
-	public String getBankAccount() {
-		return bankAccount;
+	public String getClaim_status() {
+		return claim_status;
 	}
 
-	public void setBankAccount(String bankAccount) {
-		this.bankAccount = bankAccount;
+	public void setClaim_status(String claim_status) {
+		this.claim_status = claim_status;
 	}
 
-	public String getBankName() {
-		return bankName;
+	public String getBank_account() {
+		return bank_account;
 	}
 
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
+	public void setBank_account(String bank_account) {
+		this.bank_account = bank_account;
 	}
 
-	public String getBeneficiaryName() {
-		return beneficiaryName;
+	public String getBank_name() {
+		return bank_name;
 	}
 
-	public void setBeneficiaryName(String bankAccountName) {
-		this.beneficiaryName = bankAccountName;
+	public void setBank_name(String bank_name) {
+		this.bank_name = bank_name;
 	}
 
-	public List<String> getDocuments() {
-		return documents;
+	public String getBeneficiary_name() {
+		return beneficiary_name;
 	}
 
-	public void setDocuments(List<String> documents) {
-		this.documents = documents;
+	public void setBeneficiary_name(String beneficiary_name) {
+		this.beneficiary_name = beneficiary_name;
+	}
+
+	public List<String> getDocument_type_name() {
+		return document_type_name;
+	}
+
+	public void setDocument_type_name(List<String> document_type_name) {
+		this.document_type_name = document_type_name;
 	}
 
 	@Override
 	public String toString() {
-		return "NewClaimDataModel [isSelf=" + isSelf + ", name=" + name + ", personalId=" + personalId
-				+ ", phoneNumber=" + phoneNumber + ", claimDate=" + claimDate + ", accidentDate=" + accidentDate
-				+ ", compensationType=" + compensationType + ", claimType=" + claimType + ", claimCategory="
-				+ claimCategory + ", diagnosis=" + diagnosis + ", accidentDescription=" + accidentDescription
-				+ ", claimStatus=" + claimStatus + ", bankAccount=" + bankAccount + ", bankName=" + bankName
-				+ ", bankAccountName=" + beneficiaryName + ", documents=" + documents + "]";
+		return "NewClaimDataModel [isSelf=" + isSelf + ", customer_name=" + customer_name + ", personal_id="
+				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ", sdf=" + sdf
+				+ ", accident_date=" + accident_date + ", compensation_type=" + compensation_type + ", claim_type_name="
+				+ claim_type_name + ", claim_category=" + claim_category + ", diagnosis_name=" + diagnosis_name
+				+ ", accident_description=" + accident_description + ", employee_name=" + employee_name
+				+ ", claim_status=" + claim_status + ", bank_account=" + bank_account + ", bank_name=" + bank_name
+				+ ", beneficiary_name=" + beneficiary_name + ", document_type_name=" + document_type_name + "]";
 	}
-
-    
-
 }
