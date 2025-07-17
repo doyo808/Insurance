@@ -9,10 +9,13 @@ import employee.product.view.center.RegistPanelCenter;
 
 public class RegistPanel extends JPanel{
 	
-	public RegistPanelCenter center;
-	public RegistPanelBottom bottom;
+	public RegistPanelCenter center = new RegistPanelCenter();
+	public RegistPanelBottom bottom = new RegistPanelBottom();
 	
 	public RegistPanel() {
 		setLayout(new BorderLayout());
+		
+		add(center, BorderLayout.CENTER);
+		add(bottom, BorderLayout.SOUTH);
 	}
 }

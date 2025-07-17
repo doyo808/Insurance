@@ -3,7 +3,6 @@ package customer.product.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -31,8 +30,8 @@ public class ProductIntroducePanel extends JPanel {
 
 	private MouseClickListener listener;
     
-	Panel inHeaderPanel;
-	Panel product_table;
+	JPanel inHeaderPanel;
+	JPanel product_table;
 	
 	JPanel panel;
 	JLabel IntroLabel;
@@ -56,8 +55,8 @@ public class ProductIntroducePanel extends JPanel {
 		setBounds(new Rectangle(0, 0, 1440, 700));
 		
 		setLayout(new BorderLayout());
-		inHeaderPanel = new Panel();
-		product_table = new Panel();
+		inHeaderPanel = new JPanel();
+		product_table = new JPanel();
 		
 		add(inHeaderPanel, BorderLayout.NORTH);
 		add(product_table, BorderLayout.CENTER);
@@ -76,7 +75,6 @@ public class ProductIntroducePanel extends JPanel {
 		searchTextField = new JTextField();
 		searchTextField.setText("아직 미구현된기능");
 		searchBar.add(searchTextField);
-		searchTextField.setColumns(10);
 		
 		searchBtn = new JButton("검색");
 		searchBar.add(searchBtn);
@@ -87,7 +85,7 @@ public class ProductIntroducePanel extends JPanel {
 		productInfoTable.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 20));
 		productInfoTable.setRowHeight(30);
 		productInfoTable.getTableHeader().setReorderingAllowed(false);
-		
+		productInfoTable.getTableHeader().setResizingAllowed(false);
 		
 		//#############################------------------------------------------------------
 		
@@ -154,10 +152,13 @@ public class ProductIntroducePanel extends JPanel {
             	}
             }
         });
-		
+				
+		productInfoTable.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+		productInfoTable.getColumnModel().getColumn(3).setPreferredWidth(80);
+		productInfoTable.getColumnModel().getColumn(4).setPreferredWidth(80);
 		scrollpane = new JScrollPane(productInfoTable);
 		scrollpane.setAutoscrolls(true);
-		scrollpane.setPreferredSize(new Dimension(800, 600));
+		scrollpane.setPreferredSize(new Dimension(1100, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		product_table.add(scrollpane);
 		

@@ -1,8 +1,8 @@
 package employee.product.view.center;
 
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class EditPanelCenter extends JFrame {
+public class EditPanelCenter extends JPanel {
 	public EditPanelCenter() {
 		
 	}
