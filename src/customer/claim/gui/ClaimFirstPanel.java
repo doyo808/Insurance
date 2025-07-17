@@ -11,45 +11,29 @@ public class ClaimFirstPanel extends JPanel {
 
     public ClaimFirstPanel(JPanel parentCardPanel) {
         this.parentCardPanel = parentCardPanel;
-        setLayout(new BorderLayout(20, 20));
+        setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // ▶ 좌측: 청구내역조회 버튼 (원래 크기 + 왼쪽 여백)
-        JPanel 왼쪽패널 = new JPanel(new BorderLayout());
-        왼쪽패널.setBackground(Color.WHITE);
-        왼쪽패널.setBorder(BorderFactory.createEmptyBorder(0, 50, 0, 0)); // 상, 좌, 하, 우
-
-        JPanel 왼쪽패널버튼넣는패널 = new JPanel(new GridBagLayout()); // 가운데 정렬
-        왼쪽패널버튼넣는패널.setBackground(Color.WHITE);
-
-        CardSwitchButton 청구내역조회버튼 = new CardSwitchButton(
-                "보험금 청구내역 조회(진행상태 및 결과 조회)",
-                parentCardPanel, "", 350, 250); // 원래 크기 유지
-
-        왼쪽패널버튼넣는패널.add(청구내역조회버튼);
-        왼쪽패널.add(왼쪽패널버튼넣는패널, BorderLayout.CENTER);
-        add(왼쪽패널, BorderLayout.WEST);
-
-        // ▶ 오른쪽 2x2 버튼 영역 (작은 버튼들)
-        JPanel 오른쪽패널 = new JPanel(new GridLayout(2, 2, 50, 50));
-        오른쪽패널.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        오른쪽패널.setBackground(Color.WHITE);
+        TitlePanel title = new TitlePanel("보험금 청구");
+        add(title, BorderLayout.NORTH);
+        
+        JPanel 버튼패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
 
         // 패널이름추가하기!!!!!!!!
+        CardSwitchButton 청구내역조회버튼 = new CardSwitchButton("<html>보험금 청구내역 조회<br>(진행상태 및 결과 조회)</html>", parentCardPanel, "ClaimHistoryPanel", 200, 80);
         CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 200, 80);
-        CardSwitchButton 추가청구버튼 = new CardSwitchButton("이전에 청구했던 질병, 사고 추가 청구하기", parentCardPanel, "", 200, 80);
+        CardSwitchButton 추가청구버튼 = new CardSwitchButton("<html>이전에 청구했던 <br>질병, 사고 추가 청구하기<html>", parentCardPanel, "", 200, 80);
         CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 80);
         CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 80);
         
-//        RequiredDocumentsInfo infoPanel = new RequiredDocumentsInfo(parentCardPanel, "ClaimFirstPanel");
-//        parentCardPanel.add(infoPanel, "RequiredDocumentsInfoFromClaimFirstPanel");
-        
-        오른쪽패널.add(신규청구버튼);
-        오른쪽패널.add(추가청구버튼);
-        오른쪽패널.add(청구방법버튼);
-        오른쪽패널.add(상황별필요서류버튼);
+        버튼패널.add(청구내역조회버튼);
+        버튼패널.add(신규청구버튼);
+        버튼패널.add(추가청구버튼);
+        버튼패널.add(청구방법버튼);
+        버튼패널.add(상황별필요서류버튼);
+        버튼패널.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));  // 위 30px 여백 추가
 
-        add(오른쪽패널, BorderLayout.CENTER);
+        add(버튼패널, BorderLayout.CENTER);
 
         // ▶ 하단 안내문
         JTextArea 안내문 = new JTextArea(
@@ -70,7 +54,7 @@ public class ClaimFirstPanel extends JPanel {
         안내문.setMargin(new Insets(10, 10, 10, 10)); // 안쪽 여백(상,하,좌,우)
 
         JScrollPane scroll = new JScrollPane(안내문); // 스크롤
-        scroll.setPreferredSize(new Dimension(0, 160)); // 너비(자동맞춤), 높이
+        scroll.setPreferredSize(new Dimension(0, 300)); // 너비(자동맞춤), 높이
         scroll.setBorder(BorderFactory.createEmptyBorder(0, 30, 30, 30)); // 바깥쪽 여백(상, 좌, 하, 우)
         add(scroll, BorderLayout.SOUTH);
     }

@@ -178,6 +178,7 @@ public class ClaimTargetPanel extends JPanel {
 				claimData.setPhoneNumber(phoneNumField.getText());
 			} else if (customerChButton.isSelected()) {
 				claimData.setSelf(true); // 로그인 정보에서 값을 가져와 저장한다.
+				
 			}
 
 //			System.out.println(claimData.toString()); // 디버깅용
