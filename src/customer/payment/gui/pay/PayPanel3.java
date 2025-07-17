@@ -1,4 +1,4 @@
-package customer.payment.gui.autopayment;
+package customer.payment.gui.pay;
 
 import common.gui.MainPageButton;
 import customer.payment.gui.PaymentMainPanel;
@@ -11,12 +11,12 @@ import javax.swing.SwingConstants;
 import java.awt.Rectangle;
 import net.miginfocom.swing.MigLayout;
 
-public class AutoPaymentPanel3 extends DefaultPanel {
+public class PayPanel3 extends DefaultPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private MainPageButton mainPageButton;
 
-	public AutoPaymentPanel3(PaymentMainPanel pmp, CustomerMainPanel cmp) {
+	public PayPanel3(PaymentMainPanel pmp, CustomerMainPanel cmp) {
 		setBounds(new Rectangle(0, 0, 1440, 700));
 		// 전체를 1열로 구성, 행 간격 20px 줌
 		setLayout(new MigLayout("", "[grow]", "20[][54px][39px][50px]"));
@@ -24,7 +24,7 @@ public class AutoPaymentPanel3 extends DefaultPanel {
 		mainPageButton = new MainPageButton(cmp);
 		
 
-		JLabel lbln = new JLabel("<html><div style='text-align: center;'>자동이체 등록이 완료되었습니다.<br>메인페이지로 돌아가시려면 버튼을 눌러주세요.</div></html>");
+		JLabel lbln = new JLabel("<html><div style='text-align: center;'>결제가 완료되었습니다.<br>메인페이지로 돌아가시려면 버튼을 눌러주세요.</div></html>");
 		lbln.setHorizontalAlignment(SwingConstants.CENTER);
 		lbln.setFont(new Font("맑은 고딕", Font.BOLD, 20));
 		lbln.setBackground(Color.WHITE);
