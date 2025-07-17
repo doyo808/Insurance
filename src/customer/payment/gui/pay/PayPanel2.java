@@ -1,4 +1,4 @@
-package customer.payment.gui.autopayment;
+package customer.payment.gui.pay;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,7 +30,7 @@ import customer.payment.gui.components.PaymentDefaultButton;
 import customer.payment.method.AccountRegistrator;
 import net.miginfocom.swing.MigLayout; // MigLayout import
 
-public class AutoPaymentPanel2 extends JPanel {
+public class PayPanel2 extends JPanel {
 
     private static final long serialVersionUID = 1L;
     public final static String[] BANKLIST = {"국민은행", "신한은행", "우리은행", "하나은행", "카카오뱅크", "토스뱅크"};
@@ -39,16 +39,16 @@ public class AutoPaymentPanel2 extends JPanel {
     private static final Font VALUE_FONT = new Font("맑은 고딕", Font.BOLD, 13);
     private String[] selectedData = null;
     // 정보 표시 및 입력용 컴포넌트
-    private JLabel valProductName, valContractId, valStartDate, valEndDate, valPaymentType, valPremium;
-    private JLabel lblRegisteredBank, valRegisteredBank, lblRegisteredAccount, valRegisteredAccount;
-    private JLabel lblNoAccountInfo;
+    private JLabel valProductName, valContractId, valPremium, valUnpaidDate, valDeadlineDate;
     private JComboBox<String> cbBank;
     private JTextField tfAccountNumber;
     private JPasswordField tfPassword2Digits;
     private JButton regiBtn, cnbtn;
     private CardSwitcher pmp;
+    private JLabel lbln;
+    private JLabel lbln_1;
 
-    public AutoPaymentPanel2(PaymentMainPanel pmp) {
+    public PayPanel2(PaymentMainPanel pmp) {
     	
         // 1. 메인 패널 레이아웃: 1열로 구성, 아래쪽 패널이 남은 공간 모두 차지
         super(new MigLayout(
@@ -79,10 +79,10 @@ public class AutoPaymentPanel2 extends JPanel {
         // 값 표시용 라벨들 초기화
         valProductName = createValueLabel(); 
         valContractId = createValueLabel();
-        valStartDate = createValueLabel(); 
-        valEndDate = createValueLabel();
-        valPaymentType = createValueLabel(); 
         valPremium = createValueLabel();
+        valUnpaidDate = createValueLabel(); 
+        valDeadlineDate = createValueLabel();
+
 
 
         // MigLayout은 컴포넌트와 제약조건을 번갈아 추가하는 직관적인 방식 사용
@@ -92,31 +92,13 @@ public class AutoPaymentPanel2 extends JPanel {
         panel.add(valContractId, "growx");
 
         panel.add(new JLabel("가입일"));
-        panel.add(valStartDate, "growx");
+        panel.add(valUnpaidDate, "growx");
         panel.add(new JLabel("만기일"));
-        panel.add(valEndDate, "growx");
+        panel.add(valDeadlineDate, "growx");
 
-        panel.add(new JLabel("납입방법"));
-        panel.add(valPaymentType, "growx");
         panel.add(new JLabel("보험료"));
         panel.add(valPremium, "growx");
 
-
-        // 등록 계좌 정보
-        lblRegisteredBank = new JLabel("등록은행");
-        valRegisteredBank = createValueLabel();
-        lblRegisteredAccount = new JLabel("등록계좌");
-        valRegisteredAccount = createValueLabel();
-        lblNoAccountInfo = new JLabel("현재 등록된 계좌정보가 없습니다.", SwingConstants.LEFT);
-        lblNoAccountInfo.setForeground(Color.RED);
-        
-        panel.add(lblRegisteredBank);
-        panel.add(valRegisteredBank, "growx");
-        panel.add(lblRegisteredAccount);
-        panel.add(valRegisteredAccount, "growx");
-        
-        // 정보 없음 메시지는 조건부 노출을 위해 별도로 추가해 둠
-        panel.add(lblNoAccountInfo, "skip 1, span 3, growx, hidemode 3"); // 1칸 건너뛰고 3칸 병합, 안 보일 때 공간도 차지하지 않음
 
         return panel;
     }
@@ -125,9 +107,9 @@ public class AutoPaymentPanel2 extends JPanel {
      * 자동이체 계좌 정보 입력 패널을 생성합니다.
      */
     private JPanel createAccountInputPanel(PaymentMainPanel pmp) {
-    	JPanel panel = new JPanel(new MigLayout("fillx", "[][grow][][grow][][grow]"));
+    	JPanel panel = new JPanel(new MigLayout("fillx", "[][grow][][grow][][grow]", "[][][][][][][]"));
         panel.setBackground(new Color(255, 255, 255));
-        panel.setBorder(BorderFactory.createTitledBorder("자동이체 계좌 변경/신규 등록"));
+        panel.setBorder(BorderFactory.createTitledBorder("결제 계좌 입력"));
 
         cbBank = new JComboBox<>(BANKLIST);
         cbBank.setPreferredSize(new Dimension(500, 30));
@@ -138,7 +120,7 @@ public class AutoPaymentPanel2 extends JPanel {
         tfPassword2Digits.setFont(new Font("맑은 고딕", Font.BOLD, 15));
         tfPassword2Digits.setPreferredSize(new Dimension(100, 30));
         tfPassword2Digits.setMargin(new Insets(0, 5, 5, 0));
-		cnbtn = new CardNavButton("이전", this.pmp, "AutoPayment1");
+		cnbtn = new CardNavButton("이전", this.pmp, "pay1");
         regiBtn = new PaymentDefaultButton("등록");
         regiBtn.setEnabled(false); // 처음엔 비활성화
         regiBtn.addActionListener(e -> {
@@ -175,16 +157,32 @@ public class AutoPaymentPanel2 extends JPanel {
         tfPassword2Digits.getDocument().addDocumentListener(inputListener);
 
         // 컴포넌트 추가 (예시, MigLayout 기준)
-        panel.add(new JLabel("은행"));
-        panel.add(cbBank, "wrap");
-        panel.add(new JLabel("계좌번호"));
-        panel.add(tfAccountNumber, "wrap");
-        panel.add(new JLabel("비밀번호 앞 2자리"));
-        panel.add(tfPassword2Digits, "wrap");	
+        panel.add(new JLabel("은행"), "cell 0 0");
+        panel.add(cbBank, "cell 1 0");
+        panel.add(new JLabel("계좌번호"), "cell 0 1");
+        panel.add(tfAccountNumber, "cell 1 1");
+        panel.add(new JLabel("비밀번호 앞 2자리"), "cell 0 2");
+        panel.add(tfPassword2Digits, "cell 1 2");
+        
+        lbln = new JLabel("결제금액:");
+        lbln.setHorizontalAlignment(SwingConstants.RIGHT);
+        lbln.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        lbln.setBackground(Color.WHITE);
+        panel.add(lbln, "cell 0 3");
+        
+        lbln_1 = new JLabel("원");
+        lbln_1.setMinimumSize(new Dimension(46, 20));
+        lbln_1.setMaximumSize(new Dimension(200, 100));
+        lbln_1.setSize(new Dimension(0, 20));
+        lbln_1.setPreferredSize(new Dimension(100, 20));
+        lbln_1.setHorizontalAlignment(SwingConstants.LEFT);
+        lbln_1.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        lbln_1.setBackground(Color.WHITE);
+        panel.add(lbln_1, "cell 1 3");
        
 
-        panel.add(cnbtn, "span, split 2, center, gapright 20");
-        panel.add(regiBtn);
+        panel.add(cnbtn, "cell 0 5 6 1,alignx center,gapright 20");
+        panel.add(regiBtn, "cell 0 5 6 1");
 
         return panel;
         
@@ -202,10 +200,10 @@ public class AutoPaymentPanel2 extends JPanel {
     	if (contractData != null) {
         valProductName.setText(contractData[1]);
         valContractId.setText(contractData[2]);
-        valStartDate.setText(contractData[3]);
-        valEndDate.setText(contractData[4]);
-        valPaymentType.setText(contractData[5]);
-        valPremium.setText(contractData[6]);
+        valPremium.setText(contractData[3] + "원");
+        valUnpaidDate.setText(contractData[4]);
+        valDeadlineDate.setText(contractData[5]);
+        
     	}
     }
     
@@ -218,16 +216,6 @@ public class AutoPaymentPanel2 extends JPanel {
                     accountNumber != null && !accountNumber.trim().isEmpty();
 
             
-            lblRegisteredBank.setVisible(true);
-            valRegisteredBank.setVisible(hasAccount);
-            lblRegisteredAccount.setVisible(true);
-            valRegisteredAccount.setVisible(hasAccount);
-            lblNoAccountInfo.setVisible(!hasAccount);
-
-            if (hasAccount) {
-                valRegisteredBank.setText(bank);
-                valRegisteredAccount.setText(accountNumber);
-            }
     	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

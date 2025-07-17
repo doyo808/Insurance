@@ -9,25 +9,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.database.model.UnpaidModel;
+import common.method.InsuranceTeamConnector;
 
 public class UnpaidDAO {
 
     // 특정 고객의 미납 내역 조회
-    public static List<UnpaidModel> getUnpaidsByCustomer(int customer_id, Connection conn) throws SQLException {
-        String query = "SELECT * FROM unpaids WHERE customer_id = ?";
-        List<UnpaidModel> result = new ArrayList<>();
+    public static List<UnpaidModel> getUnpaidsByCustomer(int customer_id) {
+    	try (Connection conn =  InsuranceTeamConnector.getConnection()) {
+    		String query = "SELECT * FROM unpaids WHERE customer_id = ?";
+            List<UnpaidModel> result = new ArrayList<>();
 
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, customer_id);
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setInt(1, customer_id);
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    result.add(new UnpaidModel(rs));
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(new UnpaidModel(rs));
+                    }
                 }
             }
-        }
-
-        return result;
+            return result;
+    	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
     }
     // 고객의 미납내역 한개를 조회
     public static UnpaidModel getUnpaidByCustomer(int customer_id, int unpaid_id, Connection conn) throws SQLException {

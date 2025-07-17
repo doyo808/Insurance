@@ -19,6 +19,7 @@ import common.database.model.ContractModel;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
 import customer.payment.gui.PaymentMainPanel;
+import customer.payment.gui.components.CardNavButton;
 import customer.payment.gui.components.CardSwitcher;
 import customer.payment.gui.components.ContractTablePanel;
 import customer.payment.gui.components.DefaultPanel;
@@ -53,6 +54,10 @@ public class AutoPaymentPanel1 extends DefaultPanel {
 		JPanel contractPanel = new ContractTablePanel(datas);
 		contractPanel.setBackground(new Color(255, 255, 255));
 		add(contractPanel, "cell 1 2,grow");
+		
+		
+		CardNavButton cnbtn = new CardNavButton("이전", switcher, "PaymentMenu");
+		add(cnbtn, "cell 1 3, center");
 		
 		PaymentDefaultButton chkbtn = new PaymentDefaultButton("확인");
 		add(chkbtn, "cell 1 3, center");
