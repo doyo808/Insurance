@@ -1,4 +1,4 @@
-package common.method;
+package customer.contract.method;
 
 import java.time.LocalDate;
 

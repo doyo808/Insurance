@@ -32,6 +32,27 @@ public class ProductDAO {
             }
         }
     }
+    
+    /**
+     * 특정 상품 이름으로 상품 정보를 조회합니다.
+     *
+     * @param productName 조회할 상품 이름
+     * @param conn DB 연결 객체
+     * @return Product 객체 (없으면 null)
+     * @throws SQLException
+     */
+    public static ProductModel getProductByName(String productName, Connection conn) throws SQLException {
+        String query = "SELECT * FROM products WHERE product_name = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, productName);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next() ? new ProductModel(rs) : null;
+            }
+        }
+    }
+    
+    
 
     /**
      * 모든 상품 목록을 조회합니다.

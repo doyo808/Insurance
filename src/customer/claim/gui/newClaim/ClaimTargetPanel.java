@@ -23,7 +23,6 @@ import customer.claim.gui.TitlePanel;
 public class ClaimTargetPanel extends JPanel {
 	
 	private JPanel parentCardPanel;
-	
 
 	public ClaimTargetPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
 		this.parentCardPanel = parentCardPanel;
@@ -107,15 +106,12 @@ public class ClaimTargetPanel extends JPanel {
 //				}
 //			}
 //		});
-		
 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		insuredInfoPanel.add(nameLabel, gbc);
 		gbc.gridx = 1;
 		insuredInfoPanel.add(nameField, gbc);
-
-		
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
