@@ -17,13 +17,13 @@ import javax.swing.SpinnerNumberModel;
 public class RegistPanelCenter extends JPanel {
 	
 	public JTextField productIdField, productNameField, joinLimitLowField, joinLimitHighField, basePremiumField, premiumConstantField;
-//	JTextField termsPathField;
-//	JTextField manualPathField;
+	public JTextField termsNameField;
+	public JTextField manualNameField;
 	public JComboBox<String> divisionField;
     public JSpinner joinAgeLowField ,joinAgeHighField;
     public JButton termsBrowseButton, manualBrowseButton, imageUploadButton;
 
-	public File termAndCondition;
+	public File termAndConditions;
 	public File productManual;
 	public File image;
 	
@@ -44,14 +44,14 @@ public class RegistPanelCenter extends JPanel {
         joinAgeHighField = new JSpinner(new SpinnerNumberModel(65, 0, 120, 1));
         joinLimitLowField = new JTextField(20);
         joinLimitHighField = new JTextField(20);
-//        termsPathField = new JTextField(20);
+        termsNameField = new JTextField(20);
         termsBrowseButton = new JButton("찾기");
-//        manualPathField = new JTextField(20);
+        manualNameField = new JTextField(20);
     	manualBrowseButton = new JButton("찾기");
     	basePremiumField = new JTextField(20);
     	premiumConstantField = new JTextField(20);
     	imageUploadButton = new JButton("이미지 업로드");
-//        JLabel imagePreview = new JLabel("이미지 미리보기");
+        JLabel imagePreview = new JLabel("이미지 미리보기");
 
         // 레이블과 필드를 행으로 추가
         addRow(this, gbc, row++, "상품 ID:", productIdField);
@@ -61,10 +61,8 @@ public class RegistPanelCenter extends JPanel {
         addRow(this, gbc, row++, "가입 나이 (최고):", joinAgeHighField);
         addRow(this, gbc, row++, "가입한도 (최저):", joinLimitLowField);
         addRow(this, gbc, row++, "가입한도 (최고):", joinLimitHighField);
-        addRow(this, gbc, row++, "약관 파일:", termsBrowseButton);
-        addRow(this, gbc, row++, "설명서 파일:", manualBrowseButton);
-//        addRowWithButton(this, gbc, row++, "약관 파일:", termsPathField, termsBrowseButton);
-//        addRowWithButton(this, gbc, row++, "설명서 파일:", manualPathField, manualBrowseButton);
+        addRowWithButton(this, gbc, row++, "약관 파일:", termsNameField, termsBrowseButton);
+        addRowWithButton(this, gbc, row++, "설명서 파일:", manualNameField, manualBrowseButton);
         addRow(this, gbc, row++, "기본 지급 금액:", basePremiumField);
         addRow(this, gbc, row++, "보장 상수:", premiumConstantField);
 
@@ -73,9 +71,9 @@ public class RegistPanelCenter extends JPanel {
         add(new JLabel("상품 소개 이미지:"), gbc);
         gbc.gridx = 1;
         add(imageUploadButton, gbc);
-//        gbc.gridy++;
-//        gbc.gridx = 1;
-//        add(imagePreview, gbc);
+        gbc.gridy++;
+        gbc.gridx = 1;
+        add(imagePreview, gbc);
 	}
 	
 	private void addRow(JPanel panel, GridBagConstraints gbc, int row, String label, Component field) {
@@ -86,15 +84,15 @@ public class RegistPanelCenter extends JPanel {
         panel.add(field, gbc);
     }
 
-	/*
     private void addRowWithButton(JPanel panel, GridBagConstraints gbc, int row, String label, JTextField field, JButton button) {
         gbc.gridx = 0;
         gbc.gridy = row;
         panel.add(new JLabel(label), gbc);
         gbc.gridx = 1;
+        field.setEditable(false);
+        field.setFocusable(false);
         panel.add(field, gbc);
         gbc.gridx = 2;
         panel.add(button, gbc);
     }
-    */
 }

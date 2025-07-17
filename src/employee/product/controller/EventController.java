@@ -1,7 +1,11 @@
 package employee.product.controller;
 
+import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+
+import javax.swing.JFileChooser;
 
 import employee.product.model.ProductInfoModel;
 import employee.product.view.ProductManageMainPanel;
@@ -60,21 +64,27 @@ public class EventController {
 		});
 		
 		view.card3.center.termsBrowseButton.addActionListener(e -> {
-			// 파일 탐색기를 연다
-			
-			// 파일 탐색기에서 선택된 파일정보를 File view.card3.termsAndConditions에 담아둔다
+			// 파일 탐색기에서 선택된 파일정보를 File view.card3.termAndConditions에 담아둔다
+			File file = fileExplore(view.card3.center);
+			view.card3.center.termAndConditions = file;
+			// 해당 텍스트필드에 파일명을 적어둠
+			view.card3.center.termsNameField.setText(file.getName());
 		});
 		
 		view.card3.center.manualBrowseButton.addActionListener(e -> {
-			// 파일 탐색기를 연다
-			
-			// 파일 탐색기에서 선택된 파일정보를 File view.card3.manual에 담아둔다
+			// 파일 탐색기에서 선택된 파일정보를 File view.card3.productManual에 담아둔다
+			File file = fileExplore(view.card3.center);
+			view.card3.center.productManual = fileExplore(view.card3.center);
+			// 해당 텍스트필드에 파일명을 적어둠
+			view.card3.center.manualNameField.setText(file.getName());
 		});
 		
 		view.card3.center.imageUploadButton.addActionListener(e -> {
-			// 파일 탐색기를 연다
+			// 파일 탐색기에서 선택된 파일정보를 File view.card3.image에 담아둔다
+			File file = fileExplore(view.card3.center);
+			view.card3.center.image = fileExplore(view.card3.center);
+			// 해당 레이블에 이미지를 미리 보여주기
 			
-			// 파일 탐색기에서 선택된 이미지 파일을 File view.card3.image에 담아둔다
 		});
 		
 		view.card3.bottom.regist.addActionListener(e -> {
@@ -94,5 +104,23 @@ public class EventController {
 		// end
 		//################################################################
 		
+	}
+	
+	/***
+	 * 파일탐색기에서 파일을 가져오는 메서드
+	 * @param 컴포넌트
+	 * @return 선택한 파일을 반환
+	 */
+	public File fileExplore(Component com) {
+		// 파일 탐색기를 연다
+		JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(com);
+        
+		// 파일 탐색기에서 선택된 이미지 파일경로를 String 변수에 담아둔다
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile();
+        } else {
+        	return null;
+        }
 	}
 }
