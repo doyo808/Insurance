@@ -3,23 +3,17 @@ package customer.payment.gui.components;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.util.Collections;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class UnpaidTablePanel extends JPanel {
 
-    private JTable table;
+	private static final long serialVersionUID = 1L;
+	private JTable table;
     private DefaultTableModel tableModel;
     private int selectedIndex = -1;
-    
-    private List<String[]> testmutipledata;
 
     public UnpaidTablePanel() {
-        this(List.of(
-            new String[]{"자동이체", "실손보험", "123451", "150000", "2025.05", "2025-07-31"},
-            new String[]{"가상계좌", "실손보험", "123452", "90000", "2025.06", "2025-08-15"},
-            new String[]{"카드결제", "치아보험", "123453", "120000", "2025.07", "2025-09-30"}
-        ));
     }
 
     public UnpaidTablePanel(List<String[]> dataList) {
@@ -28,6 +22,8 @@ public class UnpaidTablePanel extends JPanel {
         String[] columnNames = {"구분", "상품이름", "계약번호", "미납액", "납입월분", "납입기한", "선택"};
 
         tableModel = new DefaultTableModel(null, columnNames) {
+            private static final long serialVersionUID = 1L;
+
             @Override
             public Class<?> getColumnClass(int columnIndex) {
                 return columnIndex == 6 ? Boolean.class : String.class;
@@ -39,10 +35,25 @@ public class UnpaidTablePanel extends JPanel {
             }
         };
 
+        // 미납액 포맷용
+        DecimalFormat moneyFormat = new DecimalFormat("#,###원");
+
+        // 데이터 추가
         for (String[] row : dataList) {
             Object[] newRow = new Object[row.length + 1];
-            System.arraycopy(row, 0, newRow, 0, row.length);
-            newRow[row.length] = false;  // 선택 초기값
+            for (int i = 0; i < row.length; i++) {
+                if (i == 3) { // 미납액 칼럼 (인덱스 3)
+                    try {
+                        int amount = Integer.parseInt(row[i].replaceAll("[^0-9]", ""));
+                        newRow[i] = moneyFormat.format(amount);
+                    } catch (NumberFormatException e) {
+                        newRow[i] = row[i];
+                    }
+                } else {
+                    newRow[i] = row[i];
+                }
+            }
+            newRow[row.length] = false; // 선택 기본값
             tableModel.addRow(newRow);
         }
 
@@ -54,12 +65,17 @@ public class UnpaidTablePanel extends JPanel {
         table.setBackground(Color.WHITE);
         table.setSelectionBackground(Color.CYAN);
 
-        // 선택 컬럼 설정
+        // ===== 컬럼 너비 조절 =====
+        // 구분 컬럼(0번)
+        TableColumn typeColumn = table.getColumnModel().getColumn(0);
+        typeColumn.setPreferredWidth(50);
+        typeColumn.setMaxWidth(60);
+        typeColumn.setMinWidth(40);
+
+        // 선택 컬럼(6번)
         TableColumn selectColumn = table.getColumnModel().getColumn(6);
         selectColumn.setCellRenderer(new RadioButtonRenderer());
         selectColumn.setCellEditor(new RadioButtonEditor());
-
-        // 너비 30px로 고정
         selectColumn.setPreferredWidth(30);
         selectColumn.setMaxWidth(30);
         selectColumn.setMinWidth(30);

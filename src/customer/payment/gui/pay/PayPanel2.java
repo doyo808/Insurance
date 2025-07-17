@@ -28,6 +28,7 @@ import customer.payment.gui.components.CardNavButton;
 import customer.payment.gui.components.CardSwitcher;
 import customer.payment.gui.components.PaymentDefaultButton;
 import customer.payment.method.AccountRegistrator;
+import customer.payment.method.payment;
 import net.miginfocom.swing.MigLayout; // MigLayout import
 
 public class PayPanel2 extends JPanel {
@@ -38,15 +39,15 @@ public class PayPanel2 extends JPanel {
     private static final Font LABEL_FONT = new Font("맑은 고딕", Font.PLAIN, 13);
     private static final Font VALUE_FONT = new Font("맑은 고딕", Font.BOLD, 13);
     private String[] selectedData = null;
+    private Integer unpaid_id;
     // 정보 표시 및 입력용 컴포넌트
-    private JLabel valProductName, valContractId, valPremium, valUnpaidDate, valDeadlineDate;
+    private JLabel valProductName, valContractId, valPremium, valUnpaidDate, valDeadlineDate, lbPayment, valPayment;
     private JComboBox<String> cbBank;
     private JTextField tfAccountNumber;
     private JPasswordField tfPassword2Digits;
     private JButton regiBtn, cnbtn;
     private CardSwitcher pmp;
-    private JLabel lbln;
-    private JLabel lbln_1;
+
 
     public PayPanel2(PaymentMainPanel pmp) {
     	
@@ -137,6 +138,8 @@ public class PayPanel2 extends JPanel {
                     "등록 실패",
                     JOptionPane.WARNING_MESSAGE);
             }
+            unpaid_id = Integer.valueOf(selectedData[6]);
+            payment.pay(Session.getCustomer(), unpaid_id, Integer.valueOf(accountNumber));
         });
 
         // 입력 필드 상태 감시 리스너 등록
@@ -164,21 +167,21 @@ public class PayPanel2 extends JPanel {
         panel.add(new JLabel("비밀번호 앞 2자리"), "cell 0 2");
         panel.add(tfPassword2Digits, "cell 1 2");
         
-        lbln = new JLabel("결제금액:");
-        lbln.setHorizontalAlignment(SwingConstants.RIGHT);
-        lbln.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-        lbln.setBackground(Color.WHITE);
-        panel.add(lbln, "cell 0 3");
+        lbPayment = new JLabel("결제금액:");
+        lbPayment.setHorizontalAlignment(SwingConstants.RIGHT);
+        lbPayment.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        lbPayment.setBackground(Color.WHITE);
+        panel.add(lbPayment, "cell 0 3");
         
-        lbln_1 = new JLabel("원");
-        lbln_1.setMinimumSize(new Dimension(46, 20));
-        lbln_1.setMaximumSize(new Dimension(200, 100));
-        lbln_1.setSize(new Dimension(0, 20));
-        lbln_1.setPreferredSize(new Dimension(100, 20));
-        lbln_1.setHorizontalAlignment(SwingConstants.LEFT);
-        lbln_1.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-        lbln_1.setBackground(Color.WHITE);
-        panel.add(lbln_1, "cell 1 3");
+        valPayment = new JLabel("원");
+        valPayment.setMinimumSize(new Dimension(46, 20));
+        valPayment.setMaximumSize(new Dimension(200, 100));
+        valPayment.setSize(new Dimension(0, 20));
+        valPayment.setPreferredSize(new Dimension(100, 20));
+        valPayment.setHorizontalAlignment(SwingConstants.LEFT);
+        valPayment.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        valPayment.setBackground(Color.WHITE);
+        panel.add(valPayment, "cell 1 3");
        
 
         panel.add(cnbtn, "cell 0 5 6 1,alignx center,gapright 20");
@@ -200,10 +203,10 @@ public class PayPanel2 extends JPanel {
     	if (contractData != null) {
         valProductName.setText(contractData[1]);
         valContractId.setText(contractData[2]);
-        valPremium.setText(contractData[3] + "원");
+        valPremium.setText(contractData[3]);
         valUnpaidDate.setText(contractData[4]);
         valDeadlineDate.setText(contractData[5]);
-        
+        valPayment.setText(contractData[3]);
     	}
     }
     

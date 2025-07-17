@@ -104,4 +104,8 @@ public class PaymentMainPanel extends DefaultPanel implements CardSwitcher {
 
 		showCard(name);
 	}
+	
+	public CustomerMainPanel getCMP() {
+		return cmp;
+	}
 }
