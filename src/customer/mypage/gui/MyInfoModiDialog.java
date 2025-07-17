@@ -21,10 +21,10 @@ import customer.mypage.method.MyPageUtil;
 
 public class MyInfoModiDialog extends JDialog {
 
-    private JTextField tfName, tfBirth, tfPhone, tfEmailId, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
+    private JTextField tfName, tfBirth, tfPhone, tfPhoneMid, tfPhoneLast, tfEmailId, tfJob, tfCompany, tfCompanyPhone, tfAddress1, tfAddress2, tfWorkAddress1, tfWorkAddress2;
     private JButton btnSave, btnCancel;
     private MyPageMainPanel parentPanel;
-    private JComboBox<String> cbEmailDomain;
+    private JComboBox<String> cbPhoneLocal, cbEmailDomain;
     private CustomerModel cm;
 
     public MyInfoModiDialog(MyPageMainPanel parentPanel, CustomerModel cm) {
@@ -74,7 +74,27 @@ public class MyInfoModiDialog extends JDialog {
         	}
         });        
         
-        addLabelAndField("전화번호", tfPhone = new JTextField(), 20, y += spacingY, labelW, fieldW);        
+        //addLabelAndField("전화번호", tfPhone = new JTextField(), 20, y += spacingY, labelW, fieldW);
+        addLabelAndCombo("전화번호", cbPhoneLocal = new JComboBox<>(new String[] {
+        		"010", "011", "016", "017", "018", "019", "02", "031", "032", "033", "041", "042", "043", "044", "051", "052", "053", "054", "055", "061", "062", "063", "064"
+        }), 20, y += spacingY, labelW, 60);
+        
+        JLabel lbDash1 = new JLabel("-");
+        lbDash1.setBounds(20 + labelW + 78, y, 5, h);
+        add(lbDash1);
+
+        tfPhoneMid = new JTextField();
+        tfPhoneMid.setBounds(20 + labelW + 90, y, 60, h);
+        add(tfPhoneMid);
+        
+        JLabel lbDash2 = new JLabel("-");
+        lbDash2.setBounds(20 + labelW + 155, y, 5, h);
+        add(lbDash2);      
+
+        tfPhoneLast = new JTextField();
+        tfPhoneLast.setBounds(20 + labelW + 165, y, 60, h);
+        add(tfPhoneLast);        
+        
         addLabelAndField("기본주소", tfAddress1 = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("상세주소", tfAddress2 = new JTextField(), 20, y += spacingY, labelW, fieldW);
         addLabelAndField("직업", tfJob = new JTextField(), 20, y += spacingY, labelW, fieldW);
@@ -89,7 +109,8 @@ public class MyInfoModiDialog extends JDialog {
         tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()));        
         //tfEmail.setText(cm.getEmail());
         MyPageUtil.splitEmailToFields(cm.getEmail(), tfEmailId, cbEmailDomain);
-        tfPhone.setText(cm.getPhone_number());
+        //tfPhone.setText(cm.getPhone_number());
+        MyPageUtil.splitPhoneToFields(cm.getPhone_number(), cbPhoneLocal, tfPhoneMid, tfPhoneLast);        
         tfAddress1.setText(cm.getAddress_1());
         tfAddress2.setText(cm.getAddress_2());        
         tfJob.setText(cm.getJob());
@@ -121,7 +142,8 @@ public class MyInfoModiDialog extends JDialog {
                 
                 //pstmt.setString(1, tfEmail.getText());
                 pstmt.setString(1, MyPageUtil.combineEmail(tfEmailId.getText(), cbEmailDomain.getSelectedItem()));
-                pstmt.setString(2, tfPhone.getText());
+                //pstmt.setString(2, tfPhone.getText());
+                pstmt.setString(2, MyPageUtil.combinePhone(cbPhoneLocal.getSelectedItem(), tfPhoneMid.getText(), tfPhoneLast.getText()));
                 pstmt.setString(3, tfAddress1.getText());
                 pstmt.setString(4, tfAddress2.getText());                
                 pstmt.setString(5, tfJob.getText());
@@ -140,7 +162,8 @@ public class MyInfoModiDialog extends JDialog {
                 	// DB 업데이트 성공 후
                     //cm.setEmail(tfEmail.getText());
                     cm.setEmail(MyPageUtil.combineEmail(tfEmailId.getText(), cbEmailDomain.getSelectedItem()));
-                    cm.setPhone_number(tfPhone.getText());
+                    //cm.setPhone_number(tfPhone.getText());
+                    cm.setPhone_number(MyPageUtil.combinePhone(cbPhoneLocal.getSelectedItem(), tfPhoneMid.getText(), tfPhoneLast.getText()));                    
                     cm.setAddress_1(tfAddress1.getText());
                     cm.setAddress_2(tfAddress2.getText());                    
                     cm.setJob(tfJob.getText());
@@ -177,6 +200,16 @@ public class MyInfoModiDialog extends JDialog {
         field.setBounds(x + labelWidth + 10, y, fieldWidth, 25);
         add(field);
     }
+    
+    private void addLabelAndCombo(String label, JComboBox<String> cbo, int x, int y, int labelWidth, int fieldWidth) {
+        JLabel lb = new JLabel(label);
+        lb.setBounds(x, y, labelWidth, 25);
+        add(lb);
+
+        cbo.setBounds(x + labelWidth + 10, y, fieldWidth, 25);
+        add(cbo);
+    }
+    
     
     
 
