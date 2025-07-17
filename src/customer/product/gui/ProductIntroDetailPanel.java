@@ -202,7 +202,7 @@ public class ProductIntroDetailPanel extends JPanel {
 		coverDetailTable.setRowHeight(30);
 		scrollpane = new JScrollPane(coverDetailTable);
 		scrollpane.setAutoscrolls(true);
-		scrollpane.setPreferredSize(new Dimension(800, 600));
+		scrollpane.setPreferredSize(new Dimension(1100, 600));
 		scrollpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		coverDetailTable.getTableHeader().setReorderingAllowed(false);
 		

@@ -1,6 +1,7 @@
 package employee.product.view;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
@@ -18,6 +19,7 @@ public class ProductManageMainPanel extends JPanel {
 		add(card1, "show");
 		add(card2, "edit");
 		add(card3, "regist");
+		setPreferredSize(new Dimension(1440,700));
 	}
 
 	public void showCard(String name) {

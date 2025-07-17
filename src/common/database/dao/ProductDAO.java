@@ -150,4 +150,48 @@ public class ProductDAO {
             return pstmt.executeUpdate();
         }
     }
+    
+    /***
+     * 상품ID로 DB에서 상품매뉴얼의 상대경로를 가져오는 메서드
+     * @param productId
+     * @param conn
+     * @return 상품메뉴얼 상대경로
+     * @throws SQLException 
+     */
+    public String getProductManualPath(long productId, Connection conn) throws SQLException {
+        String sql = "SELECT product_manual_path FROM PRODUCTS WHERE product_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("product_manual_path");
+                }
+            }
+        }
+        return null;
+    }
+    
+    /***
+     * 상품ID로 DB에서 상품약관의 상대경로를 가져오는 메서드
+     * @param productId
+     * @param conn
+     * @return 상품약관 상대경로
+     * @throws SQLException 
+     */
+    public String getTermAndConditionsPath(long productId, Connection conn) throws SQLException {
+        String sql = "SELECT term_and_conditions_path FROM PRODUCTS WHERE product_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setLong(1, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("term_and_conditions_path");
+                }
+            }
+        }
+        return null;
+    }
 }

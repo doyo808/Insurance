@@ -54,7 +54,9 @@ public class EventController {
 		
 		//################################################################
 		//RegistPanel의 이벤트들
-		
+		view.card3.bottom.prev.addActionListener(e -> {
+			view.showCard("show");
+		});
 		// end
 		//################################################################
 		
@@ -62,7 +64,9 @@ public class EventController {
 		
 		//################################################################
 		//EditPanel의 이벤트들
-		
+		view.card2.bottom.prev.addActionListener(e -> {
+			view.showCard("show");
+		});
 		// end
 		//################################################################
 		
