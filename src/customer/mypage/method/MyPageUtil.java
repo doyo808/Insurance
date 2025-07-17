@@ -1,5 +1,11 @@
 package customer.mypage.method;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -86,5 +92,61 @@ public class MyPageUtil {
 		last = last !=null ? last.trim() : "";
 		return localNum + "-" + mid + "-" + last;
 	}
+	
+	//날짜 포맷 보정
+	
+	public static String formatDate(String rawDateTime) {
+		
+		if(rawDateTime == null || rawDateTime.isEmpty()) {
+			return "";
+		}
+		
+		try {
+			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Date date = inputFormat.parse(rawDateTime);
+			return outputFormat.format(date);		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return rawDateTime;
+		}
+
+	}
+	
+	// 납입월 형식: 2025년 7월    
+    public static String formatToYearMonth(String rawDateTime) {
+        if (rawDateTime == null || rawDateTime.isEmpty()) return "";
+
+        try {
+            // 시간 소수점 이하 제거
+            String trimmed = rawDateTime.split("\\.")[0];
+
+            LocalDateTime dateTime;
+            DateTimeFormatter inputFormatter;
+            
+            if (trimmed.contains("/")) {
+                // 예: 25/07/11 14:18:31
+                inputFormatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
+            } else if (trimmed.contains("-")) {
+                // 예: 2025-07-11 14:18:31
+                inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            } else {
+                return rawDateTime;
+            }
+
+            dateTime = LocalDateTime.parse(trimmed, inputFormatter);
+
+            // 출력 포맷: 2025년 7월
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월");
+            return outputFormatter.format(dateTime);
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return rawDateTime;
+        }
+    }
 
 }
+
