@@ -385,11 +385,7 @@ public class MyPageMainPanel extends JPanel {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(this, "엑셀 저장 중 오류 발생", "오류", JOptionPane.ERROR_MESSAGE);
 			
-		}
-    	
-    	
-    	
-    	
+		}   	
     	
     }
 	
