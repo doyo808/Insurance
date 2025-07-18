@@ -198,7 +198,7 @@ public class CalculatePremiumPanel extends JPanel {
 				monthlyPremiumOutput = CalculatePremium.CalculatePremiumByAge(monthlyPremiumInput, age);
 				
 				setSelectedGender();
-				if (gender.equals("M")) monthlyPremiumOutput *= 1.05;
+				if (gender.equals("M")) monthlyPremiumOutput *= 1.1;
 				
 				textField.setText(String.format("월 %,.0f원", monthlyPremiumOutput));
 				calculated = true;
