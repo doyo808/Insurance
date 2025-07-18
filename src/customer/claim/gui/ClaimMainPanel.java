@@ -76,10 +76,10 @@ public class ClaimMainPanel extends JPanel {
       
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-		cl.show(카드패널, "ClaimFirstPanel");
+//		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
 //		cl.show(카드패널, "AccidentDatePanel");
-//		cl.show(카드패널, "ClaimSituationPanel");
+		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");
 //		cl.show(카드패널, "DocumentRegistrationPanel");
@@ -157,9 +157,9 @@ public class ClaimMainPanel extends JPanel {
 
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-		cl.show(카드패널, "ClaimFirstPanel");
+//		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
-//		cl.show(카드패널, "AccidentDatePanel");
+		cl.show(카드패널, "AccidentDatePanel");
 //		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");

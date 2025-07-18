@@ -95,7 +95,7 @@ public class DocumentRegistrationPanel extends JPanel {
 						JPanel fileP = new JPanel();
 						fileP.setLayout(new BoxLayout(fileP, BoxLayout.X_AXIS));
 
-						JLabel fileNameL = new JLabel("📎 " + file.getName());
+						JLabel fileNameL = new JLabel("* " + file.getName());
 						JButton deleteB = new JButton("삭제");
 						deleteB.setMargin(new Insets(2, 5, 2, 5)); // 버튼 여백 조절
 

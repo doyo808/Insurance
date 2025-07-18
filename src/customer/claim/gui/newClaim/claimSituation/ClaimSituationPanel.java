@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.concurrent.BrokenBarrierException;
 
@@ -31,7 +32,7 @@ public class ClaimSituationPanel extends JPanel {
 	
 	private JPanel parentCardPanel;
 	
-    private String[] 상황_1 = {"병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요", "사망/장해를 입었어요", "내 재산에 피해가 발생했어요"};
+    private String[] 상황_1 = {"청구상황을 선택해 주세요", "병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요", "사망/장해를 입었어요", "내 재산에 피해가 발생했어요"};
 
     private String[] 병원_2 = {"아팠어요(질병)", "다쳤어요(상해)"};
     private String[] 다른사람_2 = {"다쳤어요(신체)", "재산피해를 입혔어요(재물)"};
@@ -52,7 +53,7 @@ public class ClaimSituationPanel extends JPanel {
 	        TitlePanel title = new TitlePanel("청구상황 선택");
 	        add(title, BorderLayout.NORTH);
 
-	        // 가운데 centerPanel ------------------------
+	        // 가운데 centerPanel 
 	        JPanel centerPanel = new JPanel(new BorderLayout());
 	        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
 	        add(centerPanel, BorderLayout.CENTER);
@@ -60,14 +61,10 @@ public class ClaimSituationPanel extends JPanel {
 	        // 중앙 콤보박스 담을 패널 (Y축 방향으로 나열)
 	        JPanel comboBoxContainer = new JPanel();
 	        comboBoxContainer.setLayout(new BoxLayout(comboBoxContainer, BoxLayout.Y_AXIS));
-	        comboBoxContainer.setBorder(BorderFactory.createEmptyBorder(50, 300, 50, 300));
+	        comboBoxContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 	        centerPanel.add(comboBoxContainer, BorderLayout.NORTH);
 	        
 	       // 모든 상황에서 - 어디서 발생했는지 적는칸 있음 (근데 이건 주소 API가 있어야 할 것 같은데, 근데 우선 Table에는 주소까지는 안넣어서 지금은...)
-//	       String[] 다른사람_다쳤어요_사고내용_어디서사고발생 = {}; // 국내면 주소 검색하면 주소가 뜨는 API 사용, 해외면 간단히 나라명만 입력인데 굳이 해외까지 할필요가 있을까.......??????
-	       
-//	       JTextField 다친상황_입력창 = new JTextField();
-//	       String 다친상황; // 고객이 직접 입력하는 JTextField 활용예정 (ex 보행 중 지나가는 오토바이에 치였어요, 운전 중 앞차량과 부딪혀 손목을 다쳤어요, 버스가 급정거하면서 넘어졌어요)
 	       
 	       /*
 				피해 정보를 입력해주세요
@@ -88,6 +85,7 @@ public class ClaimSituationPanel extends JPanel {
 	       JComboBoxMaker 부상유형선택콤 = new JComboBoxMaker(부상유형선택);
 	       JComboBoxMaker 자동차보험사콤보박스 = new JComboBoxMaker(자동차보험사);
 	       JComboBoxMaker 자동차사고상황콤보박스 = new JComboBoxMaker(자동차사고_상황정보);
+	       JComboBoxMaker 사망장해상황콤보박스 = new JComboBoxMaker(사망장해_2);
 	       
 	       JTextField 다친상황_입력창 = new JTextField();
 	       다친상황_입력창.setMaximumSize(new Dimension(600, 40));
@@ -106,86 +104,45 @@ public class ClaimSituationPanel extends JPanel {
 	       comboBoxContainer.add(부상유형선택콤);
 	       comboBoxContainer.add(자동차보험사콤보박스);
 	       comboBoxContainer.add(다친상황_입력창);
+	       다친상황_입력창.setVisible(false);
+	       comboBoxContainer.add(사망장해상황콤보박스);
 	       
 	       
 //	       JLabel 사고내용입력라벨 = new JLabel("상황을 자세히 알려주세요: ");
 	       
-	       
-	       // 입력 패널 (피해자 정보 입력칸)
-	       /*
-  			String 다른사람_다쳤어요_사고내용_어디서사고발생_피해정보
-  			
-  			다치신 분의 정보를 아시나요? (라디오 버튼)
-  			예 -> 
-  			다치신 분1 - 피해자명: "", 휴대폰번호: "" (다치신 분 추가 가능)
-  			
-  			타인의 재물피해도 발생했나요?
-  			예/아니오 (선택만 하고 따로 입력하는 칸이 생성되지는 않음)
-  			
-  			아니오 ->
-  			입력칸 없이 서류등록으로 넘어감
-  	        */
-	       
 	       JPanel 피해자정보묻는라디오버튼패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+	       피해자정보묻는라디오버튼패널.setPreferredSize(new Dimension(400, 40));
 	       JLabel 피해자정보여부라벨 = new JLabel("다치신 분의 정보를 아시나요? : ");
-	       JRadioButton yesButton = new JRadioButton(" 예");
-	       JRadioButton noButton = new JRadioButton(" 아니오");
+	       JRadioButton 피해자정보yesButton = new JRadioButton(" 예");
+	       JRadioButton 피해자정보noButton = new JRadioButton(" 아니오");
+	       
 	       // 나중에 선택안한거 있으면 다음으로 못넘어가게 하는 그룹묶음
 	       ButtonGroup chButtonGroup = new ButtonGroup();
-	       chButtonGroup.add(yesButton);
-	       chButtonGroup.add(noButton);
-	       피해자정보묻는라디오버튼패널.add(피해자정보여부라벨);
-	       피해자정보묻는라디오버튼패널.add(yesButton);
-	       피해자정보묻는라디오버튼패널.add(noButton);
-	       comboBoxContainer.add(피해자정보묻는라디오버튼패널);
+	       chButtonGroup.add(피해자정보yesButton);
+	       chButtonGroup.add(피해자정보noButton);
 	       
+	       피해자정보묻는라디오버튼패널.add(피해자정보여부라벨);
+	       피해자정보묻는라디오버튼패널.add(피해자정보yesButton);
+	       피해자정보묻는라디오버튼패널.add(피해자정보noButton);
+	       
+	       comboBoxContainer.add(피해자정보묻는라디오버튼패널);
+	       피해자정보묻는라디오버튼패널.setVisible(false);
 	       
 	       // ------------- 여기부터
 
-	       JPanel 다른사람_다쳤어요_피해정보패널 = new JPanel(new GridBagLayout());
-	       다른사람_다쳤어요_피해정보패널.setBorder(BorderFactory.createTitledBorder("피해정보"));
-	       다른사람_다쳤어요_피해정보패널.setMaximumSize(new Dimension(400, 200)); // 크기 제한
-	       
-
-	       JLabel 피해자이름라벨 = new JLabel("피해자명 : ");
-	       JLabel 피해자연락처라벨 = new JLabel("휴대폰번호 : ");
-	       JTextField 피해자이름필드 = new JTextField(9);
-	       JTextField 피해자연락처필드 = new JTextField(11);
-	       JLabel 피해자재물피해여부라벨 = new JLabel("타인의 재물피해도 발생했나요? : ");
-	       JPanel 피해자정보_재물피해여부패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-	       피해자정보_재물피해여부패널.add(피해자재물피해여부라벨);
-	       피해자정보_재물피해여부패널.add(yesButton);
-	       피해자정보_재물피해여부패널.add(noButton);
-
-	       GridBagConstraints gbc = new GridBagConstraints();
-	       gbc.insets = new Insets(30, 30, 30, 10);
-	       gbc.anchor = GridBagConstraints.WEST;
-	       gbc.gridx = 0; gbc.gridy = 0;
-	       다른사람_다쳤어요_피해정보패널.add(피해자이름라벨, gbc);
-	       gbc.gridx = 1; gbc.gridy = 0;
-	       다른사람_다쳤어요_피해정보패널.add(피해자이름필드, gbc);
-	       gbc.gridx = 0; gbc.gridy = 1;
-	       다른사람_다쳤어요_피해정보패널.add(피해자연락처라벨, gbc);
-	       gbc.gridx = 1; gbc.gridy = 1;
-	       다른사람_다쳤어요_피해정보패널.add(피해자연락처필드, gbc);
-	       gbc.gridx = 0; gbc.gridy = 2;
-	       다른사람_다쳤어요_피해정보패널.add(피해자재물피해여부라벨, gbc);
-	       gbc.gridx = 1; gbc.gridy = 2;
-	       다른사람_다쳤어요_피해정보패널.add(피해자정보_재물피해여부패널, gbc);
-	       
+	       victimInfoPanel 다른사람_다쳤어요_피해정보패널 = new victimInfoPanel();
+	       comboBoxContainer.add(다른사람_다쳤어요_피해정보패널);
 	       다른사람_다쳤어요_피해정보패널.setVisible(false);
-	       
-	       comboBoxContainer.add(다른사람_다쳤어요_피해정보패널, BorderLayout.CENTER);
+
 	       // ----------- 여기까지는 재물피해시 내용만 조금 바꿔서 새로 만들어야한다.
 	       
-	       
-	       yesButton.addActionListener((e) -> {
+	       피해자정보yesButton.addActionListener((e) -> {
 	    	   다른사람_다쳤어요_피해정보패널.setVisible(true);
 				revalidate();
 				repaint();
 			});
 	       
-	       noButton.addActionListener((e) -> {
+	       피해자정보noButton.addActionListener((e) -> {
 	    	   다른사람_다쳤어요_피해정보패널.setVisible(false);
 				revalidate();
 				repaint();
@@ -208,50 +165,68 @@ public class ClaimSituationPanel extends JPanel {
 	   			입력칸 없이 서류등록으로 넘어감
 	   	        */
 	       
-	       
-	       
 	       부상유형선택콤.addActionListener((e) -> {
 	    	    if (부상유형선택콤.getSelectedItem() == null) return;
 	    	    다친상황_입력창.setVisible(true);
 	    	});
 	       
+// resetComboBox(상황1콤, 병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+// notVisible(상황1콤, 병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 다친상황_입력창);	    	    
 	       
-	       setVisible(false);
-
 	       상황1콤.addActionListener((e) -> {
 	    	   Object selected = 상황1콤.getSelectedItem();
 	    	    if (selected == null) return; // null이면 처리하지 않음
-	    	   
 	    	    String 선택값 = selected.toString();
 	    	    
-	    	 // 1. 병원에 다녀왔어요(실손 등) 선택시
 	    	   if ("병원에 다녀왔어요(실손 등)".equals(선택값)) {
-
 	    		   병원콤.setVisible(true);
-	    		   resetComboBox(다른사람콤, 다친신체부위콤, 부상유형선택콤);
-	    		   notVisible(다른사람콤, 다친신체부위콤, 부상유형선택콤, 다친상황_입력창);
+	    		   resetComboBox(다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+	    		   notVisible(다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 다친상황_입력창, 피해자정보묻는라디오버튼패널);
 	    		   
-	    		// 2. 다른 사람에게 피해를 입혔어요 선택시
 	    	   } else if ("다른 사람에게 피해를 입혔어요".equals(선택값)) {
 	    		   다른사람콤.setVisible(true);
-	    		   resetComboBox(병원콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤);
-	    		   notVisible(병원콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 다친상황_입력창);
+	    		   resetComboBox(병원콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+	    		   notVisible(병원콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 다친상황_입력창, 피해자정보묻는라디오버튼패널);
 	    		   
-	    		 // 3. 교통사고로 비용이 발생했어요 선택시
 	    	   } else if ("교통사고로 비용이 발생했어요".equals(선택값)) {
 	    		   다친신체부위콤.setVisible(true);
-	    		   resetComboBox(다른사람콤, 부상유형선택콤, 병원콤, 병원_아팠어요_진단내용콤);
-	    		   notVisible(다른사람콤, 부상유형선택콤, 병원콤, 병원_아팠어요_진단내용콤, 다친상황_입력창);
+	    		   resetComboBox(다른사람콤, 병원콤, 부상유형선택콤,  병원_아팠어요_진단내용콤, 사망장해상황콤보박스);
+	    		   notVisible(다른사람콤, 병원콤, 부상유형선택콤,  병원_아팠어요_진단내용콤, 사망장해상황콤보박스, 다친상황_입력창, 피해자정보묻는라디오버튼패널);
 	    		   
-	    		   다친신체부위콤.addActionListener((e1) -> {
-	    			   부상유형선택콤.setVisible(true); 
-	    		   });
+	    	   } else if ("사망/장해를 입었어요".equals(선택값)) {
+	    		   사망장해상황콤보박스.setVisible(true);
+	    		   resetComboBox(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤);
+	    		   notVisible(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 다친상황_입력창, 피해자정보묻는라디오버튼패널);
 	    		   
-	    		   부상유형선택콤.addActionListener((e2) -> {
-	    			   다친상황_입력창.setVisible(true); 
-	    		   });
+	    	   } else if ("내 재산에 피해가 발생했어요".equals(선택값)) {
+	    		   다친상황_입력창.setVisible(true);
+	    		   resetComboBox(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+	    		   notVisible(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 피해자정보묻는라디오버튼패널);
+	    	   } else if ("청구상황을 선택해 주세요".equals(선택값)) {
+	    		   resetComboBox(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+	    		   notVisible(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 다친상황_입력창);	
 	    	   }
 	       });
+	       
+	       병원_아팠어요_진단내용콤.addActionListener((e) -> {
+	    	   Object selected = 병원_아팠어요_진단내용콤.getSelectedItem();
+	    	    if (selected == null) return; // null이면 처리하지 않음
+	    	    String 선택값 = selected.toString();
+	    	    
+	    	    if ("해당하는 항목이 없어요(직접입력)".equals(선택값)) {
+	    	    	다친상황_입력창.setVisible(true);
+	    	    } else {
+	    	    	다친상황_입력창.setVisible(false);
+	    	    }
+	       });
+	       
+	       다친신체부위콤.addActionListener((e1) -> {
+			   부상유형선택콤.setVisible(true); 
+		   });
+		   
+		   부상유형선택콤.addActionListener((e2) -> {
+			   다친상황_입력창.setVisible(true); 
+		   });
 	       
 	       병원콤.addActionListener((e) -> {
 	    	   Object selected = 병원콤.getSelectedItem();
@@ -268,10 +243,6 @@ public class ClaimSituationPanel extends JPanel {
 	    	   } else if ("다쳤어요(상해)".equals(병원선택값)) {
 	    		   다친신체부위콤.setVisible(true);
 	    		   notVisible(다른사람콤, 부상유형선택콤, 병원_아팠어요_진단내용콤, 다친상황_입력창);
-	    		   
-	    		   다친신체부위콤.addActionListener((e1) -> {
-	    			   부상유형선택콤.setVisible(true);
-	    		   });
 	    	   }
 	       });
 	       
@@ -279,7 +250,6 @@ public class ClaimSituationPanel extends JPanel {
 	    	   Object selected = 다른사람콤.getSelectedItem();
 	    	    
 	    	   if (selected == null) {
-	    		   System.out.println("선택된 항목이 없습니다."); // 디버깅용
 	    		   return; // null이면 처리하지 않음
 	    	   }
 	    	   String 다른사람선택값 = selected.toString();
@@ -289,13 +259,12 @@ public class ClaimSituationPanel extends JPanel {
 	    	   if ("다쳤어요(신체)".equals(다른사람선택값)) {
 	    		   다친상황_입력창.setVisible(true);
 	    		   피해자정보묻는라디오버튼패널.setVisible(true);
-	    		   피해자정보_재물피해여부패널.setVisible(false);
+	    		   다른사람_다쳤어요_피해정보패널.get피해자재물피해여부라벨().setVisible(false);
 	    	   } else if ("재산피해를 입혔어요(재물)".equals(다른사람선택값)) {
 	    		   다른사람_다쳤어요_피해정보패널.setVisible(false);
 	    		   피해자정보묻는라디오버튼패널.setVisible(false);
-	    		   피해자정보_재물피해여부패널.setVisible(true);
+	    		   다른사람_다쳤어요_피해정보패널.get피해자정보_재물피해여부패널().setVisible(true);
 	    	   }
-	    	   
 	       });
 	       
 //	       ----- 하단 버튼 패널 -------------------------------------
@@ -307,11 +276,11 @@ public class ClaimSituationPanel extends JPanel {
 	       add(buttonPanel, BorderLayout.SOUTH);
 	      
 	      // 이전버튼 누르면 모든 내용 초기화되는 기능 추가
-	      previousButton.addActionListener((e) -> {
-	    	  cl.show(parentCardPanel, "AccidentDatePanel");
-//	    	  notVisible(null)
-//	    	  resetComboBox(상황콤보박스);
-	      });
+			previousButton.addActionListener((e) -> {
+				cl.show(parentCardPanel, "AccidentDatePanel");
+				resetComboBox(상황1콤, 병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스);
+				notVisible(병원콤, 다른사람콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤, 사망장해상황콤보박스, 다친상황_입력창);
+			});
 	       
 			nextButton.addActionListener((e) -> {
 				// 고객이 모든 정보를 빠짐없이 입력했는지 확인해야 하고,
@@ -319,14 +288,17 @@ public class ClaimSituationPanel extends JPanel {
 					JOptionPane.showMessageDialog(this, "청구상황을 선택해주세요.", "안내", JOptionPane.WARNING_MESSAGE);
 					return; // null이면 처리하지 않음
 				}
+				String 상황1선택 = (String) 상황1콤.getSelectedItem();
+				String 다른사람선택 = (String) 다른사람콤.getSelectedItem(); // nullable
 
 				// 필수적인 항목을 여기서 다시 한번 확인 ex
-				if (상황1콤.getSelectedItem().equals("다른 사람에게 피해를 입혔어요") && 다른사람콤.getSelectedItem().equals("다쳤어요(신체)")) {
+				if ("다른 사람에게 피해를 입혔어요".equals(상황1선택) && "다쳤어요(신체)".equals(다른사람선택)) {
 					if (chButtonGroup.getSelection() == null) {
 						JOptionPane.showMessageDialog(this, "피해자 정보 여부를 알려주세요.", "안내", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
-					if (피해자이름필드.getText().trim().isBlank() || 피해자연락처필드.getText().trim().isBlank()) {
+					if (다른사람_다쳤어요_피해정보패널.get피해자이름필드().getText().trim().isBlank() || 
+						다른사람_다쳤어요_피해정보패널.get피해자연락처필드().getText().trim().isBlank()) {
 						JOptionPane.showMessageDialog(this, "피해자 정보를 입력해주세요", "안내", JOptionPane.WARNING_MESSAGE);
 						return;
 					}
@@ -395,10 +367,6 @@ public class ClaimSituationPanel extends JPanel {
 	        cb.setSelectedItem(null); // 선택값 초기화
 	    }
 	}
-	// 모든 콤보박스 초기화 언제하냐...
-	public void resetPanel() {
-		
-	}
 }
 
 class JComboBoxMaker extends JComboBox<String> {
@@ -406,11 +374,7 @@ class JComboBoxMaker extends JComboBox<String> {
 	public JComboBoxMaker(String[] items) {
 		super(items);
 		setMaximumSize(new Dimension(600, 40));
-		setSelectedItem(null); // 아무것도 선택되지 않은 상태에서 시작
+		setSelectedItem(-1); // 아무것도 선택되지 않은 상태에서 시작
 		setVisible(false);
 	}
-}
-
-class RButton extends JRadioButton {
-	
 }
