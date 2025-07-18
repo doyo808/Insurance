@@ -1,6 +1,5 @@
 package employee.crm.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.io.File;
 import java.util.List;
@@ -10,7 +9,6 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -28,6 +26,7 @@ public class EmailDialog extends JDialog {
         super(parent, "메일 발송", true);
         this.recipients = recipientEmails;
 
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(null);
         setSize(700, 800);
         setLocationRelativeTo(parent);
@@ -76,7 +75,6 @@ public class EmailDialog extends JDialog {
 
         btnCancel.addActionListener(e -> dispose());
 
-        setVisible(true);
     }
 
     private void chooseFile() {

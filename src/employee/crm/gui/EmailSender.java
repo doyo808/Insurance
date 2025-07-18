@@ -19,15 +19,11 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-
-
-
-
 public class EmailSender {
 
     // ★ 본인의 Gmail 계정 정보로 수정 ★
-    private static final String USERNAME = "your_email@gmail.com";  // 보내는 이메일 주소
-    private static final String PASSWORD = "your_app_password"; // 앱 비밀번호 (2단계 인증 사용 시 필요)
+    private static final String USERNAME = "okthere74@gmail.com";  // 보내는 이메일 주소
+    private static final String PASSWORD = "smer mjwr sgrs rmdf"; // 앱 비밀번호 (2단계 인증 사용 시 필요)
 
 
     public static boolean sendEmail(List<String> recipients, String subject, String content, File attachment) {

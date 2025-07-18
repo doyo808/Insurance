@@ -16,10 +16,6 @@ import javax.swing.SwingUtilities;
 
 import employee.product.view.ProductManageMainPanel;
 
-
-
-
-
 public class TempEmployeeMain extends JFrame implements ActionListener {
 	
 	private JPanel contentPanel;
