@@ -19,7 +19,9 @@ import insuranceMain.customerPanel.CustomerMainPanel;
 public class ContractMainPanel extends JPanel {
 	private int testPage = 0;
 	
+	private CustomerMainPanel cmp;
 	public CardLayout c = new CardLayout();
+	
 	private CalculatePremiumPanel calPre;
 	private ChooseProductPanel choosePP;
 	public String[] cardNames = {"키워드선택", "보험선택", "보험료계산", "보험기간선택", "피보험자정보입력"
@@ -28,6 +30,7 @@ public class ContractMainPanel extends JPanel {
 	private ContractInfo contractInfo = new ContractInfo();
 	
 	public ContractMainPanel(CustomerMainPanel cmp) {
+		this.cmp = cmp;
 		setLayout(c);
 		
 		add(new KeywordPanel(this), cardNames[0]);
@@ -66,4 +69,8 @@ public class ContractMainPanel extends JPanel {
 	public ContractInfo getContractInfo() {
         return contractInfo;
     }
+	public CustomerMainPanel getCmp() {
+		return cmp;
+	}
+	
 }
