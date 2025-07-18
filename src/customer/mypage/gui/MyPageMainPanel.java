@@ -5,6 +5,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +17,9 @@ import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -24,6 +29,12 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import common.account.login.Session;
 import common.database.model.CustomerModel;
@@ -119,9 +130,7 @@ public class MyPageMainPanel extends JPanel {
         btnExcel.setBounds(1299, 440, 90, 30);
         add(btnExcel);
         
-        btnExcel.addActionListener(e -> {
-           
-        });  
+        btnExcel.addActionListener(e -> exportExcel(paymentTable));
 
         paymentTable = new JTable();
         JScrollPane paymentScroll = new JScrollPane(paymentTable);
@@ -323,6 +332,65 @@ public class MyPageMainPanel extends JPanel {
     	loadPersonalInfo();        
         loadContractInfo();
         loadPaymentHistory();
+    }
+    
+    private void exportExcel(JTable table) {
+    	JFileChooser fileChooser = new JFileChooser();
+    	fileChooser.setDialogTitle("엑셀로 저장");
+    	fileChooser.setSelectedFile(new File("납입내역.xlsx"));
+    	
+    	int userSelection = fileChooser.showSaveDialog(this);
+    	if(userSelection != JFileChooser.APPROVE_OPTION) return;
+    	
+    	File fileToSave = fileChooser.getSelectedFile();
+    	if(!fileToSave.getName().toLowerCase().endsWith(".xlsx")) {
+    		fileToSave = new File(fileToSave.getAbsolutePath() + ".xlsx");
+    	}
+    	
+    	try(Workbook workbook = new XSSFWorkbook()) {    		
+    		Sheet sheet = workbook.createSheet("납입내역");
+    		
+    		DefaultTableModel model = (DefaultTableModel) table.getModel();
+    		int columnCount = model.getColumnCount();
+    		
+    		//1. 헤더 작성(선택 열 제외)
+    		Row headerRow = sheet.createRow(0);
+    		for(int col = 1; col < columnCount; col++) {
+    			Cell cell = headerRow.createCell(col - 1);
+    			cell.setCellValue(model.getColumnName(col));    			
+    		}
+    		
+    		//2. 체트된 행만 추가
+    		int rowIndex = 1;
+    		for(int row = 0; row < model.getRowCount(); row++) {
+    			Boolean isChecked = (Boolean) model.getValueAt(row, 0);
+    			if(isChecked != null && isChecked) {
+    				Row excelRow = sheet.createRow(rowIndex++);
+    				for(int col = 1; col < columnCount; col++) {
+    					Object value = model.getValueAt(row, col);
+    					Cell cell = excelRow.createCell(col - 1);
+    					cell.setCellValue(value != null ? value.toString() : "");
+    				}
+    			}
+    		}
+    		
+    		try(FileOutputStream fileOut = new FileOutputStream(fileToSave)) {
+				workbook.write(fileOut);
+			}
+    		
+    		JOptionPane.showMessageDialog(this, "엑셀 파일로 저장완료", "성공", JOptionPane.INFORMATION_MESSAGE);
+    		
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "엑셀 저장 중 오류 발생", "오류", JOptionPane.ERROR_MESSAGE);
+			
+		}
+    	
+    	
+    	
+    	
+    	
     }
 	
 	
