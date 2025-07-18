@@ -12,26 +12,10 @@ import common.database.model.NewClaimDataModel;
 
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
-		// 이어서 만들예정
-		// 고객이 입력한 정보를 토대로 다른 테이블과 연결해 claims 테이블에 값이 들어가야함 (이클립스->DB)	
-
 		// 고객이 청구대상을 '다른사람'으로 선택하면 그 대상이 가입한 보험계약 정보를 가지고 와야함
 		// 청구테이블(계약ID) JOIN 계약테이블(고객ID) JOIN 고객테이블(이름, 주민번호, 전화번호)
 		
 		/*
-			[보험금 청구 내역 조회 페이지]
-				
-				고객이 피보험자/수익자 중 하나를 선택하면 그 선택값이 쿼리문에 들어가야함
-				- 고객이 피보험자인지, 수익자인지에 따라 달라짐
-				
-				여기에 피보험자인지 수익자인지 조건 함께 설정...하자...
-				- 조회기간(청구일자) 설정
-				: SELECT claim_date FROM CLAIMS WHERE (여기에 입력값1 ~ 입력값2 사이값을 나타내는 조건 알아보기)
-			
-				
-				: SELECT 
-				
-				
 				[보험금 청구 상세내역]
 				: 접수번호 / 진행상황=처리상태('접수')/
 				
@@ -47,32 +31,54 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 				<결정보험금 표>
 		 */
 	
-		// 고객이 청구대상을 '본인'으로 선택하면 로그인 기록을 가지고와서 그 사람의 보험계약 정보를 가지고 와야함
-		// 고객이 하나 이상의 계약이 꼭 있다는 가정
+		// 고객이 청구대상을 '본인'으로 선택하면 로그인 기록을 가지고와서 그 사람의 정보를 가지고 와야함
+		// 고객이 하나 이상의 계약이 있다는 가정
 		// 가져올 정보: 고객이름, 고객주민번호, 고객 연락처, 상품명, 계약명
-		// LOG_TABLE(고객ID) JOIN 고객테이블(고객ID) JOIN 계약(고객ID/상품ID) JOIN 상품(상품명)
 		public static NewClaimDataModel getCustomerInfo(String login_id, Connection conn) throws SQLException {
 			NewClaimDataModel customerInfo = new NewClaimDataModel();
 			String query = "SELECT cu.customer_name, cu.personal_id, cu.phone_number "
 					+ "FROM customers cu "
 					+ "WHERE cu.login_id = ? ";
-			
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 		        pstmt.setString(1, login_id);
-
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            while (rs.next()) {
-		            	customerInfo.setName(rs.getString("customer_name"));
-		            	customerInfo.setPersonalId(rs.getString("personal_id"));
-		            	customerInfo.setPhoneNumber(rs.getString("phone_number"));
+		            	customerInfo.setCustomer_name(rs.getString("customer_name"));
+		            	customerInfo.setPersonal_id(rs.getString("personal_id"));
+		            	customerInfo.setPhone_number(rs.getString("phone_number"));
 		            }
 		        }
 		    }
 		    return customerInfo;
 		}
 	
-		// 고객의 로그인ID를 입력하고 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트표시 (DB -> 이클립스)
-		// 로그인ID로 고객의 청구내역을 청구날짜 내림차순으로 조회 (하고 싶지만 다 하고 시간되면)
+		// 고객이 자동이체 계좌를 선택하면 로그인 기록을 가지고와서 그 사람의 계좌번호를 가지고 와야함
+		public static NewClaimDataModel getCustomerBankInfo(String login_id, Connection conn) throws SQLException {
+			NewClaimDataModel customerBankInfo = new NewClaimDataModel();
+			
+			String query = "SELECT bf.bank_name, bf.bank_account, bf.beneficiary_name "
+					+ "FROM beneficiaries bf "
+					+ "INNER JOIN contracts cn ON bf.beneficiary_id = cn.beneficiary_id "
+					+ "INNER JOIN customers cu ON cn.customer_id = cu.customer_id "
+					+ "WHERE cu.login_id = ? ";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setString(1, login_id);
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            while (rs.next()) {
+		            	customerBankInfo.setBank_name(rs.getString("bank_name"));
+		            	customerBankInfo.setBank_account(rs.getString("bank_account"));
+		            	customerBankInfo.setBeneficiary_name(rs.getString("beneficiary_name"));
+		            }
+		        }
+		    }
+		    return customerBankInfo;
+		}
+		
+//		[보험금 청구 내역 조회 페이지]
+//		고객이 피보험자/수익자 중 하나를 선택하면 그 선택값이 쿼리문에 들어가야함
+//		- 고객이 피보험자인지, 수익자인지에 따라 달라짐 (여기에 피보험자인지 수익자인지 조건 함께 설정하면 좋을 듯)
+		// 로그인 된 상태에서 보험청구내역패널 들어가 '조회'누르면 고객이 지금까지 접수했던 모든 청구 내역 리스트 나타남(날짜 기준으로)
+		// 로그인ID로 고객의 청구내역을 가져와 테이블에 나열 (최근 청구날짜 순서대로 조회(내림차순))
 		public static List<ClaimsModel> getClaims(String login_id, Date startDate, Date endDateStr, Connection conn) throws SQLException {
 		    List<ClaimsModel> claimList = new ArrayList<>();
 		    String query = "SELECT c.claim_id, c.claim_date, d.diagnosis_name, i.insured_name, p.product_name, e.employee_name, c.claim_status "
@@ -84,7 +90,8 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		            + "INNER JOIN employees e ON c.employee_id = e.employee_id "
 		            + "INNER JOIN customers cu ON ct.customer_id = cu.customer_id "
 		            + "WHERE cu.login_id = ? "
-		            + "AND c.claim_date BETWEEN ? AND ? ";
+		            + "AND c.claim_date BETWEEN ? AND ? "
+		            + "ORDER BY c.claim_date DESC ";
 
 		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 		        pstmt.setString(1, login_id);
@@ -110,25 +117,8 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		}
 
 		
-//		// 수신동의여부로 검색하기
-//		public static List<CustomerModel> findCustomerByAgree_yn(String yn, Connection conn) throws SQLException {
-//			String query = "SELECT * FROM CUSTOMERS WHERE agree_yn = ?";
-//			
-//			try (PreparedStatement pstmt = conn.prepareStatement(query)){
-//				
-//				pstmt.setString(1, yn);
-//				
-//				try (ResultSet rs = pstmt.executeQuery()) {
-//					List<CustomerModel> CustomerModels = new ArrayList<>();
-//					
-//					while (rs.next()) {
-//						CustomerModels.add(new CustomerModel(rs));
-//					}
-//					return CustomerModels;	
-//				}			
-//			}		
-//		}
-//		
+		
+		
 //		// 새 고객을 추가하는 메서드 (CREATE) * 주민등록번호, 로그인 아이디 유니크 주의해주세요
 //		public static int addCustomer(CustomerModel c, Connection conn) {
 //
@@ -152,7 +142,6 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 //				return -1;
 //			}
 //		}
-//		
 //		// 해당 고객을 삭제하고 삭제 여부를 반환하는 메서드 (DELETE) - 현재는 오류 발생 DB수정해야함
 //		public static boolean deleteCustomer(int customer_id, Connection conn) throws SQLException {
 //			String query = "DELETE FROM CUSTOMERS WHERE customer_id = ?";
@@ -162,9 +151,6 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 //				return pstmt.executeUpdate() == 1;
 //			}
 //		}
-//		
-//		
-//		
 //	}
 
 }

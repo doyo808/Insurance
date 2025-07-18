@@ -1,20 +1,19 @@
 package customer.contract.gui;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.SystemColor;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.SystemColor;
-import javax.swing.JButton;
-import java.awt.Color;
-import javax.swing.UIManager;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedKeywords;
-import insuranceMain.MainFrame;
 
 public class KeywordPanel extends JPanel {
 	
@@ -25,21 +24,21 @@ public class KeywordPanel extends JPanel {
 		setLayout(null);
 		
 		JLabel title = new JLabel("보험상품가입 [키워드선택]");
-		title.setFont(new Font("굴림", Font.BOLD, 32));
+		title.setFont(new Font("Dialog", Font.BOLD, 32));
 		title.setHorizontalAlignment(SwingConstants.CENTER);
-		title.setBounds(457, 10, 537, 56);
+		title.setBounds(500, 10, 537, 56);
 		add(title);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(SystemColor.controlHighlight);
-		panel.setBounds(243, 97, 946, 476);
+		panel.setBounds(290, 93, 946, 476);
 		add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("인기 키워드 (중복 선택 가능)");
-		lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 30));
+		lblNewLabel_1.setFont(new Font("Dialog", Font.PLAIN, 28));
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBounds(242, 41, 442, 72);
+		lblNewLabel_1.setBounds(250, 38, 442, 72);
 		panel.add(lblNewLabel_1);
 		
 		JButton btn0 = new JButton("암");
@@ -85,13 +84,16 @@ public class KeywordPanel extends JPanel {
 		JButton[] btns = {btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7};
 		for (JButton b : btns) {
 			switchColor(b);
+			b.setFont(new Font("Dialog", Font.PLAIN, 16));
+			b.setFocusPainted(false);
 		}
 		
 		JButton confirm = new JButton("조회");
-		confirm.setBackground(OurColors.NEXT_BUTTON);
-		confirm.setForeground(OurColors.TITLE_TEXT);
-		confirm.setFont(new Font("굴림", Font.PLAIN, 28));
-		confirm.setBounds(578, 616, 279, 41);
+//		confirm.setBackground(OurColors.NEXT_BUTTON);
+//		confirm.setForeground(OurColors.TITLE_TEXT);
+//		confirm.setFont(new Font("Pretendard", Font.PLAIN, 28));
+		ButtonPainter.stylePrimaryButton(confirm, 16);
+		confirm.setBounds(623, 617, 279, 41);
 		add(confirm);
 		
 		addConfirmAction(contractMP, confirm, btns);

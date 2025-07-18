@@ -1,6 +1,7 @@
 package customer.contract;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class ContractInfo {
@@ -8,7 +9,7 @@ public class ContractInfo {
     private String  selectedProductName;     	// 선택된 상품 이름
     private Integer product_payment_period; 	// 납입기간
 	private Integer product_coverage_period;	// 보증기간
-    private String  createdDate;             	// 생성일 (yyyy-MM-dd 등)
+    private LocalDate  createdDate;         	// 생성일 (yyyy-MM-dd 등)
     private Double  premium;               	 	// 보험료
     private Double  premium_final;
     
@@ -16,7 +17,7 @@ public class ContractInfo {
     private String insuredName;                 // 이름
     private String insuredGender;               // 성별 (M/F)
     private String insuredJumin;		        // 주민등록번호 (901231-1234567)
-    private LocalDate insuredBirth;             // 생년월일 (yyyy-MM-dd)
+    private LocalDate insuredBirth;           	// 생년월일 (yyyy-MM-dd)
     private Integer insuredAge;                 // 나이
     private String insuredSmoke;                // 흡연 여부 ("Y"/"N")
     private String insuredDrink;                // 음주 여부 ("Y"/"N")
@@ -52,6 +53,7 @@ public class ContractInfo {
 	    relationship = null;
 	    beneficiaryBank = null;
 	    beneficiaryAccount = null;
+	    selectedCoverageNames.clear();
 	}
 
 	// 커버리지 관련
@@ -90,11 +92,11 @@ public class ContractInfo {
 		this.product_coverage_period = product_coverage_period;
 	}
 
-	public String getCreatedDate() {
+	public LocalDate getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(String createdDate) {
+	public void setCreatedDate(LocalDate createdDate) {
 		this.createdDate = createdDate;
 	}
 
