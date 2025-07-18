@@ -142,8 +142,7 @@ public class SearchCrmPanel extends JPanel {
         resultTable.addMouseListener(new MouseAdapter() {
         	
         	@Override
-        	public void mouseClicked(MouseEvent e) {
-        		
+        	public void mouseClicked(MouseEvent e) {        		
         		//int selectedRow = resultTable.getSelectedRow();
         		int selectedRow = resultTable.rowAtPoint(e.getPoint());
         		int selectedColumn = resultTable.columnAtPoint(e.getPoint());
