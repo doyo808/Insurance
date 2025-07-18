@@ -20,6 +20,7 @@ import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.CalculateAge;
 import customer.contract.method.SelectedProductName;
+import insuranceMain.MainFrame;
 
 public class InsuredInfoPanel extends JPanel {
     private ContractMainPanel contractMP;
@@ -74,6 +75,8 @@ public class InsuredInfoPanel extends JPanel {
         this.add(juminLabel);
         juminField = new JTextField();
         juminField.setBounds(748, 162, 220, 30);
+        if (MainFrame.TEST) juminField.setText("901010-1234567");
+        
         this.add(juminField);
 
         // 성별

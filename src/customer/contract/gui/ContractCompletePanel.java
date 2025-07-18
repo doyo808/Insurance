@@ -25,7 +25,7 @@ public class ContractCompletePanel extends JPanel {
     public ContractCompletePanel(ContractMainPanel contractMP) {
     	this.contractMP = contractMP;
         this.contractInfo = contractMP.getContractInfo();
-        contractInfo.setCreatedDate(LocalDate.now().toString());
+        
         initializeUI();
     }
 
@@ -107,12 +107,13 @@ public class ContractCompletePanel extends JPanel {
 
         myContractBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "내 계약 조회 화면으로 이동합니다.");
-            // 실제 화면 전환 코드 넣기
+            contractMP.getCmp().getSMP().getSmcp().showCard("마이페이지");
         });
 
         mainBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "메인 화면으로 이동합니다.");
-            // 실제 화면 전환 코드 넣기
+            contractMP.getCmp().showCard("accounts");
+            contractMP.getCmp().getAMP().showCard("회원_메인");
         });
 
         buttonPanel.add(myContractBtn);
