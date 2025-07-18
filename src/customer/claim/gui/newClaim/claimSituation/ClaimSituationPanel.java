@@ -1,4 +1,4 @@
-package customer.claim.gui.newClaim;
+package customer.claim.gui.newClaim.claimSituation;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -41,8 +41,6 @@ public class ClaimSituationPanel extends JPanel {
     private String[] 다친신체부위 = {"머리(얼굴포함)", "어깨/목", "허리", "팔", "손/손목", "다리", "무릎", "발/발목", "해당되는 신체부위가 없어요"};
     private String[] 부상유형선택 = {"상처가 났어요(손상)", "접질렀어요(염좌)", "부러졌어요(골절)", "데였어요(화상)", "해당되는 부상종류가 없어요"};
 	
-
-    
     private String[] 자동차보험사 = {"KB손해보험", "삼성화재", "현대해상", "DB손해보험", "메리츠화재", "롯데손해보험", "한화손해보험", "NH농협손해보험", "하나손해보험", "흥국화재", "MG손해보험", "AXA손해보험", "AIG손해보험", "에이스손해보험", "캐롯손해보험", "리젠트화재보험", "전세버스공제", "택시공제", "개인택시공제", "버스공제", "전국렌터카공제", "화물공제"};
     private	String[] 자동차사고_상황정보 = {"운전중", "탑승중", "보행중"};
 
@@ -193,9 +191,6 @@ public class ClaimSituationPanel extends JPanel {
 				repaint();
 			});
 	       
-	    	    
-	   	       
-	   	       
 	   	       // 재산피해를 입혔어요(재물)
 	   	       String 다른사람_재산피해_사고내용; // // 고객이 직접 입력하는 JTextField 활용예정 (ex 배관 공사 중 실수로 이웃집에 누수를 발생시켰어요, 주차 실수로 이웃차량을 심하게 파손했어요, 화재를 내서 이웃집 벽을 태웠어요)
 	   	       String[] 다른사람_재산피해_사고내용_어디서사고발생 = {}; // 국내면 주소 검색하면 주소가 뜨는 API 사용, 해외면 간단히 나라명만 입력인데 굳이 해외까지 할필요가 있을까.......??????
@@ -400,6 +395,10 @@ public class ClaimSituationPanel extends JPanel {
 	        cb.setSelectedItem(null); // 선택값 초기화
 	    }
 	}
+	// 모든 콤보박스 초기화 언제하냐...
+	public void resetPanel() {
+		
+	}
 }
 
 class JComboBoxMaker extends JComboBox<String> {
@@ -409,12 +408,9 @@ class JComboBoxMaker extends JComboBox<String> {
 		setMaximumSize(new Dimension(600, 40));
 		setSelectedItem(null); // 아무것도 선택되지 않은 상태에서 시작
 		setVisible(false);
-		
-	}
-	
-	// 모든 콤보박스 초기화 언제하냐...
-	public void resetPanel() {
-		
 	}
 }
 
+class RButton extends JRadioButton {
+	
+}

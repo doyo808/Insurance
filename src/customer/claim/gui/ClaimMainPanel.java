@@ -8,9 +8,9 @@ import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
 import customer.claim.gui.newClaim.AccidentDatePanel;
-import customer.claim.gui.newClaim.ClaimSituationPanel;
 import customer.claim.gui.newClaim.ClaimTargetPanel;
 import customer.claim.gui.newClaim.ClaimTypePanel;
+import customer.claim.gui.newClaim.claimSituation.ClaimSituationPanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 // 청구업무 메인부모패널 (카드레이아웃 패널의 부모패널)
 public class ClaimMainPanel extends JPanel {
