@@ -27,6 +27,7 @@ public class ProductManageMainPanel extends JPanel {
 	}
 
 	public void showCard(String name) {
+		
 		layout.show(this, name);
 	}
 }
