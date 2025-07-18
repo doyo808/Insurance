@@ -1,3 +1,5 @@
+package insuranceMain.customerPanel.accounts.signup;
+
 import javax.swing.*;
 
 import common.database.model.CustomerModel;
