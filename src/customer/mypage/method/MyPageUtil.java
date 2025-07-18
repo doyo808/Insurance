@@ -1,5 +1,13 @@
 package customer.mypage.method;
 
+import java.security.KeyStore.Entry;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Date;
+import java.util.Map;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -65,5 +73,109 @@ public class MyPageUtil {
 		if(idPart == null || domainPart == null) return "";
 		return idPart.trim() + "@" + domainPart.toString().trim();
 	}
+	
+	//전화번호 분리
+	public static void splitPhoneToFields(String phoneNumber, JComboBox<String> cbPhoneLocal, JTextField tfPhoneMid, JTextField tfPhoneLast) {
+		if ( phoneNumber == null || phoneNumber.isEmpty()) return;
+		
+		String[] parts = phoneNumber.split("-");
+		if(parts.length == 3) {
+			cbPhoneLocal.setSelectedItem(parts[0]);
+			tfPhoneMid.setText(parts[1]);
+			tfPhoneLast.setText(parts[2]);		
+		}
+	}
+	
+	//전화번호 병합
+	
+	public static String combinePhone(Object cbValue, String mid, String last) {
+		String localNum = cbValue != null ? cbValue.toString().trim() : "";
+		mid = mid !=null ? mid.trim() : "";
+		last = last !=null ? last.trim() : "";
+		return localNum + "-" + mid + "-" + last;
+	}
+	
+	//날짜 포맷 보정
+	
+	public static String formatDate(String rawDateTime) {
+		
+		if(rawDateTime == null || rawDateTime.isEmpty()) {
+			return "";
+		}
+		
+		try {
+			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			Date date = inputFormat.parse(rawDateTime);
+			return outputFormat.format(date);		
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return rawDateTime;
+		}
+
+	}
+	
+	// 납입월 형식: 2025년 7월    
+    public static String formatToYearMonth(String rawDateTime) {
+        if (rawDateTime == null || rawDateTime.isEmpty()) return "";
+
+        try {
+            // 시간 소수점 이하 제거
+            String trimmed = rawDateTime.split("\\.")[0];
+
+            LocalDateTime dateTime;
+            DateTimeFormatter inputFormatter;
+            
+            if (trimmed.contains("/")) {
+                // 예: 25/07/11 14:18:31
+                inputFormatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
+            } else if (trimmed.contains("-")) {
+                // 예: 2025-07-11 14:18:31
+                inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            } else {
+                return rawDateTime;
+            }
+
+            dateTime = LocalDateTime.parse(trimmed, inputFormatter);
+
+            // 출력 포맷: 2025년 7월
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy년 M월");
+            return outputFormatter.format(dateTime);
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return rawDateTime;
+        }
+    }
+    
+    
+    private static final Map<String, String> STATUS_MAP = Map.ofEntries(   
+    		// 계약정보 >>> 계약상태
+    		Map.entry("PENDING", "가입 신청 완료"),
+    		Map.entry("APPROVED","심사 승인 완료"), 
+    		Map.entry("ACTIVE", "정상"),
+    		Map.entry("EXPIRED", "계약 종료"),
+    		Map.entry("CANCELLED", "계약 철회"),
+    		Map.entry("REJECTED", "심사 승인 거절"),
+    		Map.entry("SUSPENDED", "일시 중지"),
+    		Map.entry("CLAIMED", "보험금 청구"),
+    		Map.entry("TERMINATED", "중도 해지"),    		
+    		Map.entry("LAPSED", "해지 예정"),
+    		
+    		//  납입정보 >>> 납입상태
+    		Map.entry("Y", "납부완료"),
+    		Map.entry("N", "미납")
+    );
+    
+    public static String getDisplayStatus(String status) {
+    	if(status == null) return "";
+    	return STATUS_MAP.getOrDefault(status, status);
+    }
+    
+    
+    
 
 }
+

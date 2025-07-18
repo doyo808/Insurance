@@ -1,6 +1,5 @@
 package customer.contract.gui;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.sql.Connection;
@@ -31,13 +30,13 @@ public class CalculatePremiumPanel extends JPanel {
 	private Boolean calculated = false;
 	
 	private ProductModel product;
-	private double monthlyPremiumInput;
-	private double monthlyPremiumOutput;
+	private Double monthlyPremiumInput;
+	private Double monthlyPremiumOutput;
 	private int year;
 	private int month;
 	private int day;
 	private LocalDate birthDate;
-	private int age;
+	private Integer age;
 	private String gender = "F";
 	
 	private JLabel title;
@@ -165,7 +164,7 @@ public class CalculatePremiumPanel extends JPanel {
 		addBackButton(panel_1);
 		addConfirmButton(panel_1);
 		
-		addActions();
+		addVerificationToButton();
 	}
 	
 	ProductModel getProduct(String product_name) {
@@ -187,7 +186,7 @@ public class CalculatePremiumPanel extends JPanel {
 		}
 	}
 	
-	void addActions() {
+	void addVerificationToButton() {
 		btnNewButton_1.addActionListener(e -> {
 			try {
 				this.year = Integer.parseInt(textField_Year.getText());
@@ -199,10 +198,12 @@ public class CalculatePremiumPanel extends JPanel {
 				monthlyPremiumOutput = CalculatePremium.CalculatePremiumByAge(monthlyPremiumInput, age);
 				
 				setSelectedGender();
-				if (gender.equals("M")) monthlyPremiumOutput *= 1.05;
+				if (gender.equals("M")) monthlyPremiumOutput *= 1.1;
 				
 				textField.setText(String.format("월 %,.0f원", monthlyPremiumOutput));
 				calculated = true;
+				
+				JOptionPane.showMessageDialog(this, "보험료가 계산되었습니다.");
 				
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(this, "잘못된 입력입니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -242,6 +243,10 @@ public class CalculatePremiumPanel extends JPanel {
 				JOptionPane.showMessageDialog(this, "성별 및 생년월일을 입력하여 월보험료를 계산해주세요."
 						, "알림", JOptionPane.WARNING_MESSAGE);
 			} else {
+				contractMP.getContractInfo().setInsuredBirth(birthDate);
+			    contractMP.getContractInfo().setInsuredGender(gender);
+			    contractMP.getContractInfo().setInsuredAge(age);
+			    contractMP.getContractInfo().setPremium(monthlyPremiumOutput);
 				contractMP.ShowCard(contractMP.cardNames[3]);
 			}
 		});

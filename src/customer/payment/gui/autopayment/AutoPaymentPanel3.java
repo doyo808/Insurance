@@ -1,6 +1,7 @@
 package customer.payment.gui.autopayment;
 
 import common.gui.MainPageButton;
+import customer.payment.gui.PaymentMainPanel;
 import customer.payment.gui.components.DefaultPanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 import javax.swing.JLabel;
@@ -15,7 +16,7 @@ public class AutoPaymentPanel3 extends DefaultPanel {
 	private static final long serialVersionUID = 1L;
 	private MainPageButton mainPageButton;
 
-	public AutoPaymentPanel3(CustomerMainPanel cmp) {
+	public AutoPaymentPanel3(PaymentMainPanel pmp, CustomerMainPanel cmp) {
 		setBounds(new Rectangle(0, 0, 1440, 700));
 		// 전체를 1열로 구성, 행 간격 20px 줌
 		setLayout(new MigLayout("", "[grow]", "20[][54px][39px][50px]"));

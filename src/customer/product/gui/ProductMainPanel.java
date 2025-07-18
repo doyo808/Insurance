@@ -53,13 +53,5 @@ public class ProductMainPanel extends JPanel {
 			}
 		});
 		
-//		detail.btn3.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				System.out.println("test");
-//				cl.show(ProductMainPanel.this, "intro");
-//			}
-//		});
-		
 	}
 }

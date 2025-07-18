@@ -25,12 +25,14 @@ import common.database.model.NewClaimDataModel;
 import customer.claim.gui.TitlePanel;
 
 // 고객이 입력을 중단한 걸 기록해 뒀다가 나중에 이어서 청구할 수 있는 기능을 넣을 건지..???
+
+// 각각의 콤보박스 값을 선택했을 때 (addActionListener 클래스를 각각 만들 수 있으면 각각 만드는게 깔끔해서 좋을 듯)
 public class ClaimSituationPanel extends JPanel {
 	
 	private JPanel parentCardPanel;
 	
     private String[] 상황_1 = {"병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요", "사망/장해를 입었어요", "내 재산에 피해가 발생했어요"};
-    
+
     private String[] 병원_2 = {"아팠어요(질병)", "다쳤어요(상해)"};
     private String[] 다른사람_2 = {"다쳤어요(신체)", "재산피해를 입혔어요(재물)"};
     private String[] 사망장해_2 = {"일반사망", "재해사망", "시력 상실", "청력 상실", "절단", "중추신경 마비", "언어장애", "장기기능 상실", "기타 장해"};
@@ -110,90 +112,88 @@ public class ClaimSituationPanel extends JPanel {
 	       
 //	       JLabel 사고내용입력라벨 = new JLabel("상황을 자세히 알려주세요: ");
 	       
-	       // 입력 패널 (피해자 정보 입력칸)
 	       
+	       // 입력 패널 (피해자 정보 입력칸)
+	       /*
+  			String 다른사람_다쳤어요_사고내용_어디서사고발생_피해정보
+  			
+  			다치신 분의 정보를 아시나요? (라디오 버튼)
+  			예 -> 
+  			다치신 분1 - 피해자명: "", 휴대폰번호: "" (다치신 분 추가 가능)
+  			
+  			타인의 재물피해도 발생했나요?
+  			예/아니오 (선택만 하고 따로 입력하는 칸이 생성되지는 않음)
+  			
+  			아니오 ->
+  			입력칸 없이 서류등록으로 넘어감
+  	        */
+	       
+	       JPanel 피해자정보묻는라디오버튼패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 	       JLabel 피해자정보여부라벨 = new JLabel("다치신 분의 정보를 아시나요? : ");
-	       JPanel radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 	       JRadioButton yesButton = new JRadioButton(" 예");
 	       JRadioButton noButton = new JRadioButton(" 아니오");
 	       // 나중에 선택안한거 있으면 다음으로 못넘어가게 하는 그룹묶음
 	       ButtonGroup chButtonGroup = new ButtonGroup();
 	       chButtonGroup.add(yesButton);
 	       chButtonGroup.add(noButton);
+	       피해자정보묻는라디오버튼패널.add(피해자정보여부라벨);
+	       피해자정보묻는라디오버튼패널.add(yesButton);
+	       피해자정보묻는라디오버튼패널.add(noButton);
+	       comboBoxContainer.add(피해자정보묻는라디오버튼패널);
 	       
-	       radioButtonPanel.add(yesButton);
-	       radioButtonPanel.add(noButton);
-	       radioButtonPanel.setVisible(false);
-	       //================================================================================
-	       comboBoxContainer.add(radioButtonPanel);
 	       
-	       //---
-	       JLabel 피해자재물피해여부라벨 = new JLabel("타인의 재물피해도 발생했나요? : ");
-	       JPanel radioButtonPanel2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-	       JRadioButton yesButton2 = new JRadioButton(" 예");
-	       JRadioButton noButton2 = new JRadioButton(" 아니오");
-	       radioButtonPanel2.add(yesButton2);
-	       radioButtonPanel2.add(noButton2);
-	      
-	       // 나중에 선택안한거 있으면 다음으로 못넘어가게 하는 그룹묶음
-	       ButtonGroup chButtonGroup2 = new ButtonGroup();
-	       chButtonGroup2.add(yesButton2);
-	       chButtonGroup2.add(noButton2);
+	       // ------------- 여기부터
+
+	       JPanel 다른사람_다쳤어요_피해정보패널 = new JPanel(new GridBagLayout());
+	       다른사람_다쳤어요_피해정보패널.setBorder(BorderFactory.createTitledBorder("피해정보"));
+	       다른사람_다쳤어요_피해정보패널.setMaximumSize(new Dimension(400, 200)); // 크기 제한
 	       
-	       JPanel 다른사람_다쳤어요_피해정보 = new JPanel(new GridBagLayout());
-	       다른사람_다쳤어요_피해정보.setBorder(BorderFactory.createTitledBorder("피해정보"));
-	       다른사람_다쳤어요_피해정보.setMaximumSize(new Dimension(400, 200)); // 크기 제한
-	       
+
 	       JLabel 피해자이름라벨 = new JLabel("피해자명 : ");
 	       JLabel 피해자연락처라벨 = new JLabel("휴대폰번호 : ");
 	       JTextField 피해자이름필드 = new JTextField(9);
 	       JTextField 피해자연락처필드 = new JTextField(11);
-	       
+	       JLabel 피해자재물피해여부라벨 = new JLabel("타인의 재물피해도 발생했나요? : ");
+	       JPanel 피해자정보_재물피해여부패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+	       피해자정보_재물피해여부패널.add(피해자재물피해여부라벨);
+	       피해자정보_재물피해여부패널.add(yesButton);
+	       피해자정보_재물피해여부패널.add(noButton);
+
 	       GridBagConstraints gbc = new GridBagConstraints();
 	       gbc.insets = new Insets(30, 30, 30, 10);
 	       gbc.anchor = GridBagConstraints.WEST;
 	       gbc.gridx = 0; gbc.gridy = 0;
-	       다른사람_다쳤어요_피해정보.add(피해자이름라벨, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자이름라벨, gbc);
 	       gbc.gridx = 1; gbc.gridy = 0;
-	       다른사람_다쳤어요_피해정보.add(피해자이름필드, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자이름필드, gbc);
 	       gbc.gridx = 0; gbc.gridy = 1;
-	       다른사람_다쳤어요_피해정보.add(피해자연락처라벨, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자연락처라벨, gbc);
 	       gbc.gridx = 1; gbc.gridy = 1;
-	       다른사람_다쳤어요_피해정보.add(피해자연락처필드, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자연락처필드, gbc);
 	       gbc.gridx = 0; gbc.gridy = 2;
-	       다른사람_다쳤어요_피해정보.add(피해자재물피해여부라벨, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자재물피해여부라벨, gbc);
 	       gbc.gridx = 1; gbc.gridy = 2;
-	       다른사람_다쳤어요_피해정보.add(radioButtonPanel2, gbc);
+	       다른사람_다쳤어요_피해정보패널.add(피해자정보_재물피해여부패널, gbc);
 	       
-	       다른사람_다쳤어요_피해정보.setVisible(false);
+	       다른사람_다쳤어요_피해정보패널.setVisible(false);
 	       
-	       centerPanel.add(다른사람_다쳤어요_피해정보, BorderLayout.CENTER);
+	       comboBoxContainer.add(다른사람_다쳤어요_피해정보패널, BorderLayout.CENTER);
+	       // ----------- 여기까지는 재물피해시 내용만 조금 바꿔서 새로 만들어야한다.
+	       
 	       
 	       yesButton.addActionListener((e) -> {
-	    	   다른사람_다쳤어요_피해정보.setVisible(true);
+	    	   다른사람_다쳤어요_피해정보패널.setVisible(true);
 				revalidate();
 				repaint();
 			});
 	       
 	       noButton.addActionListener((e) -> {
-	    	   다른사람_다쳤어요_피해정보.setVisible(false);
+	    	   다른사람_다쳤어요_피해정보패널.setVisible(false);
 				revalidate();
 				repaint();
 			});
 	       
-	    	      /*
-	   			String 다른사람_다쳤어요_사고내용_어디서사고발생_피해정보
-	   			
-	   			다치신 분의 정보를 아시나요? (라디오 버튼)
-	   			예 -> 
-	   			다치신 분1 - 피해자명: "", 휴대폰번호: "" (다치신 분 추가 가능)
-	   			
-	   			타인의 재물피해도 발생했나요?
-	   			예/아니오 (선택만 하고 따로 입력하는 칸이 생성되지는 않음)
-	   			
-	   			아니오 ->
-	   			입력칸 없이 서류등록으로 넘어감
-	   	        */
+	    	    
 	   	       
 	   	       
 	   	       // 재산피해를 입혔어요(재물)
@@ -226,6 +226,7 @@ public class ClaimSituationPanel extends JPanel {
 	       상황1콤.addActionListener((e) -> {
 	    	   Object selected = 상황1콤.getSelectedItem();
 	    	    if (selected == null) return; // null이면 처리하지 않음
+	    	   
 	    	    String 선택값 = selected.toString();
 	    	    
 	    	 // 1. 병원에 다녀왔어요(실손 등) 선택시
@@ -281,21 +282,24 @@ public class ClaimSituationPanel extends JPanel {
 	       
 	       다른사람콤.addActionListener ((e) -> {
 	    	   Object selected = 다른사람콤.getSelectedItem();
-	    	   String 다른사람선택값 = selected.toString();
 	    	    
-	    	   
-	    	   if (selected == null) return; // null이면 처리하지 않음
+	    	   if (selected == null) {
+	    		   System.out.println("선택된 항목이 없습니다."); // 디버깅용
+	    		   return; // null이면 처리하지 않음
+	    	   }
+	    	   String 다른사람선택값 = selected.toString();
 	    	    
 	    	   notVisible(병원콤, 병원_아팠어요_진단내용콤, 다친신체부위콤, 부상유형선택콤,
 	    			   다친신체부위콤, 부상유형선택콤);
 	    	   if ("다쳤어요(신체)".equals(다른사람선택값)) {
 	    		   다친상황_입력창.setVisible(true);
-	    		   radioButtonPanel.setVisible(true);
+	    		   피해자정보묻는라디오버튼패널.setVisible(true);
+	    		   피해자정보_재물피해여부패널.setVisible(false);
 	    	   } else if ("재산피해를 입혔어요(재물)".equals(다른사람선택값)) {
-	    		   다른사람_다쳤어요_피해정보.setVisible(false);
-	    		   
+	    		   다른사람_다쳤어요_피해정보패널.setVisible(false);
+	    		   피해자정보묻는라디오버튼패널.setVisible(false);
+	    		   피해자정보_재물피해여부패널.setVisible(true);
 	    	   }
-	    	   
 	    	   
 	       });
 	       
@@ -336,32 +340,32 @@ public class ClaimSituationPanel extends JPanel {
 				// 기록된 정보가 객체에 저장되어야 한다.
 				if (상황1콤.getSelectedItem().equals("다른 사람에게 피해를 입혔어요")
 						&& 다른사람콤.getSelectedItem().equals("재산피해를 입혔어요(재물)")) {
-					claimData.setCompensationType('P');
+					claimData.setCompensation_type('P');
 				} else {
-					claimData.setCompensationType('H');
+					claimData.setCompensation_type('H');
 				}
 
 				String selectedSituation = (String) 상황1콤.getSelectedItem();
 				switch (selectedSituation) {
 					case "병원에 다녀왔어요(실손 등)":
 						if (병원콤.getSelectedItem().equals("아팠어요(질병)")) {
-							claimData.setClaimCategory("질병");
+							claimData.setClaim_category("질병");
 							break;
 						} else if (병원콤.getSelectedItem().equals("다쳤어요(상해)")) {
-							claimData.setClaimCategory("상해");
+							claimData.setClaim_category("상해");
 							break;
 						}
 					case "다른 사람에게 피해를 입혔어요":
-						claimData.setClaimCategory("배상책임");
+						claimData.setClaim_category("배상책임");
 						break;
 					case "교통사고로 비용이 발생했어요":
-						claimData.setClaimCategory("교통사고");
+						claimData.setClaim_category("교통사고");
 						break;
 					case "사망/장해를 입었어요":
-						claimData.setClaimCategory("사망/장해");
+						claimData.setClaim_category("사망/장해");
 						break;
 					case "내 재산에 피해가 발생했어요":
-						claimData.setClaimCategory("재산손해");
+						claimData.setClaim_category("재산손해");
 						break;
 					default:
 						break;
@@ -370,7 +374,7 @@ public class ClaimSituationPanel extends JPanel {
 				// 진단코드 (각 콤보박스를 하나씩 연결해서 그 진단코드를 다 입력해야하는거겠지...)
 
 				if (다친상황_입력창 != null && 다친상황_입력창.isValid()) {
-					claimData.setAccidentDescription(다친상황_입력창.getText());
+					claimData.setAccident_description(다친상황_입력창.getText());
 				}
 
 				// 상황에 맞는 페이지로 넘어갈 수 있도록 하고,
@@ -405,6 +409,11 @@ class JComboBoxMaker extends JComboBox<String> {
 		setMaximumSize(new Dimension(600, 40));
 		setSelectedItem(null); // 아무것도 선택되지 않은 상태에서 시작
 		setVisible(false);
+		
+	}
+	
+	// 모든 콤보박스 초기화 언제하냐...
+	public void resetPanel() {
 		
 	}
 }

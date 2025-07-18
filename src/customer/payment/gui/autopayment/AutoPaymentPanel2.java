@@ -24,6 +24,8 @@ import common.database.dao.AutoPaymentDAO;
 import common.database.model.AutoPaymentModel;
 import common.method.InsuranceTeamConnector;
 import customer.payment.gui.PaymentMainPanel;
+import customer.payment.gui.components.CardNavButton;
+import customer.payment.gui.components.CardSwitcher;
 import customer.payment.gui.components.PaymentDefaultButton;
 import customer.payment.method.AccountRegistrator;
 import net.miginfocom.swing.MigLayout; // MigLayout import
@@ -43,7 +45,8 @@ public class AutoPaymentPanel2 extends JPanel {
     private JComboBox<String> cbBank;
     private JTextField tfAccountNumber;
     private JPasswordField tfPassword2Digits;
-    private JButton regiBtn;
+    private JButton regiBtn, cnbtn;
+    private CardSwitcher pmp;
 
     public AutoPaymentPanel2(PaymentMainPanel pmp) {
     	
@@ -53,6 +56,7 @@ public class AutoPaymentPanel2 extends JPanel {
                 "[grow]",          // 컬럼 설정: 1개 컬럼이 가로로 늘어남
                 "[]20[grow]"       // 로우 설정: 1번째 로우는 기본 크기, 20px 갭, 2번째 로우가 세로로 늘어남
         ));
+        this.pmp = pmp;
         setBackground(new Color(255, 255, 255));
     	setPreferredSize(new Dimension(1440, 700));
 
@@ -134,7 +138,7 @@ public class AutoPaymentPanel2 extends JPanel {
         tfPassword2Digits.setFont(new Font("맑은 고딕", Font.BOLD, 15));
         tfPassword2Digits.setPreferredSize(new Dimension(100, 30));
         tfPassword2Digits.setMargin(new Insets(0, 5, 5, 0));
-
+		cnbtn = new CardNavButton("이전", this.pmp, "AutoPayment1");
         regiBtn = new PaymentDefaultButton("등록");
         regiBtn.setEnabled(false); // 처음엔 비활성화
         regiBtn.addActionListener(e -> {
@@ -176,8 +180,11 @@ public class AutoPaymentPanel2 extends JPanel {
         panel.add(new JLabel("계좌번호"));
         panel.add(tfAccountNumber, "wrap");
         panel.add(new JLabel("비밀번호 앞 2자리"));
-        panel.add(tfPassword2Digits, "wrap");
-        panel.add(regiBtn, "span, center");
+        panel.add(tfPassword2Digits, "wrap");	
+       
+
+        panel.add(cnbtn, "span, split 2, center, gapright 20");
+        panel.add(regiBtn);
 
         return panel;
         
@@ -192,13 +199,14 @@ public class AutoPaymentPanel2 extends JPanel {
     }
     
     public void displayContractInfo(String[] contractData) {
+    	
     	if (contractData != null) {
         valProductName.setText(contractData[1]);
         valContractId.setText(contractData[2]);
         valStartDate.setText(contractData[3]);
         valEndDate.setText(contractData[4]);
         valPaymentType.setText(contractData[5]);
-        valPremium.setText(contractData[6]);
+        valPremium.setText(String.format("%,d원", Integer.valueOf(contractData[6]))); 
     	}
     }
     

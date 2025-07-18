@@ -2,9 +2,14 @@ package customer.payment.method;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import common.database.dao.ContractDAO;
 import common.database.dao.PaymentDAO;
+import common.database.dao.ProductDAO;
 import common.database.dao.UnpaidDAO;
 import common.database.model.CustomerModel;
 import common.database.model.PaymentModel;
@@ -24,7 +29,6 @@ public class payment {
 			// unpaid_id를 통해서 미납내역 한개 가져오기
 			UnpaidModel unpaid = UnpaidDAO.getUnpaidByCustomer(cm.getCustomer_id(), unpaid_id, conn);
 			if (unpaid.getIsPaidBool()) {
-				System.out.println("이미 결제됨");
 				return false; 
 			}
 			
@@ -39,8 +43,6 @@ public class payment {
 			// 업데이트
 			UnpaidDAO.updateUnpaidY(unpaid_id, conn);
 			PaymentDAO.insert(n_payment, conn);
-			
-			System.out.println("결제 완료");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -48,9 +50,36 @@ public class payment {
 		return true;
 	}
 	
-	
-	
-	public static void main(String[] args) {
+	public static List<String[]> ModelsToStringData(List<UnpaidModel> unpaids) {
 		
+		if (unpaids == null) return null;
+		SimpleDateFormat formatterUnpaid = new SimpleDateFormat("yyyy-MM");
+		SimpleDateFormat formatterDeadline = new SimpleDateFormat("yyyy-MM-dd");
+		List<String[]> datas = new ArrayList<String[]>();
+		
+		try (Connection conn = InsuranceTeamConnector.getConnection()) {
+			for (UnpaidModel model : unpaids) {
+				int count = 1;
+				String[] data = new String[6];
+				data[0] = String.valueOf(count++);
+				data[1] = ProductDAO.getProductName((ContractDAO.getByContId(model.getContractId(), conn)).getProduct_id(), conn);
+				data[2] = String.valueOf(model.getContractId());
+				data[3] = String.valueOf(model.getUnpaidAmount());
+				data[4] = formatterUnpaid.format(model.getUnpaidDate());
+				data[5] = formatterDeadline.format(model.getPaymentDeadline());
+				data[6] = String.valueOf(model.getUnpaidId());
+				datas.add(data);
+			}
+			return datas;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;	
 	}
+	
+	
+	
+
 }

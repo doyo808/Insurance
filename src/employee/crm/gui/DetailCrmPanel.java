@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import common.account.login.Session;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import customer.mypage.method.MyPageUtil;
 
 
 public class DetailCrmPanel extends JPanel {
@@ -75,26 +76,15 @@ public class DetailCrmPanel extends JPanel {
 
         // 4행: 회사주소 (중앙 정렬)
         y += height + spacingY;       
-        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 960);       
+        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 980);       
 
         // 5행: 수정 버튼
         y += height + spacingY;
         btnBack = new JButton("LIST");
-        btnBack.setBounds(1200, y, 80, 30);
-        add(btnBack);
-        
-        btnEdit = new JButton("수정");
-        btnEdit.setBounds(1300, y, 80, 30);       
-        add(btnEdit);
-        
+        btnBack.setBounds(1300, y, 80, 30);
+        add(btnBack);        
         
         btnBack.addActionListener(e -> goBackToSearch());
-                
-        btnEdit.addActionListener(e -> {
-            //MyInfoModiDialog dialog = new MyInfoModiDialog(this, cm);
-            //dialog.setVisible(true);
-        });        
-        
         
 
         // ==== 테이블 UI 구성 ====
@@ -169,7 +159,7 @@ public class DetailCrmPanel extends JPanel {
 			if(rs.next()) {
 				tfName.setText(rs.getString("customer_name"));
 			    tfAddress.setText(rs.getString("address_1") + rs.getString("address_2"));
-			    tfBirth.setText(rs.getString("personal_id"));
+			    tfBirth.setText(MyPageUtil.convertJuminToBirth(rs.getString("personal_id")));
 			    tfPhone.setText(rs.getString("phone_number"));
 			    tfEmail.setText(rs.getString("email"));
 			    tfJob.setText(rs.getString("job"));
@@ -207,12 +197,12 @@ public class DetailCrmPanel extends JPanel {
 				model.addRow(new Object[]{
 						rs.getInt("contract_id"),
 						rs.getString("product_name"),
-						rs.getInt("premium"),
-						rs.getString("signup_date"),
-						rs.getString("effective_date"),
-						rs.getString("payment_end_date"),
-						rs.getString("coverage_end_date"),
-						rs.getString("status")				
+						String.format("%,d", rs.getInt("premium")),
+						MyPageUtil.formatDate(rs.getString("signup_date")),
+						MyPageUtil.formatDate(rs.getString("effective_date")),
+						MyPageUtil.formatDate(rs.getString("payment_end_date")),
+						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
+						MyPageUtil.getDisplayStatus(rs.getString("status"))				
 				});
 			}
 			
@@ -242,10 +232,10 @@ public class DetailCrmPanel extends JPanel {
     		while(rs.next()) {
     			model.addRow(new Object[] {
     					rs.getInt("contract_id"),
-    					rs.getString("payment_date"),
+    					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
-    					rs.getInt("paid_amount"),
-    					rs.getString("pay_status")   					
+    					String.format("%,d", rs.getInt("paid_amount")),
+    					MyPageUtil.getDisplayStatus(rs.getString("pay_status"))   					
     			});
     		}   				
 			

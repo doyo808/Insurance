@@ -1,8 +1,10 @@
 package employee.product.view;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class ProductManageMainPanel extends JPanel {
 
@@ -15,12 +17,17 @@ public class ProductManageMainPanel extends JPanel {
 	
 	public ProductManageMainPanel() {
 		setLayout(layout);
+		JScrollPane jspane = new JScrollPane(card3);
+		jspane.getVerticalScrollBar().setUnitIncrement(20);
+		
 		add(card1, "show");
 		add(card2, "edit");
-		add(card3, "regist");
+		add(jspane, "regist");
+		setPreferredSize(new Dimension(1440,700));
 	}
 
 	public void showCard(String name) {
+		
 		layout.show(this, name);
 	}
 }

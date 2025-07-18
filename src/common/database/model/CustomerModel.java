@@ -26,7 +26,10 @@ public class CustomerModel {
 		private String password_salt;
 		private Date created_at;		// DB에서 자동으로 채워주니 입력X
 		
-	
+		public CustomerModel() {
+			
+		}
+		
 		// 생성자
 		public CustomerModel(ResultSet rs) throws SQLException {
 			this.customer_id = rs.getInt("customer_id");
@@ -59,6 +62,7 @@ public class CustomerModel {
 			this.password_hash = password_hash;
 			this.password_salt = password_salt;
 		}
+		
 		
 		// 출력
 		@Override
