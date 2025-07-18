@@ -26,6 +26,7 @@ public class ClaimFirstPanel extends JPanel {
         CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 80);
         CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 80);
         
+        
         버튼패널.add(청구내역조회버튼);
         버튼패널.add(신규청구버튼);
         버튼패널.add(추가청구버튼);

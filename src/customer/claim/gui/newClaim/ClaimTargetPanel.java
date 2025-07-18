@@ -29,6 +29,12 @@ import customer.claim.gui.TitlePanel;
 public class ClaimTargetPanel extends JPanel {
 
 	private JPanel parentCardPanel;
+	private JTextField nameField;
+	private JTextField phoneNumField;
+	private JTextField perNumFieldF;
+	private JTextField perNumFieldB;
+	private JPanel insuredInfoPanel;
+	private ButtonGroup chButtonGroup;
 
 	public ClaimTargetPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
 		this.parentCardPanel = parentCardPanel;
@@ -158,11 +164,7 @@ public class ClaimTargetPanel extends JPanel {
 
 		previousButton.addActionListener((e) -> {
 			cl.show(parentCardPanel, "ClaimFirstPanel");
-			chButtonGroup.clearSelection();
-			nameField.setText("");
-			phoneNumField.setText("");
-			perNumFieldB.setText("");
-			insuredInfoPanel.setVisible(false);
+			resetPanel();
 		});
 
 		nextButton.addActionListener((e) -> {
@@ -178,9 +180,9 @@ public class ClaimTargetPanel extends JPanel {
 					return;
 				}
 				claimData.setSelf(false);
-				claimData.setName(nameField.getText());
-				claimData.setPersonalId(perNumFieldF.getText() + "-" + perNumFieldB.getText());
-				claimData.setPhoneNumber(phoneNumField.getText());
+				claimData.setCustomer_name(nameField.getText());
+				claimData.setPersonal_id(perNumFieldF.getText() + "-" + perNumFieldB.getText());
+				claimData.setPhone_number(phoneNumField.getText());
 			} else if (customerChButton.isSelected()) {
 				claimData.setSelf(true); // 로그인 정보에서 값을 가져와 저장한다.
 
@@ -189,20 +191,19 @@ public class ClaimTargetPanel extends JPanel {
 					
 					NewClaimDataModel customerInfo = ClaimDAO.getCustomerInfo(cm.getLogin_id(), conn);
 					if (customerInfo != null) {
-						claimData.setName(customerInfo.getName());
-						claimData.setPersonalId(customerInfo.getPersonalId());
-						claimData.setPhoneNumber(customerInfo.getPhoneNumber());
+						claimData.setCustomer_name(customerInfo.getCustomer_name());
+						claimData.setPersonal_id(customerInfo.getPersonal_id());
+						claimData.setPhone_number(customerInfo.getPhone_number());
 					} else {
 						JOptionPane.showMessageDialog(this, "고객 정보를 찾을 수 없습니다.");
 						return;
 					}
-
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
 			}
 
-			System.out.println(claimData.toString()); // 디버깅용
+//			System.out.println(claimData.toString()); // 디버깅용
 
 			cl.show(parentCardPanel, "AccidentDatePanel");
 		});
@@ -211,4 +212,13 @@ public class ClaimTargetPanel extends JPanel {
 		buttonPanel.add(nextButton);
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
+	
+	public void resetPanel() {
+		chButtonGroup.clearSelection();
+		nameField.setText("");
+		phoneNumField.setText("");
+		perNumFieldB.setText("");
+		insuredInfoPanel.setVisible(false);
+	}
+	
 }
