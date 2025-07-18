@@ -3,9 +3,10 @@ package employee.crm.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -38,7 +39,7 @@ public class SearchCrmPanel extends JPanel {
 	
 	private JTextField tfName, tfBirth, tfUserId, tfPhone, tfContractId;
     private JTable resultTable;
-    private JButton btnSearch, btnSenEmail;
+    private JButton btnSearch, btnSendEmail;
     private DefaultTableModel tableModel;
     private int currentPage = 1;
     private int rowsPerPage = 10;
@@ -102,9 +103,9 @@ public class SearchCrmPanel extends JPanel {
         btnSearch.setBounds(x4 + labelW, y, 100, height);
         add(btnSearch);
         
-        btnSenEmail = new JButton("메일 발송");
-        btnSenEmail.setBounds(x4 + labelW + 109, y, 100, height);
-        add(btnSenEmail);
+        btnSendEmail = new JButton("메일 발송");
+        btnSendEmail.setBounds(x4 + labelW + 109, y, 100, height);
+        add(btnSendEmail);
         
 
         // ====== 테이블 ======
@@ -184,6 +185,34 @@ public class SearchCrmPanel extends JPanel {
         //화면이 열리자 마자 데이터가 조회되게 하는 방법
         currentPage = 1;
         searchCustomers();
+        
+        // ====== 이벤트 ======
+        btnSendEmail.addActionListener(e -> {
+            List<String> selectedEmails = new ArrayList<>();
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                Boolean isChecked = (Boolean) tableModel.getValueAt(i, 0);
+                if (Boolean.TRUE.equals(isChecked)) {
+                    String email = (String) tableModel.getValueAt(i, 6); // 이메일 열 인덱스
+                    if (email != null && !email.isBlank()) {
+                        selectedEmails.add(email);
+                    }
+                }
+            }
+
+            if (selectedEmails.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "메일을 보낼 고객을 선택하세요.");
+                return;
+            }
+
+            Window window = SwingUtilities.getWindowAncestor(this);
+            Frame parent = (window instanceof Frame) ? (Frame) window : null;
+            
+            EmailDialog dialog = new EmailDialog(parent, selectedEmails);
+            dialog.setVisible(true);
+        });
+        
+        
+        
         
         
     }
