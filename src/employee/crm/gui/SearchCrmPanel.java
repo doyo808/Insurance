@@ -103,14 +103,15 @@ public class SearchCrmPanel extends JPanel {
 
         // ====== 테이블 ======
         String[] columns = {
-            "고객ID", "이름", "생년월일", "아이디", "휴대폰", "이메일", "주소", "계약번호"
+            "선택", "고객ID", "이름", "생년월일", "아이디", "휴대폰", "이메일", "주소", "계약번호"
         };
         tableModel = new DefaultTableModel(columns, 0) {
         	
         	@Override
         	public boolean isCellEditable(int row, int column) {
         		return false;
-        	}
+        	}     
+        	
         };
         
         resultTable = new JTable(tableModel);
@@ -219,6 +220,7 @@ public class SearchCrmPanel extends JPanel {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 tableModel.addRow(new Object[]{
+                	false,	
                     rs.getInt("customer_id"),
                     rs.getString("customer_name"),
                     MyPageUtil.convertJuminToBirth(rs.getString("personal_id")),                    

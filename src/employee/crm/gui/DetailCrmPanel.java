@@ -76,26 +76,15 @@ public class DetailCrmPanel extends JPanel {
 
         // 4행: 회사주소 (중앙 정렬)
         y += height + spacingY;       
-        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 960);       
+        tfWorkAddress = addLabeledField(lbWorkAddress = new JLabel("회사주소"), x1, y, labelW, fieldW + 980);       
 
         // 5행: 수정 버튼
         y += height + spacingY;
         btnBack = new JButton("LIST");
-        btnBack.setBounds(1200, y, 80, 30);
-        add(btnBack);
-        
-        btnEdit = new JButton("수정");
-        btnEdit.setBounds(1300, y, 80, 30);       
-        add(btnEdit);
-        
+        btnBack.setBounds(1300, y, 80, 30);
+        add(btnBack);        
         
         btnBack.addActionListener(e -> goBackToSearch());
-                
-        btnEdit.addActionListener(e -> {
-            //MyInfoModiDialog dialog = new MyInfoModiDialog(this, cm);
-            //dialog.setVisible(true);
-        });        
-        
         
 
         // ==== 테이블 UI 구성 ====
@@ -213,7 +202,7 @@ public class DetailCrmPanel extends JPanel {
 						MyPageUtil.formatDate(rs.getString("effective_date")),
 						MyPageUtil.formatDate(rs.getString("payment_end_date")),
 						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
-						rs.getString("status")				
+						MyPageUtil.getDisplayStatus(rs.getString("status"))				
 				});
 			}
 			
@@ -246,7 +235,7 @@ public class DetailCrmPanel extends JPanel {
     					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
     					String.format("%,d", rs.getInt("paid_amount")),
-    					rs.getString("pay_status")   					
+    					MyPageUtil.getDisplayStatus(rs.getString("pay_status"))   					
     			});
     		}   				
 			
