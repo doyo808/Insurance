@@ -17,12 +17,14 @@ public class ProductManageMainPanel extends JPanel {
 	
 	public ProductManageMainPanel() {
 		setLayout(layout);
-		JScrollPane jspane = new JScrollPane(card3);
-		jspane.getVerticalScrollBar().setUnitIncrement(20);
+		JScrollPane regScroll = new JScrollPane(card3);
+		JScrollPane editScroll = new JScrollPane(card2);
+		regScroll.getVerticalScrollBar().setUnitIncrement(20);
+		editScroll.getVerticalScrollBar().setUnitIncrement(20);
 		
 		add(card1, "show");
-		add(card2, "edit");
-		add(jspane, "regist");
+		add(editScroll, "edit");
+		add(regScroll, "regist");
 		setPreferredSize(new Dimension(1440,700));
 	}
 

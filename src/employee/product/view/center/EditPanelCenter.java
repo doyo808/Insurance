@@ -4,10 +4,14 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -50,13 +54,7 @@ public class EditPanelCenter extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
-        try (Connection conn = InsuranceTeamConnector.getConnection()){
-        	product = ProductDAO.getProduct(productId, conn);
-//			System.out.println("DB상품정보 불러오기성공");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        
 
         // 각 입력 필드 정의
         productIdField = new JTextField(20);
@@ -90,23 +88,12 @@ public class EditPanelCenter extends JPanel {
         addRow(this, gbc, row++, "기본 지급 금액:", basePremiumField);
         addRow(this, gbc, row++, "보장 상수:", premiumConstantField);
         
-        productIdField.setText("");
+
         productIdField.setFocusable(false);
         productIdField.setEditable(false);
-        
-        divisionField.setText("");
+
         divisionField.setFocusable(false);
         divisionField.setEditable(false);
-        
-        productNameField.setText("");
-        joinAgeLowField.setValue(0);
-        joinAgeHighField.setValue(0);
-        joinLimitLowField.setText("");
-        joinLimitHighField.setText("");
-        termsNameField.setText("");
-        manualNameField.setText("");
-        basePremiumField.setText("");
-        premiumConstantField.setText("");
         
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -116,8 +103,6 @@ public class EditPanelCenter extends JPanel {
         gbc.gridy++;
         gbc.gridx = 1;
         add(imagePreview, gbc);
-        
-        imagePreview.setIcon(null);
 	}
 	
 	private void addRow(JPanel panel, GridBagConstraints gbc, int row, String label, Component field) {
@@ -138,5 +123,36 @@ public class EditPanelCenter extends JPanel {
         panel.add(field, gbc);
         gbc.gridx = 2;
         panel.add(button, gbc);
+    }
+    
+    public void setText() {
+    	try (Connection conn = InsuranceTeamConnector.getConnection()){
+        	product = ProductDAO.getProduct(productId, conn);
+			System.out.println("DB상품정보 불러오기성공");
+			
+			productIdField.setText(String.valueOf(product.getProductId()));
+	        divisionField.setText(product.getDivision());
+	        productNameField.setText(product.getProductName());
+	        joinAgeLowField.setValue(product.getJoinAgeLow());
+	        joinAgeHighField.setValue(product.getJoinAgeHigh());
+	        joinLimitLowField.setText(String.valueOf(product.getJoinAgeLow()));
+	        joinLimitHighField.setText(String.valueOf(product.getJoinAgeHigh()));
+	        termsNameField.setText(product.getTermAndConditionsPath());
+	        manualNameField.setText(product.getProductManualPath());
+	        basePremiumField.setText(String.valueOf(product.getBasePremium()));
+	        premiumConstantField.setText(String.valueOf(product.getPremiumConstant()));
+	        
+			try {
+				InputStream input = product.getProduct_introduce().getBinaryStream();
+				BufferedImage image = ImageIO.read(input);
+				ImageIcon icon = new ImageIcon(image);
+				imagePreview.setIcon(icon);
+			} catch (SQLException | IOException e) {
+				e.printStackTrace();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

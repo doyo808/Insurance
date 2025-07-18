@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -45,8 +44,12 @@ public class EventController {
 			if(row != -1) {
 				Object value = view.card1.center.table.getValueAt(row, 0);
 				model.setProductId((int)value);
+				view.card2.center.productId = model.getProductId();
 				
-				view.showCard("edit");				
+				if (model.getProductId() != 0) {
+					view.card2.center.setText();
+					view.showCard("edit");					
+				}
 			} else {
 				JOptionPane.showMessageDialog(view.card3.center, "선택된 상품이 없습니다");
 			}
@@ -175,11 +178,11 @@ public class EventController {
 		//################################################################
 		//EditPanel의 이벤트들
 		view.card2.bottom.prev.addActionListener(e -> {
-			int row = view.card1.center.table.getSelectedRow();
-			model.setProductId((int) view.card1.center.table.getValueAt(row, 0));
-			
-			view.card2.center.productId = model.getProductId();
 			view.showCard("show");
+		});
+		
+		view.card2.bottom.edit.addActionListener(e -> {
+			
 		});
 		// end
 		//################################################################
