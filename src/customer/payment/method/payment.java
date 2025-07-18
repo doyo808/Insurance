@@ -29,7 +29,6 @@ public class payment {
 			// unpaid_id를 통해서 미납내역 한개 가져오기
 			UnpaidModel unpaid = UnpaidDAO.getUnpaidByCustomer(cm.getCustomer_id(), unpaid_id, conn);
 			if (unpaid.getIsPaidBool()) {
-				System.out.println("이미 결제됨");
 				return false; 
 			}
 			
@@ -44,8 +43,6 @@ public class payment {
 			// 업데이트
 			UnpaidDAO.updateUnpaidY(unpaid_id, conn);
 			PaymentDAO.insert(n_payment, conn);
-			
-			System.out.println("결제 완료");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
