@@ -148,13 +148,14 @@ public class SearchCrmPanel extends JPanel {
         	@Override
         	public Class<?> getColumnClass(int columnIndex){
         		return columnIndex == 0 ? Boolean.class : String.class;
-        	}
-        	
-        	
+        	}   	
         	
         };
         
-        resultTable = new JTable(tableModel);  
+        resultTable = new JTable(tableModel);
+        
+        // 행 높이 조절
+        resultTable.setRowHeight(23);
         
         // 전체 선택 체크박스 생성
         JCheckBox headerCheckBox = new JCheckBox();

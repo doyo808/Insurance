@@ -44,55 +44,51 @@ public class EmailSender {
         	}
 		});
         
-        try {
-        	// 메시지 구성
-        	Message message = new MimeMessage(session);
-        	message.setFrom(new InternetAddress(USERNAME));
-        	// 수신자 여러 명 처리
-        	InternetAddress[] addresses = recipients.stream().map(email -> {
-        		try {
-					return new InternetAddress(email);
-				} catch (AddressException e) {
-					e.printStackTrace();
-					return null;
-				}
-        	}).filter(addr -> addr != null).toArray(InternetAddress[]::new);
-        	
-        	message.setRecipients(Message.RecipientType.TO, addresses);
-        	message.setSubject(subject);
-        	
-        	 // 본문 + 첨부파일 포함을 위한 multipart
-            Multipart multipart = new MimeMultipart();
-
-            // 1. 본문 파트
-            MimeBodyPart textPart = new MimeBodyPart();
-            textPart.setText(content, "utf-8");
-            multipart.addBodyPart(textPart);
-
-            
-            // 2. 첨부파일 파트
-            if (attachment != null) {
+        boolean allSent = true;
+        
+        for(String recipient : recipients) {
+        	try {
+            	// 메시지 구성
+            	Message message = new MimeMessage(session);
+            	message.setFrom(new InternetAddress(USERNAME));            	
+            	message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+            	message.setSubject(subject);
             	
-            	MimeBodyPart filePart = new MimeBodyPart();
-                DataSource source = new FileDataSource(attachment);
-                filePart.setDataHandler(new DataHandler(source));                
-                filePart.setFileName(attachment.getName());
-                multipart.addBodyPart(filePart);
+            	 // 본문 + 첨부파일 포함을 위한 multipart
+                Multipart multipart = new MimeMultipart();
+
+                // 1. 본문 파트
+                MimeBodyPart textPart = new MimeBodyPart();
+                textPart.setText(content, "utf-8");
+                multipart.addBodyPart(textPart);
+
+                
+                // 2. 첨부파일 파트
+                if (attachment != null) {
+                	
+                	MimeBodyPart filePart = new MimeBodyPart();
+                    DataSource source = new FileDataSource(attachment);
+                    filePart.setDataHandler(new DataHandler(source));                
+                    filePart.setFileName(attachment.getName());
+                    multipart.addBodyPart(filePart);
+                }
+                
+                // 메시지에 multipart 설정
+                message.setContent(multipart);
+
+                // 전송
+                Transport.send(message);
+                System.out.println("✅ 메일 전송 완료 → " + recipient);
+                
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("❌ 메일 전송 실패 → " + recipient);
+                allSent = false;
             }
-            
-            // 메시지에 multipart 설정
-            message.setContent(multipart);
-
-            // 전송
-            Transport.send(message);
-
-            System.out.println("✅ 메일 전송 완료");
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("❌ 메일 전송 실패");
-            return false;
         }
+        
+        return allSent;        
+        
     }
 }
