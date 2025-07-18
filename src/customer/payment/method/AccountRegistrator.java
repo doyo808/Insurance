@@ -30,7 +30,6 @@ public class AccountRegistrator {
 		{
 			// 입력된 은행이름과 계좌번호를 통해 받은 은행이름이 동일한지 확인
 			if (!bank_name.equals(AccountVerifier.detectBank(bank_account))) {
-				System.out.println("유효하지 않은 계좌번호입니다");
 				return false;
 			}
 			AutoPaymentModel apm = null;

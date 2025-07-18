@@ -43,9 +43,17 @@ public class ContractTablePanel extends JPanel {
             String[] rowData = data.get(row);
 
             // 일반 데이터 셀
+            int i = 0;
             for (String cell : rowData) {
-                JLabel cellLabel = createCellLabel(cell, false);
+            	JLabel cellLabel;
+            	if (i == 6) {
+            		cellLabel = createCellLabel(String.format("%,d원", Integer.valueOf(cell)), false);
+            	} else {
+            		cellLabel = createCellLabel(cell, false);
+            	}
+               
                 tablePanel.add(cellLabel);
+                i++;
             }
 
             // 선택용 라디오 버튼 셀

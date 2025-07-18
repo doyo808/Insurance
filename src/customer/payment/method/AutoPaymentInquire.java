@@ -35,7 +35,7 @@ public class AutoPaymentInquire {
 				data[4] = String.valueOf(model.getCoverage_end_date());
 				data[5] = String.valueOf(
 						AutoPaymentDAO.getAutoPaymentsByContId(model.getContract_id(), conn) == null ? "수동이체" : "자동이체");
-				data[6] = String.valueOf(model.getPremium());
+				data[6] = String.valueOf((int) Math.round(model.getPremium()));
 				datas.add(data);
 			}
 			

@@ -199,13 +199,14 @@ public class AutoPaymentPanel2 extends JPanel {
     }
     
     public void displayContractInfo(String[] contractData) {
+    	
     	if (contractData != null) {
         valProductName.setText(contractData[1]);
         valContractId.setText(contractData[2]);
         valStartDate.setText(contractData[3]);
         valEndDate.setText(contractData[4]);
         valPaymentType.setText(contractData[5]);
-        valPremium.setText(contractData[6]);
+        valPremium.setText(String.format("%,d원", Integer.valueOf(contractData[6]))); 
     	}
     }
     
