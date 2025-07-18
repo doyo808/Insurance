@@ -45,12 +45,12 @@ public class NewClaimDataModel {
     private String accident_description;
     
     // 직원누구하지
-    private String employee_name;
+    private String employee_name = "이철수";
     
     // 청구상태 - 처음 접수할때는 다 RECEIVED
     private String claim_status = "RECEIVED"; 
     // 마지막 확인패널에서 한글로 나타나게 바꿀 수 있어야 할 것 같다..
-    // 조회떄에도 영어가 아닌 한글로 나타날 수 있도록
+    // 조회 때에도 영어가 아닌 한글로 나타날 수 있도록
     
     // 수령 계좌
     private String bank_account; // 계좌번호
@@ -62,6 +62,24 @@ public class NewClaimDataModel {
 	
     public NewClaimDataModel() {
     	
+    }
+    
+    public void resetAll() {
+        isSelf = false;
+        customer_name = null;
+        personal_id = null;
+        phone_number = null;
+        accident_date = null;
+        compensation_type = null;
+        claim_type_name = new ArrayList<String>();
+        claim_category = null;
+        diagnosis_name = null;
+        accident_description = null;
+        claim_type_name = new ArrayList<>();
+        bank_account = null;
+        bank_name = null;
+        beneficiary_name = null;
+        document_type_name = new ArrayList<String>();
     }
 
 	public boolean isSelf() {
@@ -203,11 +221,12 @@ public class NewClaimDataModel {
 	@Override
 	public String toString() {
 		return "NewClaimDataModel [isSelf=" + isSelf + ", customer_name=" + customer_name + ", personal_id="
-				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ", sdf=" + sdf
-				+ ", accident_date=" + accident_date + ", compensation_type=" + compensation_type + ", claim_type_name="
+				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ","
+				+ " accident_date=" + accident_date + ", compensation_type=" + compensation_type + ", claim_type_name="
 				+ claim_type_name + ", claim_category=" + claim_category + ", diagnosis_name=" + diagnosis_name
 				+ ", accident_description=" + accident_description + ", employee_name=" + employee_name
 				+ ", claim_status=" + claim_status + ", bank_account=" + bank_account + ", bank_name=" + bank_name
 				+ ", beneficiary_name=" + beneficiary_name + ", document_type_name=" + document_type_name + "]";
 	}
+	
 }

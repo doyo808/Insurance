@@ -29,6 +29,12 @@ import customer.claim.gui.TitlePanel;
 public class ClaimTargetPanel extends JPanel {
 
 	private JPanel parentCardPanel;
+	private JTextField nameField;
+	private JTextField phoneNumField;
+	private JTextField perNumFieldF;
+	private JTextField perNumFieldB;
+	private JPanel insuredInfoPanel;
+	private ButtonGroup chButtonGroup;
 
 	public ClaimTargetPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
 		this.parentCardPanel = parentCardPanel;
@@ -158,11 +164,7 @@ public class ClaimTargetPanel extends JPanel {
 
 		previousButton.addActionListener((e) -> {
 			cl.show(parentCardPanel, "ClaimFirstPanel");
-			chButtonGroup.clearSelection();
-			nameField.setText("");
-			phoneNumField.setText("");
-			perNumFieldB.setText("");
-			insuredInfoPanel.setVisible(false);
+			resetPanel();
 		});
 
 		nextButton.addActionListener((e) -> {
@@ -201,7 +203,7 @@ public class ClaimTargetPanel extends JPanel {
 				}
 			}
 
-			System.out.println(claimData.toString()); // 디버깅용
+//			System.out.println(claimData.toString()); // 디버깅용
 
 			cl.show(parentCardPanel, "AccidentDatePanel");
 		});
@@ -210,4 +212,13 @@ public class ClaimTargetPanel extends JPanel {
 		buttonPanel.add(nextButton);
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
+	
+	public void resetPanel() {
+		chButtonGroup.clearSelection();
+		nameField.setText("");
+		phoneNumField.setText("");
+		perNumFieldB.setText("");
+		insuredInfoPanel.setVisible(false);
+	}
+	
 }

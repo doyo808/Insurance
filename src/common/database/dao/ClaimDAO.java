@@ -66,7 +66,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            while (rs.next()) {
 		            	customerBankInfo.setBank_name(rs.getString("bank_name"));
-		            	customerBankInfo.setBank_account(rs.getString("bank_name"));
+		            	customerBankInfo.setBank_account(rs.getString("bank_account"));
 		            	customerBankInfo.setBeneficiary_name(rs.getString("beneficiary_name"));
 		            }
 		        }

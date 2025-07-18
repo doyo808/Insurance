@@ -18,6 +18,12 @@ import common.method.Validators;
 
 public class EnterBankAccountPanel extends JPanel {
    private JPanel parentCardPanel;
+   
+   private ButtonGroup ChButtonGroup;
+   private JTextField bankNameF;
+   private JTextField beneficiaryNameF;
+   private JTextField bankAccountF;
+   private JPanel bankAccountEnterP;
 
    public EnterBankAccountPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
       this.parentCardPanel = parentCardPanel;
@@ -53,7 +59,7 @@ public class EnterBankAccountPanel extends JPanel {
       centerPanel.add(radioPanel, BorderLayout.NORTH);
       
       // 입력 패널 (직접입력 선택 시만 보여짐)
-      JPanel bankAccountEnterP = new JPanel(new GridBagLayout());
+      bankAccountEnterP = new JPanel(new GridBagLayout());
       bankAccountEnterP.setBorder(BorderFactory.createTitledBorder("계좌 정보 입력"));
       bankAccountEnterP.setMaximumSize(new Dimension(400, 200)); // 크기 제한
       bankAccountEnterP.setVisible(false);
@@ -123,12 +129,9 @@ public class EnterBankAccountPanel extends JPanel {
       buttonPanel.add(nextButton);
 
       previousButton.addActionListener((e) -> {
-         cl.show(parentCardPanel, "ClaimTypePanel");
-         ChButtonGroup.clearSelection();
-         bankNameF.setText("");
-         beneficiaryNameF.setText("");
-         bankAccountF.setText("");
-         bankAccountEnterP.setVisible(false);
+    	  resetPanel();
+    	  cl.show(parentCardPanel, "ClaimTypePanel");
+         
       });
 
       nextButton.addActionListener((e) -> {
@@ -172,16 +175,22 @@ public class EnterBankAccountPanel extends JPanel {
 		    	 claimData.setBank_account(bankAccountF.getText());
 		    	 claimData.setBeneficiary_name(beneficiaryNameF.getText());
          }
-       
-         
-         
          cl.show(parentCardPanel, "DocumentRegistrationPanel"); 
          
-         System.out.println(claimData.toString()); // 디버깅용
+//         System.out.println(claimData.toString()); // 디버깅용
       });
 
       buttonPanel.add(previousButton);
       buttonPanel.add(nextButton);
       add(buttonPanel, BorderLayout.SOUTH);
    }
+   
+   public void resetPanel() {
+	   ChButtonGroup.clearSelection();
+	   bankNameF.setText("");
+	   beneficiaryNameF.setText("");
+	   bankAccountF.setText("");
+	   bankAccountEnterP.setVisible(false);
+   }
+   
 }
