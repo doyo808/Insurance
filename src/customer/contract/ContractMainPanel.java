@@ -42,6 +42,9 @@ public class ContractMainPanel extends JPanel {
 		ShowCard(cardNames[MainFrame.TEST ? testPage : 0]);
 	}
 	
+	public ContractMainPanel() {
+	}
+
 	public void ShowCard(String name) {
 		if (name.equals("보험료계산")) {
 			calPre.updateProduct();
