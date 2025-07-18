@@ -4,7 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
+import java.awt.Font;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -13,6 +14,7 @@ import common.database.model.CustomerModel;
 import common.gui.FooterImagePanel;
 import common.gui.HomeButton;
 import common.method.ButtonMaker;
+import common.method.ButtonPainter;
 import insuranceMain.customerPanel.CustomerMainPanel;
 import insuranceMain.customerPanel.services.ServicesMainPanel;
 
@@ -51,6 +53,8 @@ class LoggedInCenterPanel extends JPanel {
             JButton btn = new JButton(label);
             btn.setPreferredSize(new Dimension(200, 100)); // 버튼 크기 지정
             
+            ButtonPainter.stylePrimaryButton(btn, 16);
+            
             btn.addActionListener(e -> {
             	cmp.showCard("services");
             	smp.getSmcp().showCard(label);
@@ -76,7 +80,10 @@ class LoggedInPanelNorth extends JPanel {
 		ButtonMaker.addButton(1000, 1, this);
 		
 		btn1 = new JButton("고객성함");
+		ButtonPainter.back_front(btn1, 20, Color.gray, Color.white);
+		
 		JButton btn2 = new JButton("로그아웃");
+		ButtonPainter.back_front(btn2, 20, Color.gray, Color.white);
 		
 		btn1.addActionListener(e -> {
 			cmp.showCard("services");

@@ -74,7 +74,7 @@ public class PayPanel1 extends JPanel {
 		chkbtn.addActionListener(e -> {
 		    if (unpaids == null || unpaids.isEmpty()) {
 		        JOptionPane.showMessageDialog(
-		            PayPanel1.this,
+		            null,
 		            "미납내역이 없습니다. 메인페이지로 이동합니다.",
 		            "알림",
 		            JOptionPane.INFORMATION_MESSAGE

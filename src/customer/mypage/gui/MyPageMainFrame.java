@@ -11,7 +11,7 @@ public class MyPageMainFrame extends JFrame {
 	
 	public MyPageMainFrame() {
 		
-		setTitle("OO다이렉트 보험 마이페이지");
+		setTitle("KD손해보험 다이렉트센터 마이페이지");
 		setBounds(100, 10, 1440, 1024);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);

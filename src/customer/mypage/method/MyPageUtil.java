@@ -1,10 +1,12 @@
 package customer.mypage.method;
 
+import java.security.KeyStore.Entry;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.Map;
 
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -147,6 +149,33 @@ public class MyPageUtil {
             return rawDateTime;
         }
     }
+    
+    
+    private static final Map<String, String> STATUS_MAP = Map.ofEntries(   
+    		// 계약정보 >>> 계약상태
+    		Map.entry("PENDING", "가입 신청 완료"),
+    		Map.entry("APPROVED","심사 승인 완료"), 
+    		Map.entry("ACTIVE", "정상"),
+    		Map.entry("EXPIRED", "계약 종료"),
+    		Map.entry("CANCELLED", "계약 철회"),
+    		Map.entry("REJECTED", "심사 승인 거절"),
+    		Map.entry("SUSPENDED", "일시 중지"),
+    		Map.entry("CLAIMED", "보험금 청구"),
+    		Map.entry("TERMINATED", "중도 해지"),    		
+    		Map.entry("LAPSED", "해지 예정"),
+    		
+    		//  납입정보 >>> 납입상태
+    		Map.entry("Y", "납부완료"),
+    		Map.entry("N", "미납")
+    );
+    
+    public static String getDisplayStatus(String status) {
+    	if(status == null) return "";
+    	return STATUS_MAP.getOrDefault(status, status);
+    }
+    
+    
+    
 
 }
 

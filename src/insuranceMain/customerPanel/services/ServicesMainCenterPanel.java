@@ -20,7 +20,6 @@ public class ServicesMainCenterPanel extends JPanel {
 	private PaymentMainPanel paymentMP;
 	
 	
-	
 	public ServicesMainCenterPanel(CustomerMainPanel cmp) {
 		this.cmp = cmp;
 		setLayout(c);

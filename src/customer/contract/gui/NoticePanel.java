@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,8 +17,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
+import common.account.login.Session;
+import common.method.InsuranceTeamConnector;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
+import customer.contract.method.Insert;
 import customer.contract.method.SelectedProductName;
 import customer.contract.textSources.InsuranceDocument;
 import customer.contract.textSources.InsuranceDocumentFactory;
@@ -23,8 +29,10 @@ import customer.contract.textSources.InsuranceDocumentFactory;
 public class NoticePanel extends JPanel {
 
     private ContractMainPanel contractMP;
+    private ContractInfo ci;
     private int cardNumber = 7;
-
+    
+    private String productName;
     private JTextArea guideTextArea;
     private JTextArea termsTextArea;
     private JButton guideDownloadBtn;
@@ -33,6 +41,9 @@ public class NoticePanel extends JPanel {
     
     public NoticePanel(ContractMainPanel contractMP) {
         this.contractMP = contractMP;
+        this.ci = contractMP.getContractInfo();
+        ci.setCreatedDate(LocalDate.now());
+        
         initUI();
     }
 
@@ -46,9 +57,8 @@ public class NoticePanel extends JPanel {
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel);
 
-        ContractInfo ci = contractMP.getContractInfo();
-        String productName = SelectedProductName.getProduct_name();
-        
+        productName = SelectedProductName.getProduct_name();
+        ci.setSelectedProductName(productName);
         InsuranceDocument doc = InsuranceDocumentFactory.getDocument(productName);
         InsuranceDocument docTemp = InsuranceDocumentFactory.getDocument("든든암케어");
         
@@ -129,6 +139,20 @@ public class NoticePanel extends JPanel {
         confirmBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "보험가입 안내사항 확인을 완료했습니다.");
             contractMP.ShowCard(contractMP.cardNames[cardNumber + 1]);
+            
+			try (Connection conn = InsuranceTeamConnector.getConnection()) {
+				System.out.println("noticepanel에서 디버깅" + ci);
+				int insu_id = Insert.insertInsured(ci, conn);
+	            int bene_id = Insert.insertBeneficiary(ci, conn);
+	            
+	            Insert.insertContract(ci, conn, Session.getCustomer().getCustomer_id(), insu_id, bene_id);
+			} catch (SQLException e1) {
+				System.out.println("!!DB 업데이트 실패!!");
+				e1.printStackTrace();
+			}
+            
+            ci.clear();
+            System.out.println("noticepanel에서 디버깅2" + ci);
         });
         add(confirmBtn);
     }
