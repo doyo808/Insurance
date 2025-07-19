@@ -47,7 +47,8 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
         String[] menuItems = {"보험상품관리", "보험계약관리", "보험료납부관리", "보험금청구관리", "고객관리", "사용자관리"};
 
         for (String item : menuItems) {
-            JButton btn = new JButton(item);                        
+            JButton btn = new JButton(item);
+            btn.setSize(100, 50);
             btn.setActionCommand(item);
             btn.addActionListener(this);
             topPanel.add(btn);

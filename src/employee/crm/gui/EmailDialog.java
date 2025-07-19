@@ -5,10 +5,12 @@ import java.awt.Frame;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -22,60 +24,81 @@ public class EmailDialog extends JDialog {
 	private JLabel lbAttach;
 	private File attachedFile = null;
 	private List<String> recipients;
+	private JList<String> recipientList;
 	
-	public EmailDialog(Frame parent, List<String> recipientEmails) {
+	public EmailDialog(Frame parent, List<String> recipientEmails, List<String> recipientsNames) {
         super(parent, "메일 발송", true);
         this.recipients = recipientEmails;
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(null);
-        setSize(700, 680);
+        setSize(700, 700);
         setLocationRelativeTo(parent);
+        
+        // ====== 받는 사람 목록 =======
+        JLabel lbRecipients = new JLabel("받는사람\n (" + recipientEmails.size() + "명) :");
+        lbRecipients.setBounds(30, 10, 120, 30);
+        lbRecipients.setFont(new Font (lbRecipients.getFont().getName(), Font.BOLD, 14));
+        add(lbRecipients);
+        
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for(int i = 0; i < recipientEmails.size(); i++) {
+        	String name = i < recipientsNames.size() ? recipientsNames.get(i) : "";
+        	listModel.addElement(name + " [" + recipientEmails.get(i) + "]");
+        }
+        
+        recipientList = new JList<>(listModel);
+        recipientList.setEnabled(false);
+        recipientList.setFont(new Font (recipientList.getFont().getName(), Font.BOLD, 14));
+        JScrollPane scrollRecipients = new JScrollPane(recipientList);
+        scrollRecipients.setBounds(150, 10, 500, 100);
+        add(scrollRecipients);
+        
 
         // ===== 제목 =====
         JLabel lbSubject = new JLabel("제 목:");
-        lbSubject.setBounds(30, 30, 100, 30);
+        lbSubject.setBounds(30, 120, 100, 30);
         lbSubject.setFont(new Font (lbSubject.getFont().getName(), Font.BOLD, 14));
         add(lbSubject);
 
         tfSubject = new JTextField();
-        tfSubject.setBounds(80, 30, 570, 30);
+        tfSubject.setBounds(80, 120, 570, 30);
         tfSubject.setFont(new Font(tfSubject.getFont().getName(), Font.PLAIN, 14));
         add(tfSubject);
 
         // ===== 내용 =====
         JLabel lbContent = new JLabel("내 용:");
-        lbContent.setBounds(30, 80, 100, 30);
+        lbContent.setBounds(30, 160, 100, 30);
         lbContent.setFont(new Font (lbContent.getFont().getName(), Font.BOLD, 14));
         add(lbContent);
 
         taContent = new JTextArea();
         JScrollPane scrollContent = new JScrollPane(taContent);
-        scrollContent.setBounds(80, 80, 570, 400);
+        scrollContent.setBounds(80, 160, 570, 400);
         taContent.setFont(new Font(taContent.getFont().getName(), Font.PLAIN, 14));
         add(scrollContent);
 
         // ===== 첨부파일 =====
         btnAttach = new JButton("첨부파일 선택");
-        btnAttach.setBounds(80, 500, 160, 30);
+        btnAttach.setBounds(80, 570, 160, 30);
         add(btnAttach);
 
         lbAttach = new JLabel("선택된 파일 없음");
-        lbAttach.setBounds(270, 500, 390, 30);
+        lbAttach.setBounds(270, 570, 390, 30);
         add(lbAttach);
 
         btnAttach.addActionListener(e -> chooseFile());
 
         // ===== 전송 버튼 =====
         btnSend = new JButton("전송");
-        btnSend.setBounds(390, 570, 120, 40);
+        btnSend.setBounds(390, 610, 120, 40);
         add(btnSend);
 
         btnSend.addActionListener(e -> sendEmail());
 
         // ===== 취소 버튼 =====
         btnCancel = new JButton("취소");
-        btnCancel.setBounds(530, 570, 120, 40);
+        btnCancel.setBounds(530, 610, 120, 40);
         add(btnCancel);
 
         btnCancel.addActionListener(e -> dispose());

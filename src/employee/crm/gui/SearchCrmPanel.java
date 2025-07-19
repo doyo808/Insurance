@@ -110,12 +110,16 @@ public class SearchCrmPanel extends JPanel {
      // ====== 이벤트 ======
         btnSendEmail.addActionListener(e -> {
             List<String> selectedEmails = new ArrayList<>();
+            List<String> selectedNames = new ArrayList<>();
+            
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 Boolean isChecked = (Boolean) tableModel.getValueAt(i, 0);
                 if (Boolean.TRUE.equals(isChecked)) {
                     String email = (String) tableModel.getValueAt(i, 6); // 이메일 열 인덱스
+                    String name = (String) tableModel.getValueAt(i, 2); // 이름 열
                     if (email != null && !email.isBlank()) {
                         selectedEmails.add(email);
+                        selectedNames.add(name);
                     }
                 }
             }
@@ -128,7 +132,7 @@ public class SearchCrmPanel extends JPanel {
             Window window = SwingUtilities.getWindowAncestor(this);
             Frame parent = (window instanceof Frame) ? (Frame) window : null;
             
-            EmailDialog dialog = new EmailDialog(parent, selectedEmails);
+            EmailDialog dialog = new EmailDialog(parent, selectedEmails, selectedNames);
             dialog.setVisible(true);
         });
         
