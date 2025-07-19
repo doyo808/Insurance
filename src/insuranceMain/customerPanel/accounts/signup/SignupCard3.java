@@ -38,7 +38,7 @@ public class SignupCard3 extends JPanel {
     private boolean eamilChk = false;
 
     public SignupCard3(CardLayout c, JPanel parentPanel, CustomerModel cm) {
-        setLayout(new MigLayout("wrap 2", "[][grow]", ""));
+        setLayout(new MigLayout("wrap 2, align center center", "[][grow, center]", ""));
 
         // 이름
         add(new JLabel("이름:"));
@@ -106,8 +106,8 @@ public class SignupCard3 extends JPanel {
                 } else if (idChkNum == 1) {
                     JOptionPane.showMessageDialog(this, "사용 가능한 아이디입니다.");
                     setIdCheck(true);
-                } else {
-                    JOptionPane.showMessageDialog(this, "아이디형식이 잘못됐습니다.");
+                } else if (idChkNum == -1) {
+                    JOptionPane.showMessageDialog(this, "아이디형식이 잘못됐습니다. 영문과 숫자만 입력해주세요.");
                     setIdCheck(false);
                 }
             }
