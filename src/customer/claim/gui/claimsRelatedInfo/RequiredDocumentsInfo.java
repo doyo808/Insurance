@@ -1,4 +1,4 @@
-package customer.claim.gui;
+package customer.claim.gui.claimsRelatedInfo;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -6,6 +6,9 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class RequiredDocumentsInfo extends JPanel {
 
@@ -20,19 +23,12 @@ public class RequiredDocumentsInfo extends JPanel {
 		TitlePanel title = new TitlePanel("상황별 필요서류 안내");
 		add(title, BorderLayout.NORTH);
 		
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
+		bottomBP.getNextButton().setVisible(false);
 
-	      JButton previousButton = new JButton("이전");
-	      buttonPanel.add(previousButton);
-
-	      previousButton.addActionListener((e) -> {
+		bottomBP.getPreviousButton().addActionListener((e) -> {
 	         cl.show(parentCardPanel, previousPanelName);
 	      
 	      });
-
-
-	      buttonPanel.add(previousButton);
-	      add(buttonPanel, BorderLayout.SOUTH);
-	   
 	}
 }

@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
+import customer.claim.gui.claimsRelatedInfo.ClaimMethodInfo;
+import customer.claim.gui.claimsRelatedInfo.RequiredDocumentsInfo;
 import customer.claim.gui.newClaim.AccidentDatePanel;
 import customer.claim.gui.newClaim.ClaimTargetPanel;
 import customer.claim.gui.newClaim.ClaimTypePanel;
@@ -29,6 +31,7 @@ public class ClaimMainPanel extends JPanel {
     private RequiredDocumentsInfo 필수서류_서류등록패널;
 	private ClaimMethodInfo 보험금청구방법패널;
 	private ClaimHistoryPanel 청구내역조회패널;
+	private ClaimDetailPanel 청구상세내역패널;
 	
    public ClaimMainPanel(CustomerMainPanel cmp) {
 
@@ -55,6 +58,7 @@ public class ClaimMainPanel extends JPanel {
       필수서류_서류등록패널 = new RequiredDocumentsInfo(카드패널, "DocumentRegistrationPanel");
       보험금청구방법패널 = new ClaimMethodInfo(카드패널);
       청구내역조회패널 = new ClaimHistoryPanel(카드패널, claimdata);
+      청구상세내역패널 = new ClaimDetailPanel(카드패널); // 추후에 claimdata 또는 다른 데이터값 받을 예정
       
 //      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
       // 카드패널에 각 패널 등록(카드 이름 지정 필수)
@@ -67,19 +71,18 @@ public class ClaimMainPanel extends JPanel {
       카드패널.add(서류등록패널_계좌입력, "DocumentRegistrationPanel");
       카드패널.add(서류등록패널_청구상황, "DocumentRegistrationPanel");
       카드패널.add(최종청구내역확인패널, "CheckFinalClaimDetails");
-  
       카드패널.add(필수서류_청구첫패널, "RequiredDocumentsInfoFromClaimFirstPanel");
       카드패널.add(필수서류_서류등록패널, "RequiredDocumentsInfoFromDocReg");
       카드패널.add(보험금청구방법패널, "ClaimMethodInfo");
-      
       카드패널.add(청구내역조회패널, "ClaimHistoryPanel");
+      카드패널.add(청구상세내역패널, "ClaimDetailPanel");
       
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-//		cl.show(카드패널, "ClaimFirstPanel");
+		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
 //		cl.show(카드패널, "AccidentDatePanel");
-		cl.show(카드패널, "ClaimSituationPanel");
+//		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");
 //		cl.show(카드패널, "DocumentRegistrationPanel");
@@ -88,22 +91,6 @@ public class ClaimMainPanel extends JPanel {
       setVisible(true);
 
    }
-   
-   // 메인패널을 새로 갈아끼울거라 필요없당
-   public void resetAllClaimPanels() {
-	   청구대상패널.resetPanel();
-	      사고일선택패널.resetPanel();
-//	      청구상황선택패널.resetPanel(); // 아직 
-	      계좌입력패널.resetPanel();
-	      청구타입패널.resetPanel();
-	      서류등록패널_계좌입력.resetPanel();
-	      서류등록패널_청구상황.resetPanel();
-	      최종청구내역확인패널.resetPanel();
-	      // 추가 청구할 때 생기는 패널들도 추가해야해 ㅠㅠㅠㅠ
-   }
-   
-   
-   
    
    
 //   -------------------------------------------------------------------------------------------------------------------------
@@ -157,9 +144,9 @@ public class ClaimMainPanel extends JPanel {
 
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();
-//		cl.show(카드패널, "ClaimFirstPanel");
+		cl.show(카드패널, "ClaimFirstPanel");
 //		cl.show(카드패널, "ClaimTargetPanel");
-		cl.show(카드패널, "AccidentDatePanel");
+//		cl.show(카드패널, "AccidentDatePanel");
 //		cl.show(카드패널, "ClaimSituationPanel");
 //		cl.show(카드패널, "ClaimTypePanel");
 //		cl.show(카드패널, "EnterBankAccountPanel");

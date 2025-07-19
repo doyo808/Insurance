@@ -24,6 +24,9 @@ import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import common.database.model.NewClaimDataModel;
+import customer.claim.gui.claimsRelatedInfo.RequiredDocumentsInfo;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class DocumentRegistrationPanel extends JPanel {
 	private JPanel parentCardPanel;
@@ -143,19 +146,14 @@ public class DocumentRegistrationPanel extends JPanel {
 			cl.show(parentCardPanel, "RequiredDocumentsInfo");
 		});
 
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 
-		JButton previousButton = new JButton("이전");
-		JButton nextButton = new JButton("다음");
-		buttonPanel.add(previousButton);
-		buttonPanel.add(nextButton);
-
-		previousButton.addActionListener((e) -> {
+		bottomBP.getPreviousButton().addActionListener((e) -> {
 			resetPanel();
 			cl.show(parentCardPanel, previousPanelName);
 		});
 
-		nextButton.addActionListener((e) -> {
+		bottomBP.getNextButton().addActionListener((e) -> {
 			List<String> filesNames = new ArrayList<>();
 			for (File file : selectedFiles) {
 				filesNames.add(file.getName());
@@ -177,10 +175,6 @@ public class DocumentRegistrationPanel extends JPanel {
 			    parentCardPanel.revalidate();
 			    parentCardPanel.repaint();
 		});
-
-		buttonPanel.add(previousButton);
-		buttonPanel.add(nextButton);
-		add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
 	 public void resetPanel() {

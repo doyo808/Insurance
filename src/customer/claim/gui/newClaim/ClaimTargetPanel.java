@@ -24,7 +24,8 @@ import common.database.dao.ClaimDAO;
 import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
 import common.method.InsuranceTeamConnector;
-import customer.claim.gui.TitlePanel;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class ClaimTargetPanel extends JPanel {
 
@@ -157,17 +158,14 @@ public class ClaimTargetPanel extends JPanel {
 			repaint();
 		});
 
-		// 하단 버튼
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-		JButton previousButton = new JButton("이전");
-		JButton nextButton = new JButton("다음");
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 
-		previousButton.addActionListener((e) -> {
+		bottomBP.getPreviousButton().addActionListener((e) -> {
 			cl.show(parentCardPanel, "ClaimFirstPanel");
 			resetPanel();
 		});
 
-		nextButton.addActionListener((e) -> {
+		bottomBP.getNextButton().addActionListener((e) -> {
 			if (chButtonGroup.getSelection() == null) {
 				JOptionPane.showMessageDialog(this, "청구대상을 선택해주세요.", "안내", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -207,10 +205,6 @@ public class ClaimTargetPanel extends JPanel {
 
 			cl.show(parentCardPanel, "AccidentDatePanel");
 		});
-
-		buttonPanel.add(previousButton);
-		buttonPanel.add(nextButton);
-		add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
 	public void resetPanel() {

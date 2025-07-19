@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class CheckFinalClaimDetails extends JPanel {
@@ -72,20 +74,19 @@ public class CheckFinalClaimDetails extends JPanel {
 		}
 	      
 		add(centerPanel, BorderLayout.CENTER);
+
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 		
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+		
+		
 
-	      JButton previousButton = new JButton("이전");
-	      JButton actionButton = new JButton("보험금 청구하기");
-	      buttonPanel.add(previousButton);
-	      buttonPanel.add(actionButton);
-
-	      previousButton.addActionListener((e) -> {
+	      bottomBP.getPreviousButton().addActionListener((e) -> {
 	         cl.show(parentCardPanel, "DocumentRegistrationPanel");
 	      
 	      });
 
-	      actionButton.addActionListener((e) -> {
+	      bottomBP.setActionButton("보험금 청구하기");
+	      bottomBP.getNextButton().addActionListener((e) -> {
 	    	// 청구 내역이 DB에 저장되면서 청구 첫페이지로 넘어감
 	    	  
 	    	  JOptionPane.showMessageDialog(this, "보험금 청구가 완료되었습니다.", "안내", JOptionPane.INFORMATION_MESSAGE);
@@ -103,10 +104,6 @@ public class CheckFinalClaimDetails extends JPanel {
 	    	  parentCardPanel.revalidate();
 	    	  parentCardPanel.repaint();
 	      });
-
-	      buttonPanel.add(previousButton);
-	      buttonPanel.add(actionButton);
-	      add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
 	 public void resetPanel() {

@@ -16,7 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
-import customer.claim.gui.TitlePanel;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class ClaimTypePanel extends JPanel {
 	private JPanel parentCardPanel;
@@ -58,21 +59,14 @@ public class ClaimTypePanel extends JPanel {
 		chckPanel.setBorder(BorderFactory.createEmptyBorder(30, 500, 30, 450)); // 상좌하우 여백 추가
 		chckPanel.setVisible(true);
 
-		// ===== 하단 영역 (이전 / 다음 버튼) =====
-		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-		bottomPanel.setBounds(96, 227, 264, 63);
-		JButton previousButton = new JButton("이전");
-		JButton nextButton = new JButton("다음");
-		bottomPanel.add(previousButton);
-		bottomPanel.add(nextButton);
-		add(bottomPanel, BorderLayout.SOUTH);
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 
-		previousButton.addActionListener(e -> {
+		bottomBP.getPreviousButton().addActionListener(e -> {
 			resetPanel();
 			cl.show(parentCardPanel, "ClaimSituationPanel");
 		});
 
-		nextButton.addActionListener(e -> {
+		bottomBP.getNextButton().addActionListener(e -> {
 			boolean selected = claimTypeList.stream().anyMatch(JCheckBox::isSelected);
 			if (!selected) {
 				JOptionPane.showMessageDialog(chckPanel, "청구유형을 하나 이상 선택해주세요.", "알림", JOptionPane.WARNING_MESSAGE);

@@ -15,6 +15,8 @@ import common.database.model.NewClaimDataModel;
 import common.gui.CardSwitchButton;
 import common.method.InsuranceTeamConnector;
 import common.method.Validators;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class EnterBankAccountPanel extends JPanel {
    private JPanel parentCardPanel;
@@ -120,21 +122,14 @@ public class EnterBankAccountPanel extends JPanel {
          repaint();
       });
 
-      // ⬇️ 하단 버튼 영역
-      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
+      BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 
-      JButton previousButton = new JButton("이전");
-      JButton nextButton = new JButton("다음");
-      buttonPanel.add(previousButton);
-      buttonPanel.add(nextButton);
-
-      previousButton.addActionListener((e) -> {
+      bottomBP.getPreviousButton().addActionListener((e) -> {
     	  resetPanel();
     	  cl.show(parentCardPanel, "ClaimTypePanel");
-         
       });
 
-      nextButton.addActionListener((e) -> {
+      bottomBP.getNextButton().addActionListener((e) -> {
          if (ChButtonGroup.getSelection() == null) {
             JOptionPane.showMessageDialog(this, "계좌정보를 선택해주세요.", "안내", JOptionPane.WARNING_MESSAGE);
             return;
@@ -176,13 +171,8 @@ public class EnterBankAccountPanel extends JPanel {
 		    	 claimData.setBeneficiary_name(beneficiaryNameF.getText());
          }
          cl.show(parentCardPanel, "DocumentRegistrationPanel"); 
-         
 //         System.out.println(claimData.toString()); // 디버깅용
       });
-
-      buttonPanel.add(previousButton);
-      buttonPanel.add(nextButton);
-      add(buttonPanel, BorderLayout.SOUTH);
    }
    
    public void resetPanel() {
@@ -192,5 +182,4 @@ public class EnterBankAccountPanel extends JPanel {
 	   bankAccountF.setText("");
 	   bankAccountEnterP.setVisible(false);
    }
-   
 }

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class ClaimsModel {
-
+	// --------------------- ClaimsModel에 더 추가해야겠는데 ----------------------------------
 			private Integer claim_id;
 			private Integer contract_id;
 			private Date claim_date;

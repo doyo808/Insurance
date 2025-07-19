@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -22,6 +23,7 @@ public class victimInfoPanel extends JPanel {
 	private JLabel 피해자재물피해여부라벨;
 	private JRadioButton 피해자정보_재물피해yesButton;
 	private JRadioButton 피해자정보_재물피해noButton;
+	private ButtonGroup 라디오버튼그룹;
 	
 	// 피해입으신 분의 정보를 아시나요? 했을 때 나타나는 패널 - 다른사람_다쳤어요_피해정보패널
 	public victimInfoPanel() {
@@ -35,13 +37,16 @@ public class victimInfoPanel extends JPanel {
 	       피해자연락처라벨 = new JLabel("휴대폰번호 : ");
 	       피해자이름필드 = new JTextField(9);
 	       피해자연락처필드 = new JTextField(11);
-	     
+	       라디오버튼그룹 = new ButtonGroup();
+	       
 	       피해자정보_재물피해여부패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
 	       피해자재물피해여부라벨 = new JLabel("타인의 재물피해도 발생했나요? : ");
 	       피해자정보_재물피해yesButton = new JRadioButton(" 예");
 	       피해자정보_재물피해noButton = new JRadioButton(" 아니오");
 
-	       피해자정보_재물피해여부패널.add(피해자재물피해여부라벨);
+	       라디오버튼그룹.add(피해자정보_재물피해yesButton);
+	       라디오버튼그룹.add(피해자정보_재물피해noButton);
+	       
 	       피해자정보_재물피해여부패널.add(피해자정보_재물피해yesButton);
 	       피해자정보_재물피해여부패널.add(피해자정보_재물피해noButton);
 
@@ -55,9 +60,17 @@ public class victimInfoPanel extends JPanel {
 	       add(피해자연락처라벨, gbc);
 	       gbc.gridx = 1; gbc.gridy = 1;
 	       add(피해자연락처필드, gbc);
-	       gbc.gridy = 2;
+	       gbc.gridx = 0; gbc.gridy = 2;
+	       add(피해자재물피해여부라벨, gbc);
+	       gbc.gridx = 1; gbc.gridy = 2;
 	       add(피해자정보_재물피해여부패널, gbc);
 	       
+	}
+	
+	public void reset() {
+		라디오버튼그룹.clearSelection();
+		피해자이름필드.setText("");
+		피해자연락처필드.setText("");
 	}
 
 	public JLabel get피해자이름라벨() {
@@ -122,6 +135,14 @@ public class victimInfoPanel extends JPanel {
 
 	public void set피해자정보_재물피해noButton(JRadioButton 피해자정보_재물피해noButton) {
 		this.피해자정보_재물피해noButton = 피해자정보_재물피해noButton;
+	}
+
+	public ButtonGroup get라디오버튼그룹() {
+		return 라디오버튼그룹;
+	}
+
+	public void set라디오버튼그룹(ButtonGroup 라디오버튼그룹) {
+		this.라디오버튼그룹 = 라디오버튼그룹;
 	}
 	
 	

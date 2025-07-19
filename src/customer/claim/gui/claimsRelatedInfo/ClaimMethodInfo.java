@@ -1,4 +1,4 @@
-package customer.claim.gui;
+package customer.claim.gui.claimsRelatedInfo;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -6,6 +6,9 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class ClaimMethodInfo extends JPanel {
 
@@ -21,20 +24,13 @@ public class ClaimMethodInfo extends JPanel {
 		add(title, BorderLayout.NORTH);
 		
 		
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
+		bottomBP.getNextButton().setVisible(false);
 		
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-
-	      JButton previousButton = new JButton("이전");
-	      buttonPanel.add(previousButton);
-
-	      previousButton.addActionListener((e) -> {
+	      bottomBP.getPreviousButton().addActionListener((e) -> {
 	         cl.show(parentCardPanel, "ClaimFirstPanel");
 	      
 	      });
-
-
-	      buttonPanel.add(previousButton);
-	      add(buttonPanel, BorderLayout.SOUTH);
 	   
 	}
 }

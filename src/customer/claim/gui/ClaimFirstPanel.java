@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import common.gui.CardSwitchButton;
+import customer.claim.gui.component.TitlePanel;
 
 public class ClaimFirstPanel extends JPanel {
 
@@ -22,7 +23,7 @@ public class ClaimFirstPanel extends JPanel {
         // 패널이름추가하기!!!!!!!!
         CardSwitchButton 청구내역조회버튼 = new CardSwitchButton("<html>보험금 청구내역 조회<br>(진행상태 및 결과 조회)</html>", parentCardPanel, "ClaimHistoryPanel", 200, 80);
         CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 200, 80);
-        CardSwitchButton 추가청구버튼 = new CardSwitchButton("<html>이전에 청구했던 <br>질병, 사고 추가 청구하기<html>", parentCardPanel, "", 200, 80);
+        CardSwitchButton 추가청구버튼 = new CardSwitchButton("<html>이전에 청구했던 <br>질병, 사고 추가 청구하기<html>", parentCardPanel, "ClaimDetailPanel", 200, 80);
         CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 80);
         CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 80);
         

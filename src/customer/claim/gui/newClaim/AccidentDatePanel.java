@@ -24,7 +24,8 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import common.database.model.NewClaimDataModel;
-import customer.claim.gui.TitlePanel;
+import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class AccidentDatePanel extends JPanel {
 
@@ -106,22 +107,15 @@ public class AccidentDatePanel extends JPanel {
 			}
 		});
 
-		// -------------------- 하단 버튼 패널 --------------------
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-		JButton previousButton = new JButton("이전");
-		JButton nextButton = new JButton("다음");
-		buttonPanel.add(previousButton);
-		buttonPanel.add(nextButton);
-		add(buttonPanel, BorderLayout.SOUTH);
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 
-		// 이전 버튼: 초기화
-		previousButton.addActionListener((e) -> {
-			resetPanel();			
+		bottomBP.getPreviousButton().addActionListener((e) -> {
+			datePicker.getModel().setValue(null);
+			accidentDateChLabel.setText("");			
 			cl.show(parentCardPanel, "ClaimTargetPanel");
 		});
 
-		// 다음 버튼: 유효성 체크
-		nextButton.addActionListener((e) -> {
+		bottomBP.getNextButton().addActionListener((e) -> {
 			Date selectedDate = (Date) datePicker.getModel().getValue();
 			if (selectedDate == null) {
 				JOptionPane.showMessageDialog(this, "날짜를 선택해주세요", "안내", JOptionPane.WARNING_MESSAGE);
@@ -165,8 +159,4 @@ public class AccidentDatePanel extends JPanel {
 		}
 	}
 
-	public void resetPanel() {
-		datePicker.getModel().setValue(null);
-		accidentDateChLabel.setText("");
-	}
 }
