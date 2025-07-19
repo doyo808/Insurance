@@ -11,38 +11,27 @@ public class LoginIdValidator {
 	// id를 입력받고, 만약 이미 있다면: 이미있는 아이디 -> 로그인 창으로 이동하시겠습니까?
 	// id가 형식에 맞지않으면 다시 입력시키기
 	
-	public static void main(String[] args) throws SQLException { 
-		getVerifiedLoginId();
-	}
-	
-	public static String getVerifiedLoginId() throws SQLException {
-	    Scanner sc = new Scanner(System.in);
-	    String login_id = null;
+	public static int getVerifiedLoginId(String login_id) {
 
 	    try (Connection conn = InsuranceTeamConnector.getConnection()) {
-	        while (true) {
-	        	System.out.println();
-	            System.out.print("아이디를 입력하세요(알파벳 대소문자, 숫자 혼용 4~12자): ");
-	            login_id = sc.next();
 
-	            if (!isValidLoginId(login_id)) {
-	                System.out.println("아이디 형식이 올바르지 않습니다. 다시 입력해주세요.");
-	                continue;
-	            }
+            if (!isValidLoginId(login_id)) {
+                //System.out.println("아이디 형식이 올바르지 않습니다. 다시 입력해주세요.");
+                return -1;
+            } else if (CustomerDAO.getCustomerByLoginId(login_id, conn) != null) {
+                //System.out.println(login_id + "는 이미 있는 아이디입니다.");
+                return 0;
+            } else {
+                //System.out.println(login_id + "는 사용가능합니다.");
+                return 1;
+            }
+        } catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return -1;
+    }
 
-	            if (CustomerDAO.getCustomerByLoginId(login_id, conn) != null) {
-	                System.out.println(login_id + "는 이미 있는 아이디입니다.");
-	               
-	            } else {
-	                System.out.println(login_id + "는 사용가능합니다.");
-	                break;
-	            }
-	        }
-	    }
-
-	    return login_id;
-	}
-	
 	
 	// 아이디 형식 검증 (알파벳+숫자 4~12자리)
 	private static boolean isValidLoginId(String id) {
