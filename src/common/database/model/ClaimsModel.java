@@ -11,7 +11,7 @@ public class ClaimsModel {
 			private Date claim_date;
 			private Date accident_date;
 			private String compensation_type; // rs.getCharacter이 없어서 여기서 String으로 
-			private String claim_type_cd;
+			private String claim_type_cd; // 'H' 또는 'P'로 가지고와서 H면 사람, P면 재물로 뜰 수 있도록
 			private Integer employee_id;
 			private String claim_status;
 			private Date completion_date;
@@ -27,6 +27,9 @@ public class ClaimsModel {
 			private String insured_name;
 			private String product_name;
 			private String employee_name;
+			private String department_name;
+			private String employee_phone_number;
+			
 			
 			// 생성자
 			public ClaimsModel(ResultSet rs) throws SQLException {
@@ -51,9 +54,11 @@ public class ClaimsModel {
 			    this.insured_name = rs.getString("insured_name");
 			    this.product_name = rs.getString("product_name");
 			    this.employee_name = rs.getString("employee_name");
+			    this.department_name = rs.getString("department_name");
+			    this.employee_phone_number = rs.getString("employee_phone_number"); // 이게 맞나?
 			}
 			
-			// 필요한 필드만 사용하는 생성자 추가
+			// 보험금 청구내역조회 페이지
 			public ClaimsModel(int claim_id, Date claim_date, String diagnosis_name, String insured_name,
 			                   String product_name, String employee_name, String claim_status) {
 			    this.claim_id = claim_id;
@@ -63,6 +68,23 @@ public class ClaimsModel {
 			    this.product_name = product_name;
 			    this.employee_name = employee_name;
 			    this.claim_status = claim_status;
+			}
+			
+			// 상세페이지에서 첫번째 (청구내역)테이블에 사용
+			public ClaimsModel(int claim_id, Date accident_date, String product_name, String insured_name, String claim_category) {
+			    this.claim_id = claim_id;
+			    this.accident_date = accident_date;
+			    this.product_name = product_name;
+			    this.insured_name = insured_name;
+			    this.claim_category = claim_category;
+			}
+
+			// 상세페이지에서 두번째 (보상담당자)테이블에 사용
+			public ClaimsModel(String insured_name, String department_name, String employee_name, String employee_phone_number) {
+				this.insured_name = insured_name;
+				this.department_name = department_name;
+				this.employee_name = employee_name;
+				this.employee_phone_number = employee_phone_number;
 			}
 
 			public Integer getClaim_id() {
@@ -224,8 +246,23 @@ public class ClaimsModel {
 			public void setEmployee_name(String employee_name) {
 				this.employee_name = employee_name;
 			}
-
 			
+			public String getDepartment_name() {
+				return department_name;
+			}
+
+			public void setDepartment_name(String department_name) {
+				this.department_name = department_name;
+			}
+
+			public String getEmployee_phone_number() {
+				return employee_phone_number;
+			}
+
+			public void setEmployee_phone_number(String employee_phone_number) {
+				this.employee_phone_number = employee_phone_number;
+			}
+
 			@Override
 			public String toString() {
 				return "ClaimsModel [claim_id=" + claim_id + ", contract_id=" + contract_id + ", claim_date="
@@ -236,8 +273,11 @@ public class ClaimsModel {
 						+ claim_description + ", diagnosis_cd=" + diagnosis_cd + ", bank_name=" + bank_name
 						+ ", bank_account=" + bank_account + ", beneficiary_name=" + beneficiary_name
 						+ ", diagnosis_name=" + diagnosis_name + ", insured_name=" + insured_name + ", product_name="
-						+ product_name + ", employee_name=" + employee_name + "]";
+						+ product_name + ", employee_name=" + employee_name + ", department_name=" + department_name
+						+ ", employee_phone_number=" + employee_phone_number + "]";
 			}
+
+			
 
 			
 			

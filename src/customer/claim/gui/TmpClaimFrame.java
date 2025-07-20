@@ -8,7 +8,7 @@ public class TmpClaimFrame {
 		   
 		  // 청구페이지 확인용 프레임
 	      JFrame fr = new JFrame();
-	      fr.setBounds(0, 0, 1440, 1024);
+	      fr.setBounds(0, 0, 1440, 700);
 	      fr.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	      
 	      ClaimMainPanel 메인패널 = new ClaimMainPanel();

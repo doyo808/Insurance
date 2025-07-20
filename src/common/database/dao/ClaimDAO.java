@@ -13,12 +13,8 @@ import common.database.model.NewClaimDataModel;
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
 		// 고객이 청구대상을 '다른사람'으로 선택하면 그 대상이 가입한 보험계약 정보를 가지고 와야함
-		// 청구테이블(계약ID) JOIN 계약테이블(고객ID) JOIN 고객테이블(이름, 주민번호, 전화번호)
 		
 		/*
-				[보험금 청구 상세내역]
-				: 접수번호 / 진행상황=처리상태('접수')/
-				
 				<보험금청구내역 표>
 				사고발병일자/상품명/증권번호(없으면 pass)/재해자=피보험자/보상구분/재해유형/
 				
@@ -117,61 +113,66 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		}
 
 		// 보험금 상세내역 조회 패널에 값 불러오기 (한 페이지당 하나의 청구 기록)
+//		// 보험금 청구내역(1)
+//		// 접수번호(청구번호)/사고발병일자/상품명/재해자=피보험자 or 재물/청구유형
+		public static ClaimsModel getClaimDetail(String login_id, Connection conn) throws SQLException {
+			ClaimsModel claimDetail = null;
+		    String query = "";
+		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setString(1, login_id);
+		        
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                ClaimsModel claim = new ClaimsModel(
+		                    rs.getInt("claim_id"),
+		                    rs.getDate("accident_date"),
+		                    rs.getString("product_name"),
+		                    rs.getString("insured_name"),
+		                    rs.getString("claim_category")
+		                );
+		                claimDetail = claim;
+		            }
+		        }
+		    }
+			return claimDetail;
+		}
 		
-//		// 보험금 청구내역
-//		// 접수번호(청구번호)/사고발병일자/상품명/재해자=피보험자 or 재물/보상구분/재해유형
-//		public static ClaimsModel getClaimDetail(String login_id, Connection conn) throws SQLException {
-//		    String query = "";
-//
-//		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-//		        pstmt.setString(1, login_id);
-//
-//		        try (ResultSet rs = pstmt.executeQuery()) {
-//		            while (rs.next()) {
-//		                ClaimsModel claimDetail = new ClaimsModel(
-//		                    rs.getInt("claim_id"),
-////		                    rs.getString("employee_name"),
-////		                    rs.getString("claim_status")
-//		                );
-//		                return claimDetail;
-//		            }
-//		        }
-//		    }
-//		}
 		
-		// --------------------- ClaimsModel에 더 추가해야겠는데 ----------------------------------
-		
-//		// 보상담당자 (쿼리문은 작성완료)
-//		// 재해자=피보험자 or 재물 /(직원)소속(부서)/담당자명/ 담당자 전화번호
-//		public static ClaimsModel getClaimDetail(String login_id, Connection conn) throws SQLException {
-//		    String query = "SELECT i.insured_name, d.department_name, e.employee_name, e.phone_number "
-//		    		+ "FROM claims cl "
-//		    		+ "INNER JOIN contracts ct ON cl.contract_id = ct.contract_id "
-//		    		+ "INNER JOIN customers cu ON ct.customer_id = cu.customer_id "
-//		    		+ "INNER JOIN insureds i ON ct.insured_id = i.insured_id "
-//		    		+ "INNER JOIN employees e ON cl.employee_id = e.employee_id "
-//		    		+ "INNER JOIN departments d ON e.department_id = d.department_id "
-//		    		+ "WHERE cu.login_id = ? ";
-//
-//		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-//		        pstmt.setString(1, login_id);
-//
-//		        try (ResultSet rs = pstmt.executeQuery()) {
-//		            while (rs.next()) {
-//		                ClaimsModel claimDetail = new ClaimsModel(
-//		                    rs.getString("claim_id"),
-////		                    rs.getString("employee_name"),
-////		                    rs.getString("claim_status")
-//		                );
-//		                return claimDetail;
-//		            }
-//		        }
-//		    }
-//		}
+		// 보험금 청구내역(2)
+		// 보상담당자 (쿼리문은 작성완료)
+		// 재해자=피보험자 or 재물 /(직원)소속(부서)/담당자명/ 담당자 전화번호
+		public static ClaimsModel getEmployeeInfo(String login_id, Connection conn) throws SQLException {
+			ClaimsModel staffInfo = null;
+			String query = "SELECT i.insured_name, d.department_name, e.employee_name, e.phone_number "
+		    		+ "FROM claims cl "
+		    		+ "INNER JOIN contracts ct ON cl.contract_id = ct.contract_id "
+		    		+ "INNER JOIN customers cu ON ct.customer_id = cu.customer_id "
+		    		+ "INNER JOIN insureds i ON ct.insured_id = i.insured_id "
+		    		+ "INNER JOIN employees e ON cl.employee_id = e.employee_id "
+		    		+ "INNER JOIN departments d ON e.department_id = d.department_id "
+		    		+ "WHERE cu.login_id = ? ";
+		    
+		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setString(1, login_id);
+
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            if (rs.next()) {
+		                ClaimsModel claimDetail = new ClaimsModel(
+		                    rs.getString("insured_name"),
+		                    rs.getString("department_name"),
+		                    rs.getString("employee_name"),
+		                    rs.getString("e.phone_number")
+		                );
+		                staffInfo = claimDetail;
+		            }
+		        }
+		    }
+			return staffInfo;
+		}
 		
 		// 처리현황
-//		// 접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/결정보험금/총지급금액
-//		public static ClaimsModel getClaimDetail(String login_id, Connection conn) throws SQLException {
+		// 접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/결정보험금/총지급금액
+//		public static ClaimsModel getProcessingStatus(String login_id, Connection conn) throws SQLException {
 //		    String query = "";
 //
 //		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -180,9 +181,9 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 //		        try (ResultSet rs = pstmt.executeQuery()) {
 //		            while (rs.next()) {
 //		                ClaimsModel claimDetail = new ClaimsModel(
-//		                    rs.getInt("claim_id"),
-////		                    rs.getString("employee_name"),
-////		                    rs.getString("claim_status")
+//		                    rs.get(""),
+//		                    rs.get(""),
+//		                    rs.get("")
 //		                );
 //		                return claimDetail;
 //		            }

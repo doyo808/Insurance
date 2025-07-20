@@ -106,23 +106,23 @@ public class ClaimMainPanel extends JPanel {
 		// 카드패널을 가운데 추가
 		add(카드패널, BorderLayout.CENTER);
 
-		ClaimFirstPanel 청구첫번째패널 = new ClaimFirstPanel(카드패널);
-		ClaimTargetPanel 청구대상패널 = new ClaimTargetPanel(카드패널, claimdata);
-		AccidentDatePanel 사고일선택패널 = new AccidentDatePanel(카드패널, claimdata);
-		ClaimSituationPanel 청구상황선택패널 = new ClaimSituationPanel(카드패널, claimdata);
-		EnterBankAccountPanel 계좌입력패널 = new EnterBankAccountPanel(카드패널, claimdata);
-		ClaimTypePanel 청구타입패널 = new ClaimTypePanel(카드패널, claimdata);
-		DocumentRegistrationPanel 서류등록패널_계좌입력 = new DocumentRegistrationPanel(카드패널, "EnterBankAccountPanel", claimdata);
-		DocumentRegistrationPanel 서류등록패널_청구상황 = new DocumentRegistrationPanel(카드패널, "ClaimSituationPanel", claimdata);
+		청구첫번째패널 = new ClaimFirstPanel(카드패널);
+		청구대상패널 = new ClaimTargetPanel(카드패널, claimdata);
+		사고일선택패널 = new AccidentDatePanel(카드패널, claimdata);
+		청구상황선택패널 = new ClaimSituationPanel(카드패널, claimdata);
+		계좌입력패널 = new EnterBankAccountPanel(카드패널, claimdata);
+		청구타입패널 = new ClaimTypePanel(카드패널, claimdata);
+		서류등록패널_계좌입력 = new DocumentRegistrationPanel(카드패널, "EnterBankAccountPanel", claimdata);
+		서류등록패널_청구상황 = new DocumentRegistrationPanel(카드패널, "ClaimSituationPanel", claimdata);
 
-		CheckFinalClaimDetails 최종청구내역확인패널 = new CheckFinalClaimDetails(카드패널, claimdata);
+		최종청구내역확인패널 = new CheckFinalClaimDetails(카드패널, claimdata);
 
-		RequiredDocumentsInfo 필수서류_청구첫패널 = new RequiredDocumentsInfo(카드패널, "ClaimFirstPanel");
-		RequiredDocumentsInfo 필수서류_서류등록패널 = new RequiredDocumentsInfo(카드패널, "DocumentRegistrationPanel");
-		ClaimMethodInfo 보험금청구방법패널 = new ClaimMethodInfo(카드패널);
+		필수서류_청구첫패널 = new RequiredDocumentsInfo(카드패널, "ClaimFirstPanel");
+		필수서류_서류등록패널 = new RequiredDocumentsInfo(카드패널, "DocumentRegistrationPanel");
+		보험금청구방법패널 = new ClaimMethodInfo(카드패널);
 
-		ClaimHistoryPanel 청구내역조회패널 = new ClaimHistoryPanel(카드패널, claimdata); // 아마 여기는 데이터 값으로 다른 클래스가 들어가야하지
-																				// 않을까........!!
+		청구내역조회패널 = new ClaimHistoryPanel(카드패널, claimdata); // 아마 여기는 데이터 값으로 다른 클래스가 들어가야하지
+		청구상세내역패널 = new ClaimDetailPanel(카드패널); // 추후에 claimdata 또는 다른 데이터값 받을 예정															// 않을까........!!
 
 //      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
 		// 카드패널에 각 패널 등록(카드 이름 지정 필수)
@@ -141,6 +141,7 @@ public class ClaimMainPanel extends JPanel {
 		카드패널.add(보험금청구방법패널, "ClaimMethodInfo");
 
 		카드패널.add(청구내역조회패널, "ClaimHistoryPanel");
+		카드패널.add(청구상세내역패널, "ClaimDetailPanel");
 
 //      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) 카드패널.getLayout();

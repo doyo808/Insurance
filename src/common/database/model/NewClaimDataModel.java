@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+// 고객이 보험금 신규청구를 할 때 입력한 정보를 담는 Model
 public class NewClaimDataModel {
 	
 	// 청구 대상 관련
