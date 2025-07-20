@@ -83,16 +83,11 @@ public class KeywordPanel extends JPanel {
 		
 		JButton[] btns = {btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7};
 		for (JButton b : btns) {
-			switchColor(b);
-			b.setFont(new Font("Dialog", Font.PLAIN, 16));
-			b.setFocusPainted(false);
+			ButtonPainter.styleKeywordButton(b, c2, c1);
 		}
 		
 		JButton confirm = new JButton("조회");
-//		confirm.setBackground(OurColors.NEXT_BUTTON);
-//		confirm.setForeground(OurColors.TITLE_TEXT);
-//		confirm.setFont(new Font("Pretendard", Font.PLAIN, 28));
-		ButtonPainter.stylePrimaryButton(confirm, 16);
+		ButtonPainter.stylePrimaryButtonCarrot(confirm, 16);
 		confirm.setBounds(623, 617, 279, 41);
 		add(confirm);
 		
@@ -100,12 +95,6 @@ public class KeywordPanel extends JPanel {
 		
 	}
 	
-	void switchColor(JButton btn) {
-		btn.addActionListener(e -> {
-			if (btn.getBackground().equals(c1)) btn.setBackground(c2);
-			else btn.setBackground(c1);
-		});
-	}
 	
 	void addConfirmAction(ContractMainPanel contractMP, JButton btn, JButton[] btns) {
 		btn.addActionListener(e -> {
@@ -124,9 +113,10 @@ public class KeywordPanel extends JPanel {
 	void collectSelectedKeywords(JButton[] btns) {
 		SelectedKeywords.selectedKeywords.clear();
 		for (JButton b : btns) {
-			if (b.getBackground().equals(c1)) {
-				SelectedKeywords.selectedKeywords.add(b.getText());
-			}
+			 if (Boolean.TRUE.equals(b.getClientProperty("selected"))) {
+		            SelectedKeywords.selectedKeywords.add(b.getText());
+		        }
+			
 		}
 	}
 }

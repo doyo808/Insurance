@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
@@ -150,9 +151,7 @@ public class CoverageSelectionPanel extends JPanel {
         buttonPanel.setOpaque(false);
 
         JButton prevButton = new JButton("이전");
-        prevButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        prevButton.setBackground(OurColors.PREVIOUS_BUTTON);
-        prevButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonGray(prevButton, 16);
         prevButton.setPreferredSize(new Dimension(180, 33));
         prevButton.addActionListener(e -> {
         	confirmed = false;
@@ -161,9 +160,7 @@ public class CoverageSelectionPanel extends JPanel {
         });
 
         JButton nextButton = new JButton("다음");
-        nextButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        nextButton.setBackground(OurColors.NEXT_BUTTON);
-        nextButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
         nextButton.setPreferredSize(new Dimension(180, 33));
         nextButton.addActionListener(e -> {
             if (!confirmed) {

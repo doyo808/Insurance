@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.CalculateAge;
@@ -191,8 +192,7 @@ public class InsuredInfoPanel extends JPanel {
         buttonPanel.setBounds(445, 557, 700, 50);
 
         JButton prevButton = new JButton("이전");
-        prevButton.setBackground(OurColors.PREVIOUS_BUTTON);
-        prevButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonGray(prevButton, 16);
         prevButton.setPreferredSize(new java.awt.Dimension(267, 33));
         prevButton.addActionListener(e -> {
         	confirmed = false;
@@ -201,8 +201,7 @@ public class InsuredInfoPanel extends JPanel {
         });
 
         JButton nextButton = new JButton("다음");
-        nextButton.setBackground(OurColors.NEXT_BUTTON);
-        nextButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
         nextButton.setPreferredSize(new java.awt.Dimension(288, 33));
         addNextAction(nextButton);
 

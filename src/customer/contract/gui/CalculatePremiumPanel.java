@@ -20,6 +20,7 @@ import javax.swing.SwingConstants;
 import common.database.dao.ProductDAO;
 import common.database.model.ProductModel;
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import common.method.InsuranceTeamConnector;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.CalculateAge;
@@ -75,7 +76,7 @@ public class CalculatePremiumPanel extends JPanel {
 		textField = new JTextField();
 		textField.setBounds(67, 88, 385, 71);
 		panel_1.add(textField);
-		textField.setBackground(SystemColor.controlShadow);
+		textField.setBackground(OurColors.SELECTED);
 		
 		textField.setFont(new Font("Dialog", Font.BOLD, 20));
 		textField.setHorizontalAlignment(SwingConstants.CENTER);
@@ -174,8 +175,7 @@ public class CalculatePremiumPanel extends JPanel {
 	
 	private void addBackButton(JPanel panel) {
 		JButton btnNewButton = new JButton("이전");
-		btnNewButton.setBackground(OurColors.PREVIOUS_BUTTON);
-		btnNewButton.setForeground(OurColors.TITLE_TEXT);
+		ButtonPainter.stylePrimaryButtonGray(btnNewButton, 16);
 		btnNewButton.setBounds(67, 395, 184, 59);
 		
 		btnNewButton.addActionListener(e -> {
@@ -187,8 +187,7 @@ public class CalculatePremiumPanel extends JPanel {
 	
 	private void addConfirmButton(JPanel panel) {
 		JButton btnNewButton_2 = new JButton("다음");
-		btnNewButton_2.setBackground(OurColors.NEXT_BUTTON);
-		btnNewButton_2.setForeground(OurColors.TITLE_TEXT);
+		ButtonPainter.stylePrimaryButtonCarrot(btnNewButton_2, 16);
 		btnNewButton_2.setBounds(273, 395, 179, 59);
 		
 		btnNewButton_2.addActionListener(e -> {

@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
@@ -92,13 +93,13 @@ public class BeneficiaryInfoPanel extends JPanel {
         accountField.setBounds(748, 402, 220, 30);
         this.add(accountField);
 
-        addConfirmButton(y + gap);
-        addNavigationButtons(y + gap + 50);
+        addConfirmButton();
+        addNavigationButtons();
     }
 
-    private void addConfirmButton(int y) {
+    private void addConfirmButton() {
         JButton confirmButton = new JButton("확인");
-        confirmButton.setFont(new Font("굴림", Font.PLAIN, 18));
+        confirmButton.setFont(new Font("Dialog", Font.PLAIN, 18));
         confirmButton.setBounds(734, 501, 100, 30);
         confirmButton.setBackground(Color.DARK_GRAY);
         confirmButton.setForeground(Color.WHITE);
@@ -125,14 +126,12 @@ public class BeneficiaryInfoPanel extends JPanel {
         this.add(confirmButton);
     }
 
-    private void addNavigationButtons(int y) {
+    private void addNavigationButtons() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBounds(447, 565, 700, 50);
 
         JButton prevButton = new JButton("이전");
-        prevButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        prevButton.setBackground(OurColors.PREVIOUS_BUTTON);
-        prevButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonGray(prevButton, 16);
         prevButton.setPreferredSize(new java.awt.Dimension(267, 33));
         prevButton.addActionListener(e -> {
             confirmed = false;
@@ -142,8 +141,7 @@ public class BeneficiaryInfoPanel extends JPanel {
 
         JButton nextButton = new JButton("다음");
         nextButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        nextButton.setBackground(OurColors.NEXT_BUTTON);
-        nextButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
         nextButton.setPreferredSize(new java.awt.Dimension(288, 33));
         nextButton.addActionListener(e -> {
             if (!confirmed) {
