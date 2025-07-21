@@ -204,7 +204,7 @@ public class DetailCrmPanel extends JPanel {
 						MyPageUtil.formatDate(rs.getString("effective_date")),
 						MyPageUtil.formatDate(rs.getString("payment_end_date")),
 						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
-						MyPageUtil.getDisplayStatus(rs.getString("status"))				
+						MyPageUtil.getDisplayStatus("CONTRACT", rs.getString("status"))				
 				});
 			}
 			
@@ -237,7 +237,7 @@ public class DetailCrmPanel extends JPanel {
     					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
     					String.format("%,d", rs.getInt("paid_amount")),
-    					MyPageUtil.getDisplayStatus(rs.getString("pay_status"))   					
+    					MyPageUtil.getDisplayStatus("PAYMENT", rs.getString("pay_status"))   					
     			});
     		}   				
 			

@@ -151,7 +151,7 @@ public class MyPageUtil {
     }
     
     
-    private static final Map<String, String> STATUS_MAP = Map.ofEntries(   
+    private static final Map<String, String> CONTRACT_STATUS_MAP = Map.ofEntries(   
     		// 계약정보 >>> 계약상태
     		Map.entry("PENDING", "가입 신청 완료"),
     		Map.entry("APPROVED","심사 승인 완료"), 
@@ -163,17 +163,48 @@ public class MyPageUtil {
     		Map.entry("CLAIMED", "보험금 청구"),
     		Map.entry("TERMINATED", "중도 해지"),    		
     		Map.entry("LAPSED", "해지 예정"),
-    		Map.entry("0", "심사중"),
+    		Map.entry("0", "심사중")
+    );
+    
+    private static final Map<String, String> PAYMENT_STATUS_MAP = Map.ofEntries(   
     		
     		//  납입정보 >>> 납입상태
     		Map.entry("Y", "납부완료"),
-    		Map.entry("N", "미납")
+    		Map.entry("N", "미납")		
+    		
     );
     
-    public static String getDisplayStatus(String status) {
-    	if(status == null) return "";
-    	return STATUS_MAP.getOrDefault(status, status);
+    private static final Map<String, String> CLAIM_STATUS_MAP = Map.ofEntries(   		
+    		
+    		// 청구내역 >>> 청구상태
+    		Map.entry("RECEIVED", "접수"),
+    		Map.entry("ASSIGNING", "배정중"),
+    		Map.entry("UNDER_REVIEW", "심사중"),
+    		Map.entry("ESTIMATE_FINALIZED", "추산확정"),
+    		Map.entry("PAYMENT_COMPLETED", "지급완료(종결)"),
+    		Map.entry("CANCELLED", "접수취소")
+    );
+    
+//    public static String getDisplayStatus(String status) {
+//    	if(status == null) return "";
+//    	return STATUS_MAP.getOrDefault(status, status);
+//    }
+    
+    public static String getDisplayStatus(String context, String status) {
+        if (status == null) return "";
+
+        switch (context) {
+            case "CONTRACT":
+                return CONTRACT_STATUS_MAP.getOrDefault(status, status);
+            case "PAYMENT":
+                return PAYMENT_STATUS_MAP.getOrDefault(status, status);
+            case "CLAIM":
+                return CLAIM_STATUS_MAP.getOrDefault(status, status);
+            default:
+                return status;
+        }
     }
+
     
     
     
