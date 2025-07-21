@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import common.gui.CardSwitchButton;
+import common.method.ButtonPainter;
 import customer.claim.gui.component.TitlePanel;
 
 public class ClaimFirstPanel extends JPanel {
@@ -18,26 +19,30 @@ public class ClaimFirstPanel extends JPanel {
         TitlePanel title = new TitlePanel("보험금 청구");
         add(title, BorderLayout.NORTH);
         
-        JPanel 버튼패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
+        JPanel ButtonP = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 0));
 
-        // 패널이름추가하기!!!!!!!!
-        CardSwitchButton 청구내역조회버튼 = new CardSwitchButton("<html>보험금 청구내역 조회<br>(진행상태 및 결과 조회)</html>", parentCardPanel, "ClaimHistoryPanel", 200, 80);
-        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 200, 80);
+        CardSwitchButton 청구내역조회버튼 = new CardSwitchButton("<html>보험금 청구내역 조회<br>(진행상태&결과 조회)</html>", parentCardPanel, "ClaimHistoryPanel", 200, 100);
+        CardSwitchButton 신규청구버튼 = new CardSwitchButton("보험금 신규 청구", parentCardPanel, "ClaimTargetPanel", 200, 100);
 //        CardSwitchButton 추가청구버튼 = new CardSwitchButton("<html>이전에 청구했던 <br>질병, 사고 추가 청구하기<html>", parentCardPanel, "ClaimDetailPanel", 200, 80);
-        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 80);
-        CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 80);
+        CardSwitchButton 청구방법버튼 = new CardSwitchButton("보험금 청구 방법", parentCardPanel, "ClaimMethodInfo", 200, 100);
+        CardSwitchButton 상황별필요서류버튼 = new CardSwitchButton("상황별 필요서류 안내", parentCardPanel, "RequiredDocumentsInfoFromClaimFirstPanel", 200, 100);
+        
+        ButtonPainter.stylePrimaryButtonGray(청구내역조회버튼, 14);
+        ButtonPainter.stylePrimaryButtonGray(신규청구버튼, 15);
+        ButtonPainter.stylePrimaryButtonGray(청구방법버튼, 15);
+        ButtonPainter.stylePrimaryButtonGray(상황별필요서류버튼, 14);
         
         
-        버튼패널.add(청구내역조회버튼);
-        버튼패널.add(신규청구버튼);
+        
+        ButtonP.add(청구내역조회버튼);
+        ButtonP.add(신규청구버튼);
 //        버튼패널.add(추가청구버튼);
-        버튼패널.add(청구방법버튼);
-        버튼패널.add(상황별필요서류버튼);
-        버튼패널.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));  // 위 30px 여백 추가
+        ButtonP.add(청구방법버튼);
+        ButtonP.add(상황별필요서류버튼);
+        ButtonP.setBorder(BorderFactory.createEmptyBorder(80, 0, 0, 0));  // 위 30px 여백 추가
 
-        add(버튼패널, BorderLayout.CENTER);
+        add(ButtonP, BorderLayout.CENTER);
 
-        // ▶ 하단 안내문
         JTextArea 안내문 = new JTextArea(
                 "보험금 청구 안내사항\n\n"
                         + "＊ 계약자, 피보험자 모두 이용 가능합니다. (단, 미성년자 제외)\n"

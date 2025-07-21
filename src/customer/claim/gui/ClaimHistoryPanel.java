@@ -29,6 +29,7 @@ import common.database.model.ClaimsModel;
 import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
 import common.method.InsuranceTeamConnector;
+import customer.claim.gui.component.BottomButtonPanel;
 
 public class ClaimHistoryPanel extends JPanel {
 	private JTextField startDateField;
@@ -122,17 +123,13 @@ public class ClaimHistoryPanel extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
 		// 하단 버튼
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 20));
-		JButton previousButton = new JButton("이전");
-
-		previousButton.addActionListener((e) -> {
+		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
+		bottomBP.getNextButton().setVisible(false);
+		
+		bottomBP.getPreviousButton().addActionListener(e -> {
 			clearTable();
 			cl.show(parentCardPanel, "ClaimFirstPanel");
 		});
-
-		buttonPanel.add(previousButton);
-		add(buttonPanel, BorderLayout.SOUTH);
-
 	}
 
 	private void fetchData() {

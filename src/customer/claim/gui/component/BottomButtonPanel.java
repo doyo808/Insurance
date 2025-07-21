@@ -15,9 +15,10 @@ public class BottomButtonPanel extends JPanel {
 	public BottomButtonPanel(JPanel panel) {
 	   setLayout(new FlowLayout(FlowLayout.CENTER, 50, 20));
 	   previousButton = new JButton("이전");
+	   ButtonPainter.stylePrimaryButtonGray(previousButton, 16);
 	   
 	   nextButton = new JButton("다음");
-	   ButtonPainter.stylePrimaryButton(nextButton, 16);
+	   ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
 	   
        add(previousButton);
        add(nextButton);

@@ -3,7 +3,7 @@ package customer.claim.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,24 +11,22 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
-import common.method.ButtonPainter;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
-public class CheckFinalClaimDetails extends JPanel {
+public class FinalCheckPanel extends JPanel {
 
 	private CustomerMainPanel cmp;
 	private JPanel parentCardPanel;
 	private List<JLabel> valueLabels = new ArrayList<>();
 	
-	public CheckFinalClaimDetails(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
+	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
 		this.cmp = cmp;
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout)parentCardPanel.getLayout();

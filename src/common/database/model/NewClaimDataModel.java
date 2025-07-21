@@ -39,7 +39,8 @@ public class NewClaimDataModel {
     // 청구 유형 (질병/일반상해/교통사고)
     private String claim_category;
     
-    // 진단명
+    // 진단코드, 진단명
+    private String diagnosis_cd;
     private String diagnosis_name;
     
     // 사고 내용
@@ -219,15 +220,27 @@ public class NewClaimDataModel {
 		this.document_type_name = document_type_name;
 	}
 
+	
+	
+	public String getDiagnosis_cd() {
+		return diagnosis_cd;
+	}
+
+	public void setDiagnosis_cd(String diagnosis_cd) {
+		this.diagnosis_cd = diagnosis_cd;
+	}
+
 	@Override
 	public String toString() {
 		return "NewClaimDataModel [isSelf=" + isSelf + ", customer_name=" + customer_name + ", personal_id="
-				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ","
-				+ " accident_date=" + accident_date + ", compensation_type=" + compensation_type + ", claim_type_name="
-				+ claim_type_name + ", claim_category=" + claim_category + ", diagnosis_name=" + diagnosis_name
-				+ ", accident_description=" + accident_description + ", employee_name=" + employee_name
+				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ", accident_date="
+				+ accident_date + ", compensation_type=" + compensation_type + ", claim_type_name=" + claim_type_name
+				+ ", claim_category=" + claim_category + ", diagnosis_cd=" + diagnosis_cd + ", diagnosis_name="
+				+ diagnosis_name + ", accident_description=" + accident_description + ", employee_name=" + employee_name
 				+ ", claim_status=" + claim_status + ", bank_account=" + bank_account + ", bank_name=" + bank_name
 				+ ", beneficiary_name=" + beneficiary_name + ", document_type_name=" + document_type_name + "]";
 	}
+
+	
 	
 }

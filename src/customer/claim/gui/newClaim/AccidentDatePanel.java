@@ -2,7 +2,7 @@ package customer.claim.gui.newClaim;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,7 +35,6 @@ public class AccidentDatePanel extends JPanel {
 	public AccidentDatePanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
-		setSize(1440, 700);
 		setLayout(new BorderLayout());
 
 		TitlePanel title = new TitlePanel("사고(발병)일 선택");

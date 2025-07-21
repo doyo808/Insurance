@@ -257,10 +257,14 @@ public class ClaimSituationPanel extends JPanel {
 			BBP.getNextButton().addActionListener((e) -> {
 				Object selected = 상황1콤.getSelectedItem();
 	    	    if (selected == null) return; // null이면 처리하지 않음
-	    	    String 상황1선택 = (String) 상황1콤.getSelectedItem();
+	    	    String 상황1선택 = (String) selected;
 	    	    String 다른사람선택 = (String) 다른사람콤.getSelectedItem(); 
 	    	    String 병원선택 = (String) 병원콤.getSelectedItem();
-				
+	    	    String 병원질병선택 = (String) 병원_아팠어요_진단내용콤.getSelectedItem();
+	    	    String 다친신체부위선택 = (String) 다친신체부위콤.getSelectedItem();
+	    	    String 부상유형선택 = (String) 부상유형선택콤.getSelectedItem();
+	    	    String 사망장해상황선택 = (String) 사망장해상황콤보박스.getSelectedItem();
+	    	    
 				// 고객이 모든 정보를 빠짐없이 입력했는지 확인해야 하고,
 				if (selected == null || "청구상황을 선택해 주세요".equals(상황1선택)) {
 					JOptionPane.showMessageDialog(this, "청구상황을 선택해주세요.", "안내", JOptionPane.WARNING_MESSAGE);
@@ -327,8 +331,48 @@ public class ClaimSituationPanel extends JPanel {
 					default:
 						break;
 				}
+				
+				
+				// 진단코드 입력하기 
+				
+				switch (병원질병선택) {
+				case "감기":
+					claimData.setDiagnosis_name("급성 비인두염 (감기)");
+					claimData.setDiagnosis_cd("J00");
+					break;
+				case "허리통증":
+					claimData.setDiagnosis_name("요통");
+					claimData.setDiagnosis_cd("M54.5");
+					break;
+				case "장염":
+					claimData.setDiagnosis_name("감염성 장염");
+					claimData.setDiagnosis_cd("A09");
+					break;
+				case "복통":
+					claimData.setDiagnosis_name("배의 통증, 미만성");
+					claimData.setDiagnosis_cd("R10.4");
+					break;
+				default:
+					break;
+			}
 
-				// 진단코드 입력하기 (각 콤보박스를 하나씩 연결해서 그 진단코드를 다 입력해야하는거겠지...)
+//				 String 상황1선택 = (String) selected;
+//		    	    String 다른사람선택 = (String) 다른사람콤.getSelectedItem(); 
+//		    	    String 병원선택 = (String) 병원콤.getSelectedItem();
+//		    	    String 병원질병선택 = (String) 병원_아팠어요_진단내용콤.getSelectedItem();
+//		    	    String 다친신체부위선택 = (String) 다친신체부위콤.getSelectedItem();
+//		    	    String 부상유형선택 = (String) 부상유형선택콤.getSelectedItem();
+//		    	    String 사망장해상황선택 = (String) 사망장해상황콤보박스.getSelectedItem();
+				
+//				private String[] 상황_1 = {"청구상황을 선택해 주세요", "병원에 다녀왔어요(실손 등)", "다른 사람에게 피해를 입혔어요", "교통사고로 비용이 발생했어요", "사망/장해를 입었어요", "내 재산에 피해가 발생했어요"};
+//			    // 두 번째 상황 선택
+//			    private String[] 병원_2 = {"아팠어요(질병)", "다쳤어요(상해)"};
+//			    private String[] 다른사람_2 = {"다쳤어요(신체)", "재산피해를 입혔어요(재물)"};
+//			    private String[] 사망장해_2 = {"일반사망", "재해사망", "시력 상실", "청력 상실", "절단", "중추신경 마비", "언어장애", "장기기능 상실", "기타 장해"};
+
+//			    private String[] 다친신체부위 = {"머리(얼굴포함)", "어깨/목", "허리", "팔", "손/손목", "다리", "무릎", "발/발목", "해당되는 신체부위가 없어요"};
+//			    private String[] 부상유형선택 = {"상처가 났어요(손상)", "접질렀어요(염좌)", "부러졌어요(골절)", "데였어요(화상)", "해당되는 부상종류가 없어요"};
+				
 
 				if (다친상황_입력창 != null && 다친상황_입력창.isShowing()) {
 					claimData.setAccident_description(다친상황_입력창.getText());

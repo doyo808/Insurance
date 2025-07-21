@@ -164,12 +164,12 @@ public class DocumentRegistrationPanel extends JPanel {
 			
 			    // 여기서 패널 제거 & 새 패널 추가
 			    for (Component comp : parentCardPanel.getComponents()) {
-			        if (comp instanceof CheckFinalClaimDetails) {
+			        if (comp instanceof FinalCheckPanel) {
 			            parentCardPanel.remove(comp);  // 기존 패널 제거
 			            break;
 			        }
 			    }
-			    CheckFinalClaimDetails newPanel = new CheckFinalClaimDetails(parentCardPanel, claimData, cmp);
+			    FinalCheckPanel newPanel = new FinalCheckPanel(parentCardPanel, claimData, cmp);
 			    parentCardPanel.add(newPanel, "CheckFinalClaimDetails");
 
 			    cl.show(parentCardPanel, "CheckFinalClaimDetails");
