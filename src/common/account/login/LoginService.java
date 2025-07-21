@@ -65,6 +65,7 @@ public class LoginService {
 			
 			String inputPassword = password_input;
 			
+			/// TODO: 지금은 인증되지도 않았는데 customer의 모든 정보를 가져오고있다. 추후 보완해야함
 			CustomerModel c = CustomerDAO.getCustomerByLoginId(inputLogin_id, conn);
 			if (c == null) {
 				return null;

@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
@@ -35,7 +36,7 @@ public class ContractCompletePanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel titleLabel = new JLabel("가입완료!", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 28));
+        titleLabel.setFont(new Font("Dialog", Font.BOLD, 28));
         add(titleLabel, BorderLayout.NORTH);
 
         JPanel contentPanel = new JPanel(new GridLayout(3, 1, 10, 10));
@@ -103,8 +104,10 @@ public class ContractCompletePanel extends JPanel {
         buttonPanel.setBackground(Color.WHITE);
 
         JButton myContractBtn = new JButton("내 계약 조회하기");
+        ButtonPainter.stylePrimaryButtonCarrot(myContractBtn, 16);
         JButton mainBtn = new JButton("메인화면");
-
+        ButtonPainter.stylePrimaryButtonCarrot(mainBtn, 16);
+        
         myContractBtn.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "내 계약 조회 화면으로 이동합니다.");
             contractMP.getCmp().getSMP().getSmcp().showCard("마이페이지");

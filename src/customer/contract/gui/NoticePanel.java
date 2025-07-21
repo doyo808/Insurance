@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import common.account.login.Session;
+import common.method.ButtonPainter;
 import common.method.InsuranceTeamConnector;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
@@ -52,7 +53,7 @@ public class NoticePanel extends JPanel {
         setBackground(new Color(0xECECEC));
 
         JLabel titleLabel = new JLabel("보험가입 안내사항을 확인하세요.");
-        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 26));
+        titleLabel.setFont(new Font("Dialog", Font.BOLD, 26));
         titleLabel.setBounds(480, 80, 580, 50);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel);
@@ -64,7 +65,7 @@ public class NoticePanel extends JPanel {
         
         // 상품설명서 라벨
         JLabel guideLabel = new JLabel("상품설명서");
-        guideLabel.setFont(new Font("굴림", Font.BOLD, 18));
+        guideLabel.setFont(new Font("Dialog", Font.BOLD, 18));
         guideLabel.setBounds(480, 140, 200, 30);
         add(guideLabel);
 
@@ -72,7 +73,7 @@ public class NoticePanel extends JPanel {
         guideTextArea.setEditable(false);
         guideTextArea.setLineWrap(true);
         guideTextArea.setWrapStyleWord(true);
-        guideTextArea.setFont(new Font("굴림", Font.PLAIN, 15));
+        guideTextArea.setFont(new Font("Dialog", Font.PLAIN, 15));
 
         if (doc != null) {
             guideTextArea.setText(doc.getGuideText());
@@ -85,7 +86,7 @@ public class NoticePanel extends JPanel {
         add(guideScroll);
 
         guideDownloadBtn = new JButton("설명서 다운로드");
-        guideDownloadBtn.setFont(new Font("굴림", Font.PLAIN, 14));
+        guideDownloadBtn.setFont(new Font("Dialog", Font.PLAIN, 14));
         guideDownloadBtn.setBounds(480, 330, 580, 30);
         guideDownloadBtn.addActionListener(e -> { 
         	downloadTextFile(doc != null ? doc.getGuideText() : null, productName, "상품설명서");
@@ -94,7 +95,7 @@ public class NoticePanel extends JPanel {
 
         // 보험약관 라벨
         JLabel termsLabel = new JLabel("보험약관");
-        termsLabel.setFont(new Font("굴림", Font.BOLD, 18));
+        termsLabel.setFont(new Font("Dialog", Font.BOLD, 18));
         termsLabel.setBounds(480, 370, 200, 30);
         add(termsLabel);
 
@@ -102,7 +103,7 @@ public class NoticePanel extends JPanel {
         termsTextArea.setEditable(false);
         termsTextArea.setLineWrap(true);
         termsTextArea.setWrapStyleWord(true);
-        termsTextArea.setFont(new Font("굴림", Font.PLAIN, 15));
+        termsTextArea.setFont(new Font("Dialog", Font.PLAIN, 15));
 
         if (doc != null) {
             termsTextArea.setText(doc.getTermsText());
@@ -115,7 +116,7 @@ public class NoticePanel extends JPanel {
         add(termsScroll);
 
         termsDownloadBtn = new JButton("약관 다운로드");
-        termsDownloadBtn.setFont(new Font("굴림", Font.PLAIN, 14));
+        termsDownloadBtn.setFont(new Font("Dialog", Font.PLAIN, 14));
         termsDownloadBtn.setBounds(480, 560, 580, 30);
         termsDownloadBtn.addActionListener(e -> { 
         	downloadTextFile(doc != null ? doc.getTermsText() : null, productName, "보험약관");
@@ -124,35 +125,48 @@ public class NoticePanel extends JPanel {
 
         // 이전 버튼
         JButton prevBtn = new JButton("이전");
-        prevBtn.setFont(new Font("굴림", Font.PLAIN, 18));
-        prevBtn.setBackground(new Color(0xDDDDDD));
-        prevBtn.setBounds(480, 610, 150, 40);
+        ButtonPainter.stylePrimaryButtonGray(prevBtn, 16);
+        prevBtn.setBounds(493, 610, 256, 40);
         prevBtn.addActionListener(e -> contractMP.ShowCard(contractMP.cardNames[cardNumber - 1])); 
         add(prevBtn);
 
         // 확인 버튼
         JButton confirmBtn = new JButton("확인");
-        confirmBtn.setFont(new Font("굴림", Font.PLAIN, 18));
-        confirmBtn.setBackground(new Color(0x4CAF50));
+        ButtonPainter.stylePrimaryButtonCarrot(confirmBtn, 16);
         confirmBtn.setForeground(Color.WHITE);
-        confirmBtn.setBounds(910, 610, 150, 40);
+        confirmBtn.setBounds(791, 610, 239, 40);
         confirmBtn.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "보험가입 안내사항 확인을 완료했습니다.");
-            contractMP.ShowCard(contractMP.cardNames[cardNumber + 1]);
+        	
+        	int choice = JOptionPane.showOptionDialog(
+        	        this,
+        	        "보험가입 안내사항 확인을 완료했습니다.\n계약을 신청하시겠습니까?",
+        	        "계약 신청 확인",
+        	        JOptionPane.YES_NO_OPTION,
+        	        JOptionPane.QUESTION_MESSAGE,
+        	        null,
+        	        new String[]{"계약신청", "뒤로가기"},
+        	        "계약신청"
+        	    );
+        	
+        	if (choice == JOptionPane.OK_OPTION) {
             
-			try (Connection conn = InsuranceTeamConnector.getConnection()) {
-				System.out.println("noticepanel에서 디버깅" + ci);
-				int insu_id = Insert.insertInsured(ci, conn);
-	            int bene_id = Insert.insertBeneficiary(ci, conn);
-	            
-	            Insert.insertContract(ci, conn, Session.getCustomer().getCustomer_id(), insu_id, bene_id);
-			} catch (SQLException e1) {
-				System.out.println("!!DB 업데이트 실패!!");
-				e1.printStackTrace();
-			}
-            
-            ci.clear();
-            System.out.println("noticepanel에서 디버깅2" + ci);
+				try (Connection conn = InsuranceTeamConnector.getConnection()) {
+					int insu_id = Insert.insertInsured(ci, conn);
+		            int bene_id = Insert.insertBeneficiary(ci, conn);
+		            
+		            Insert.insertContract(ci, conn, Session.getCustomer().getCustomer_id(), insu_id, bene_id);
+		            
+		            JOptionPane.showMessageDialog(this, "계약 신청이 완료되었습니다.");
+		            ci.clear();
+		            contractMP.ShowCard(contractMP.cardNames[cardNumber + 1]);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(this, "서버와의 연결이 실패하였습니다. 다시 시도해주세요.");
+					e1.printStackTrace();
+					return;
+				}
+        	} else {
+        		
+        	}
         });
         add(confirmBtn);
     }

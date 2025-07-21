@@ -20,14 +20,13 @@ public class ContractMainPanel extends JPanel {
 	private int testPage = 0;
 	
 	private CustomerMainPanel cmp;
+	private ContractInfo contractInfo = new ContractInfo();
 	public CardLayout c = new CardLayout();
 	
-	private CalculatePremiumPanel calPre;
 	private ChooseProductPanel choosePP;
 	public String[] cardNames = {"키워드선택", "보험선택", "보험료계산", "보험기간선택", "피보험자정보입력"
 			,"수익자정보입력", "보장항목선택" , "약관확인", "최종확인"};
 	
-	private ContractInfo contractInfo = new ContractInfo();
 	
 	public ContractMainPanel(CustomerMainPanel cmp) {
 		this.cmp = cmp;
@@ -35,19 +34,15 @@ public class ContractMainPanel extends JPanel {
 		
 		add(new KeywordPanel(this), cardNames[0]);
 		add(choosePP = new ChooseProductPanel(this), cardNames[1]);
-		add(calPre = new CalculatePremiumPanel(this), cardNames[2]);
-		    
-			addInfoCards();
+		
+//			addInfoCards();
 		
 		ShowCard(cardNames[MainFrame.TEST ? testPage : 0]);
 	}
 	
-	public ContractMainPanel() {
-	}
-
 	public void ShowCard(String name) {
 		if (name.equals("보험료계산")) {
-			calPre.updateProduct();
+			add(new CalculatePremiumPanel(this), cardNames[2]);
 			addCard();
 		} else if (name.equals("보험선택")) {
 			choosePP.updateProducts();
