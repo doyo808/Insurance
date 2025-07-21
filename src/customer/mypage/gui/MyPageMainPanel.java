@@ -52,7 +52,7 @@ public class MyPageMainPanel extends JPanel {
 	
 	private JLabel lbName, lbAddress, lbBirth, lbPhone, lbEmail, lbJob, lbCompany, lbWorkAddress, lbCompanyPhone;
 	private JTextField tfName, tfAddress, tfBirth, tfPhone, tfEmail, tfJob, tfCompany, tfWorkAddress, tfCompanyPhone;
-	private JTable contractTable, paymentTable;
+	private JTable contractTable, paymentTable, claimTable;
 	private JButton btnEdit, btnExcel;
 	private CustomerModel cm;
 
@@ -109,38 +109,52 @@ public class MyPageMainPanel extends JPanel {
         
 
         // ==== 테이블 UI 구성 ====
+        
+        // 보험 계약정보 JLabel
         JLabel contractLabel = new JLabel("보험 계약 정보");
-        contractLabel.setBounds(50, 250, 300, 25);
+        contractLabel.setBounds(50, 210, 300, 25);
         contractLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
         add(contractLabel);
-
+        
+        // 계약정보 JTable
         contractTable = new JTable();
         contractTable.setRowHeight(23);
         JScrollPane contractScroll = new JScrollPane(contractTable);
-        contractScroll.setBounds(50, 280, 1340, 150);
+        contractScroll.setBounds(50, 240, 1340, 130);
         add(contractScroll);
-
+        
+        // 납입 내역 라벨
         JLabel paymentLabel = new JLabel("납입 내역");
-        paymentLabel.setBounds(50, 450, 300, 25);
+        paymentLabel.setBounds(50, 400, 300, 25);
         paymentLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
         add(paymentLabel);
         
-        
         // 엑셀변환 버튼        
         btnExcel = new JButton("엑셀변환");
-        btnExcel.setBounds(1299, 440, 90, 30);
+        btnExcel.setBounds(1299, 390, 90, 30);
         add(btnExcel);
         
         btnExcel.addActionListener(e -> exportExcel(paymentTable));
-
+        
+        // 납입 내역 JTable
         paymentTable = new JTable();
         paymentTable.setRowHeight(23);
         JScrollPane paymentScroll = new JScrollPane(paymentTable);
-        paymentScroll.setBounds(50, 480, 1340, 180);
+        paymentScroll.setBounds(50, 430, 1340, 130);
         add(paymentScroll);
         
+        // 청구 내역 JLabel
+        JLabel claimLabel = new JLabel("청구 내역");
+        claimLabel.setBounds(50, 590, 300, 25);
+        claimLabel.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        add(claimLabel);
         
-        
+        // 청구 내역 JTable
+        claimTable = new JTable();
+        claimTable.setRowHeight(23);
+        JScrollPane claimScroll = new JScrollPane(claimTable);
+        claimScroll.setBounds(50, 620, 1340, 130);
+        add(claimScroll);        
         
 
         // ==== 데이터 로드 ====
@@ -148,6 +162,7 @@ public class MyPageMainPanel extends JPanel {
         loadPersonalInfo();        
         loadContractInfo();
         loadPaymentHistory();
+        loadClaimInfo();
     }
 	
 	private JTextField addLabeledField(JLabel label, int x, int y, int labelWidth, int fieldWidth) {
@@ -328,6 +343,57 @@ public class MyPageMainPanel extends JPanel {
     	
     }
     
+    private void loadClaimInfo() {
+    	DefaultTableModel model = new DefaultTableModel(new String[] {"접수번호","청구일자","진단명", "재해자/물 보상구분", "상품명", "담당자", "처리상태"}, 0) {	
+    		@Override
+    		public boolean isCellEditable(int row, int column){
+    			return false;
+    		}
+    	};
+    	
+    	if (cm == null) {
+            //System.out.println("로그인된 고객 정보가 없습니다.");
+            return;
+        }
+
+        int customerId = cm.getCustomer_id(); // 고객 ID 가져오기
+        
+        try(Connection conn = InsuranceTeamConnector.getConnection()) {
+        	
+        	String sql = "SELECT claim_id, claim_date, "
+        			+ "(SELECT diagnosis_name FROM diagnosis_codes WHERE diagnosis_cd = cl.diagnosis_cd) AS diagnosis_name, "
+        			+ "(SELECT insured_name FROM insureds WHERE insured_id = con.insured_id) AS insured_name, "
+        			+ "(SELECT product_name FROM products WHERE product_id = con.product_id) AS product_name, "
+        			+ "(SELECT employee_name FROM employees WHERE employee_id = cl.employee_id) AS employee_name , "
+        			+ "claim_status "
+        			+ "FROM claims cl, contracts con "
+        			+ "WHERE  cl.contract_id = con.contract_id "
+        			+ "AND con.customer_id = ?";
+        	PreparedStatement pstmt = conn.prepareStatement(sql);
+        	pstmt.setInt(1, customerId);
+        	
+        	
+        	ResultSet rs = pstmt.executeQuery();
+        	while(rs.next()) {
+        		model.addRow(new Object[] {
+        				rs.getInt("claim_id"),
+        				rs.getDate("claim_date"),
+        				rs.getString("diagnosis_name").trim(),        				
+        				rs.getString("insured_name").trim(),
+        				rs.getString("product_name").trim(),
+        				rs.getString("employee_name").trim(),
+        				rs.getString("claim_status").trim()
+        		});
+        	}
+			
+		} catch (SQLException e) {			
+			e.printStackTrace();
+		}
+    	
+    	
+    	claimTable.setModel(model);
+    }
+    
     public void refreshCustomerData() {
     	//System.out.println(">>> refreshCustomerData 호출됨");
     	this.cm = Session.getCustomer();
@@ -362,7 +428,7 @@ public class MyPageMainPanel extends JPanel {
     			cell.setCellValue(model.getColumnName(col));    			
     		}
     		
-    		//2. 체트된 행만 추가
+    		//2. 체크된 행만 추가
     		int rowIndex = 1;
     		for(int row = 0; row < model.getRowCount(); row++) {
     			Boolean isChecked = (Boolean) model.getValueAt(row, 0);
