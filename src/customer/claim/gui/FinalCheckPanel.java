@@ -3,10 +3,10 @@ package customer.claim.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.Connection;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import common.account.login.Session;
+import common.database.model.ClaimsModel;
+import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
+import common.method.InsuranceTeamConnector;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
@@ -25,12 +29,15 @@ public class FinalCheckPanel extends JPanel {
 	private CustomerMainPanel cmp;
 	private JPanel parentCardPanel;
 	private List<JLabel> valueLabels = new ArrayList<>();
+	private ClaimsModel claimModel;
 	
-	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
+	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel newData, CustomerMainPanel cmp) {
 		this.cmp = cmp;
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout)parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
+		
+//		claimModel = new ClaimsModel();
 		
 		
 		TitlePanel title = new TitlePanel("보험금 청구내역 확인");
@@ -42,17 +49,17 @@ public class FinalCheckPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 
 		// 입력한 정보 가져오기(이름, 계좌는 로그인 정보 통해서)
-		String claimTarget = claimData.getCustomer_name();
+		String claimTarget = newData.getCustomer_name();
 		java.sql.Date accidentDate = null;
 		
-		if (claimData.getAccident_date() != null) {
-		    accidentDate = new Date(claimData.getAccident_date().getTime());
+		if (newData.getAccident_date() != null) {
+		    accidentDate = new Date(newData.getAccident_date().getTime());
 		}
 		
-		List<String> claimType = claimData.getClaim_type_name();
-		String accidentDescription = claimData.getAccident_description();
-		String bankAccount = claimData.getBank_account();
-		List<String> documents = claimData.getDocument_type_name();
+		List<String> claimType = newData.getClaim_type_name();
+		String accidentDescription = newData.getAccident_description();
+		String bankAccount = newData.getBank_account();
+		List<String> documents = newData.getDocument_type_name();
 		
 		Object[][] labelValuePairs = {
 			    {"1. 청구대상: ", claimTarget},
@@ -87,27 +94,34 @@ public class FinalCheckPanel extends JPanel {
 
 	      bottomBP.setActionButton("보험금 청구하기");
 	      bottomBP.getNextButton().addActionListener((e) -> {
-	    	// 청구 내역이 DB에 저장되면서 청구 첫페이지로 넘어감
+	    	// 청구 내역이 DB에 저장
+//	    	  try (Connection conn = InsuranceTeamConnector.getConnection()) {
+//
+//	  			CustomerModel cm = Session.getCustomer();
+//	  			if (cm == null) {
+//	  				JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
+//	  				return;
+//	  			}
+	  			
+//	    	  int result = insertClaim(claimModel, conn, newData);
+//
+//	    	  if (result > 0) {
+//	    	      JOptionPane.showMessageDialog(null, "청구가 정상적으로 등록되었습니다.");
+//	    	  } else {
+//	    	      JOptionPane.showMessageDialog(null, "청구 등록에 실패했습니다.");
+//	    	  }
 	    	  
+	    	  
+	    	  // 메인패널로 넘어감
 	    	  JOptionPane.showMessageDialog(this, "보험금 청구가 완료되었습니다.", "안내", JOptionPane.INFORMATION_MESSAGE);
-	    	  
-//	    	  CustomerMainPanel cmp = new CustomerMainPanel();
-//	    	  ClaimMainPanel claimMainPanel = new ClaimMainPanel(cmp);
-	    	  
-//	    	  LoggedInCenterPanel locp = new LoggedInCenterPanel();
-	    	  
-	    	  
 	    	  parentCardPanel.removeAll(); // 기존 패널들 제거
-//	    	  parentCardPanel.add(claimMainPanel, "MainPanel");
 	    	  
 	    	  cmp.showCard("accounts");
 	    	  cmp.getAMP().showCard("회원_메인");
-	    	  
-//	    	  cl.show(parentCardPanel, "MainPanel");
-	    	  
 	    	  parentCardPanel.revalidate();
 	    	  parentCardPanel.repaint();
-	      });
+//	    	  }
+	     });
 	}
 	
 	 public void resetPanel() {

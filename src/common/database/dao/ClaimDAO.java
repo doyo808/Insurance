@@ -13,19 +13,6 @@ import common.database.model.NewClaimDataModel;
 public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		
 		// 고객이 청구대상을 '다른사람'으로 선택하면 그 대상이 가입한 보험계약 정보를 가지고 와야함
-		
-		/*
-				<보험금청구내역 표>
-				사고발병일자/상품명/증권번호(없으면 pass)/재해자=피보험자/보상구분/재해유형/
-				
-				<보상담당자 표>
-				재해자/(직원)소속(부서)/담당자명/ 전화번호
-				
-				<처리현황 표>
-				접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/
-				
-				<결정보험금 표>
-		 */
 	
 		// 고객이 청구대상을 '본인'으로 선택하면 로그인 기록을 가지고와서 그 사람의 정보를 가지고 와야함
 		// 고객이 하나 이상의 계약이 있다는 가정
@@ -171,36 +158,56 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		            }
 		        }
 		    }
-		    
 			return claimDetail;
 		}
 		
+		// 고객이 입력한 내용을 토대로 새로운 청구 내역을 추가하는 메서드
+		// 고객이 입력한 정보 + 기본적인 정보 => 
+		public static int insertClaim(ClaimsModel model, Connection conn, NewClaimDataModel newData) {
+		    String query = "INSERT INTO CLAIMS ( "
+		        + "CLAIM_ID, CONTRACT_ID, CLAIM_DATE, ACCIDENT_DATE, COMPENSATION_TYPE, "
+		        + "CLAIM_TYPE_CD, EMPLOYEE_ID, CLAIM_STATUS, CLAIM_CATEGORY, ACCIDENT_DESCRIPTION, "
+		        + "DIAGNOSIS_CD, BANK_NAME, BANK_ACCOUNT, BENEFICIARY_NAME "
+		        + ") VALUES (CLAIMS_SEQ.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setInt(1, model.getContract_id());
+		        pstmt.setDate(2, new java.sql.Date(newData.getClaim_date().getTime()));
+		        pstmt.setDate(3, new java.sql.Date(newData.getAccident_date().getTime()));
+		        pstmt.setString(4, String.valueOf(newData.getCompensation_type()));
+		        pstmt.setString(5, model.getClaim_type_cd()); // 또는 newData에서 가져오도록 구조 바꿔도 됨
+		        pstmt.setInt(6, model.getEmployee_id()); // 또는 EMPLOYEE 테이블에서 ID 조회해서 셋팅 필요
+		        pstmt.setString(7, newData.getClaim_status());
+		        pstmt.setString(8, newData.getClaim_category());
+		        pstmt.setString(9, newData.getAccident_description());
+		        pstmt.setString(10, newData.getDiagnosis_cd());
+		        pstmt.setString(11, newData.getBank_name());
+		        pstmt.setString(12, newData.getBank_account());
+		        pstmt.setString(13, newData.getBeneficiary_name());
+
+		        return pstmt.executeUpdate();
+
+		    } catch (SQLException e) {
+		    	e.getErrorCode();
+				e.getMessage();
+		    	e.printStackTrace();
+		        return -1;
+		    }
+		}
 		
+		public static int getEmployeeIdByName(String name, Connection conn) throws SQLException {
+		    String query = "SELECT employee_id FROM employee WHERE employee_name = ?";
+		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+		        pstmt.setString(1, name);
+		        ResultSet rs = pstmt.executeQuery();
+		        if (rs.next()) {
+		            return rs.getInt("employee_id");
+		        }
+		    }
+		    return -1; // 못 찾은 경우
+		}
 		
-		// 처리현황
-		// 접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/결정보험금/총지급금액
-//		public static ClaimsModel getProcessingStatus(String login_id, Connection conn) throws SQLException {
-//		    String query = "";
-//
-//		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-//		        pstmt.setString(1, login_id);
-//
-//		        try (ResultSet rs = pstmt.executeQuery()) {
-//		            while (rs.next()) {
-//		                ClaimsModel claimDetail = new ClaimsModel(
-//		                    rs.get(""),
-//		                    rs.get(""),
-//		                    rs.get("")
-//		                );
-//		                return claimDetail;
-//		            }
-//		        }
-//		    }
-//		}
-		
-		// 고객이 입력한 내용을 토대로 새로운 청구 내역을 추가하는 메서드 
-		
-//		// 새 고객을 추가하는 메서드 (CREATE) * 주민등록번호, 로그인 아이디 유니크 주의해주세요
+		 
 //		public static int addCustomer(CustomerModel c, Connection conn) {
 //
 //			String query = "INSERT INTO CUSTOMERS(customer_id, customer_name"
@@ -223,15 +230,8 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 //				return -1;
 //			}
 //		}
-//		// 해당 고객을 삭제하고 삭제 여부를 반환하는 메서드 (DELETE) - 현재는 오류 발생 DB수정해야함
-//		public static boolean deleteCustomer(int customer_id, Connection conn) throws SQLException {
-//			String query = "DELETE FROM CUSTOMERS WHERE customer_id = ?";
-//			
-//			try (PreparedStatement pstmt = conn.prepareStatement(query)){
-//				pstmt.setInt(1, customer_id);
-//				return pstmt.executeUpdate() == 1;
-//			}
-//		}
-//	}
+		
+		
+		
 
 }
