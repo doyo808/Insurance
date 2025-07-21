@@ -93,6 +93,7 @@ public class DetailCrmPanel extends JPanel {
         
         //보험 계약 정보 탭
         contractTable = new JTable();
+        contractTable.setRowHeight(23);
         JScrollPane contraJScroll = new JScrollPane(contractTable);
         JPanel contractPanel = new JPanel(new BorderLayout());
         contractPanel.add(contraJScroll, BorderLayout.CENTER);
@@ -100,6 +101,7 @@ public class DetailCrmPanel extends JPanel {
         
         // 납입 내역 탭
         paymentTable = new JTable();
+        paymentTable.setRowHeight(23);
         JScrollPane paymentScroll = new JScrollPane(paymentTable);
         JPanel paymentPanel = new JPanel(new BorderLayout());
         paymentPanel.add(paymentScroll, BorderLayout.CENTER);
@@ -202,7 +204,7 @@ public class DetailCrmPanel extends JPanel {
 						MyPageUtil.formatDate(rs.getString("effective_date")),
 						MyPageUtil.formatDate(rs.getString("payment_end_date")),
 						MyPageUtil.formatDate(rs.getString("coverage_end_date")),
-						MyPageUtil.getDisplayStatus(rs.getString("status"))				
+						MyPageUtil.getDisplayStatus("CONTRACT", rs.getString("status"))				
 				});
 			}
 			
@@ -235,7 +237,7 @@ public class DetailCrmPanel extends JPanel {
     					MyPageUtil.formatToYearMonth(rs.getString("payment_date")),
     					rs.getString("product_name"),
     					String.format("%,d", rs.getInt("paid_amount")),
-    					MyPageUtil.getDisplayStatus(rs.getString("pay_status"))   					
+    					MyPageUtil.getDisplayStatus("PAYMENT", rs.getString("pay_status"))   					
     			});
     		}   				
 			

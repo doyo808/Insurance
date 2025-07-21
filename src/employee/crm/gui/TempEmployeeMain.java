@@ -2,6 +2,7 @@ package employee.crm.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -15,10 +16,6 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import employee.product.view.ProductManageMainPanel;
-
-
-
-
 
 public class TempEmployeeMain extends JFrame implements ActionListener {
 	
@@ -51,10 +48,15 @@ public class TempEmployeeMain extends JFrame implements ActionListener {
         String[] menuItems = {"보험상품관리", "보험계약관리", "보험료납부관리", "보험금청구관리", "고객관리", "사용자관리"};
 
         for (String item : menuItems) {
-            JButton btn = new JButton(item);                        
-            btn.setActionCommand(item);
-            btn.addActionListener(this);
-            topPanel.add(btn);
+            JButton btnMenu = new JButton(item);
+            btnMenu.setSize(100, 50);
+            btnMenu.setPreferredSize(new Dimension(140, 40)); // 버튼 사이즈 동일한 크기 적용
+            btnMenu.setBackground(Color.BLACK); //버튼 배경색
+            btnMenu.setForeground(Color.WHITE); //글자색
+            btnMenu.setFont(new Font (btnMenu.getFont().getName(), Font.BOLD, 16));
+            btnMenu.setActionCommand(item);
+            btnMenu.addActionListener(this);
+            topPanel.add(btnMenu);
             
         }     
 
