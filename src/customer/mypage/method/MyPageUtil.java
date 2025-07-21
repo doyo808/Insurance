@@ -163,6 +163,7 @@ public class MyPageUtil {
     		Map.entry("CLAIMED", "보험금 청구"),
     		Map.entry("TERMINATED", "중도 해지"),    		
     		Map.entry("LAPSED", "해지 예정"),
+    		Map.entry("0", "심사중"),
     		
     		//  납입정보 >>> 납입상태
     		Map.entry("Y", "납부완료"),
