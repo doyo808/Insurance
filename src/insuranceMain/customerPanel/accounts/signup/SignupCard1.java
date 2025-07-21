@@ -52,10 +52,10 @@ public class SignupCard1 extends JPanel {
         scrollPane.getViewport().setBackground(Color.WHITE);
 
         // 약관 패널들
-        mainPanel.add(createAgreementPanel("전자금융거래 이용약관", "signup/전자금융거래이용약관.txt"), "growx");
-        mainPanel.add(createAgreementPanel("홈페이지 이용약관", "signup/홈페이지이용약관.txt"), "growx, gaptop 10");
-        mainPanel.add(createAgreementPanel("개인(신용)정보 수집 및 이용", "signup/개인정보수집및이용동의서.txt"), "growx, gaptop 10");
-        mainPanel.add(createAgreementPanel("고유식별정보 처리에 관한 사항", "signup/고유식별정보처리동의서.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("전자금융거래 이용약관", "/signup/전자금융거래이용약관.txt"), "growx");
+        mainPanel.add(createAgreementPanel("홈페이지 이용약관", "/signup/홈페이지이용약관.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("개인(신용)정보 수집 및 이용", "/signup/개인정보수집및이용동의서.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("고유식별정보 처리에 관한 사항", "/signup/고유식별정보처리동의서.txt"), "growx, gaptop 10");
 
         // 실명확인 영역
         mainPanel.add(createIdentityPanel(), "growx, gaptop 20");
@@ -139,7 +139,7 @@ public class SignupCard1 extends JPanel {
     private String readTextFromFile(String filename) {
         StringBuilder sb = new StringBuilder();
 
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename)) {
+        try (InputStream is = getClass().getResourceAsStream(filename)) {
             if (is == null) {
                 return "약관 파일을 찾을 수 없습니다: " + filename;
             }

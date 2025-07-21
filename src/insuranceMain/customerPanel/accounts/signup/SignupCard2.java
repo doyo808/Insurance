@@ -62,7 +62,7 @@ public class SignupCard2 extends JPanel {
 
     private void showAuthPopup() {
         JDialog popup = new JDialog((Frame) null, "본인 인증", true);
-        ImageIcon originalIcon = new ImageIcon(getClass().getClassLoader().getResource("signup/본인확인이미지.jpg"));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/signup/본인확인이미지.jpg"));
         Image originalImage = originalIcon.getImage();
 
         int fixedHeight = 750;
