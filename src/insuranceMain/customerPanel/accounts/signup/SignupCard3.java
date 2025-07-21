@@ -1,179 +1,187 @@
 package insuranceMain.customerPanel.accounts.signup;
 
-import javax.swing.*;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import common.account.signup.customer.LoginIdValidator;
 import common.database.model.CustomerModel;
-
-import java.awt.*;
-import java.awt.event.*;
 import net.miginfocom.swing.MigLayout;
 
 public class SignupCard3 extends JPanel {
 
-    // JTextField
-	private JTextField nameField, personalField, phoneField, emailIdField, emailDomainField,
-            zipField, addr1Field, addr2Field, jobField, companyField, jobZipField, jobAddr1Field,
-            jobAddr2Field, jobPhoneField, loginIdField;
-    private CustomerModel cm;
-    // JPasswordField
+    private JTextField loginIdField;
     private JPasswordField passwordField;
-
-    // JRadioButton
-    private JRadioButton agreeYesBtn, agreeNoBtn;
-
-    // JButton
+    private JTextField emailField;
+    private JTextField nameField, personalField, phoneField, zipField, addressField, detailAddressField, emailIdField, emailDomainField;
+    private JButton idCheckBtn;
     private JButton emailCheckBtn;
 
-    // JComboBox for email domains
-    private JComboBox<String> emailDomainCombo;
+    private JLabel idStatusLabel;
+    private JLabel passwordStatusLabel;
+    private JLabel emailStatusLabel;
+
+    private boolean idChk = false;
+    private boolean passwordChk = false;
+    private boolean eamilChk = false;
 
     public SignupCard3(CardLayout c, JPanel parentPanel, CustomerModel cm) {
-        setLayout(new MigLayout("insets 0, fillx", "[right][]", "[]15[]15[]15[]15[]15[]15[]15[]15[]15[]15[]15[]"));
-        setPreferredSize(new Dimension(1440, 700));
-        setBackground(Color.WHITE);
+        setLayout(new MigLayout("wrap 2, align center center", "[][grow, center]", ""));
 
-        // 이름 (비활성)
+        // 이름
         add(new JLabel("이름:"));
-        nameField = new JTextField(cm.getCustomer_name());
-        nameField.setEnabled(false);
-        nameField.setPreferredSize(new Dimension(250, 25));
-        add(nameField, "wrap");
+        nameField = new JTextField();
+        nameField.setPreferredSize(new Dimension(180, 25));
+        add(nameField);
 
-        // 주민번호 (비활성)
-        add(new JLabel("주민번호:"));
-        personalField = new JTextField(cm.getPersonal_id());
-        personalField.setEnabled(false);
-        personalField.setPreferredSize(new Dimension(250, 25));
-        add(personalField, "wrap");
+        // 주민등록번호
+        add(new JLabel("주민등록번호:"));
+        personalField = new JTextField();
+        personalField.setPreferredSize(new Dimension(180, 25));
+        add(personalField);
 
-        // 연락처 (비활성)
-        add(new JLabel("연락처:"));
-        phoneField = new JTextField(cm.getPhone_number());
-        phoneField.setEnabled(false);
-        phoneField.setPreferredSize(new Dimension(250, 25));
-        add(phoneField, "wrap");
+        // 전화번호
+        add(new JLabel("전화번호:"));
+        phoneField = new JTextField();
+        phoneField.setPreferredSize(new Dimension(180, 25));
+        add(phoneField);
 
-        // 이메일 (앞부분 + 도메인콤보 + 직접입력 필드)
-        add(new JLabel("이메일:"));
-
-        JPanel emailPanel = new JPanel(new MigLayout("insets 0, gap 5 0", "[][pref!][50!]", "[]"));
-        emailIdField = new JTextField();
-        emailIdField.setPreferredSize(new Dimension(150, 25));
-        emailPanel.add(emailIdField);
-
-        emailPanel.add(new JLabel("@"));
-
-        String[] domains = {"naver.com", "gmail.com", "daum.net", "직접입력"};
-        emailDomainCombo = new JComboBox<>(domains);
-        emailDomainCombo.setPreferredSize(new Dimension(120, 25));
-        emailPanel.add(emailDomainCombo);
-
-        emailDomainField = new JTextField();
-        emailDomainField.setPreferredSize(new Dimension(150, 25));
-        emailDomainField.setVisible(false);
-        emailPanel.add(emailDomainField, "wrap");
-
-        add(emailPanel, "wrap");
-
-        // 이메일 확인 버튼
-        add(new JLabel(""));
-        emailCheckBtn = new JButton("이메일 확인");
-        add(emailCheckBtn, "wrap");
-
-        // 자택 우편번호
-        add(new JLabel("자택 우편번호:"));
+        // 우편번호
+        add(new JLabel("우편번호:"));
         zipField = new JTextField();
-        zipField.setPreferredSize(new Dimension(250, 25));
-        add(zipField, "wrap");
+        zipField.setPreferredSize(new Dimension(180, 25));
+        add(zipField);
 
-        // 자택 주소1
-        add(new JLabel("자택 주소1:"));
-        addr1Field = new JTextField();
-        addr1Field.setPreferredSize(new Dimension(250, 25));
-        add(addr1Field, "wrap");
+        // 주소
+        add(new JLabel("주소:"));
+        addressField = new JTextField();
+        addressField.setPreferredSize(new Dimension(180, 25));
+        add(addressField);
 
-        // 자택 주소2
-        add(new JLabel("자택 주소2:"));
-        addr2Field = new JTextField();
-        addr2Field.setPreferredSize(new Dimension(250, 25));
-        add(addr2Field, "wrap");
-
-        // 직업
-        add(new JLabel("직업:"));
-        jobField = new JTextField();
-        jobField.setPreferredSize(new Dimension(250, 25));
-        add(jobField, "wrap");
-
-        // 회사명
-        add(new JLabel("회사명:"));
-        companyField = new JTextField();
-        companyField.setPreferredSize(new Dimension(250, 25));
-        add(companyField, "wrap");
-
-        // 직장 우편번호
-        add(new JLabel("직장 우편번호:"));
-        jobZipField = new JTextField();
-        jobZipField.setPreferredSize(new Dimension(250, 25));
-        add(jobZipField, "wrap");
-
-        // 직장 주소1
-        add(new JLabel("직장 주소1:"));
-        jobAddr1Field = new JTextField();
-        jobAddr1Field.setPreferredSize(new Dimension(250, 25));
-        add(jobAddr1Field, "wrap");
-
-        // 직장 주소2
-        add(new JLabel("직장 주소2:"));
-        jobAddr2Field = new JTextField();
-        jobAddr2Field.setPreferredSize(new Dimension(250, 25));
-        add(jobAddr2Field, "wrap");
-
-        // 직장 연락처
-        add(new JLabel("직장 연락처:"));
-        jobPhoneField = new JTextField();
-        jobPhoneField.setPreferredSize(new Dimension(250, 25));
-        add(jobPhoneField, "wrap");
+        // 상세 주소
+        add(new JLabel("상세 주소:"));
+        detailAddressField = new JTextField();
+        detailAddressField.setPreferredSize(new Dimension(180, 25));
+        add(detailAddressField);
 
         // 로그인 아이디
         add(new JLabel("로그인 아이디:"));
+        JPanel idPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         loginIdField = new JTextField();
-        loginIdField.setPreferredSize(new Dimension(250, 25));
-        add(loginIdField, "wrap");
+        loginIdField.setPreferredSize(new Dimension(180, 25));
+        idStatusLabel = new JLabel("❌");
+        idStatusLabel.setForeground(Color.RED);
+        idCheckBtn = new JButton("아이디 중복확인");
+
+        idPanel.add(loginIdField);
+        idPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        idPanel.add(idCheckBtn);
+        idPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        idPanel.add(idStatusLabel);
+        add(idPanel, "wrap");
+
+        // 아이디 중복 확인 버튼 이벤트
+        idCheckBtn.addActionListener(e -> {
+            String loginId = loginIdField.getText();
+            if (loginId.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
+                setIdCheck(false);
+            } else {
+                int idChkNum = LoginIdValidator.getVerifiedLoginId(loginId);
+                if (idChkNum == 0) {
+                    JOptionPane.showMessageDialog(this, "이미 사용 중인 아이디입니다.");
+                    setIdCheck(false);
+                } else if (idChkNum == 1) {
+                    JOptionPane.showMessageDialog(this, "사용 가능한 아이디입니다.");
+                    setIdCheck(true);
+                } else if (idChkNum == -1) {
+                    JOptionPane.showMessageDialog(this, "아이디형식이 잘못됐습니다. 영문과 숫자만 입력해주세요.");
+                    setIdCheck(false);
+                }
+            }
+        });
 
         // 비밀번호
         add(new JLabel("비밀번호:"));
+        JPanel pwPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(250, 25));
-        add(passwordField, "wrap");
+        passwordField.setPreferredSize(new Dimension(180, 25));
+        passwordStatusLabel = new JLabel("❌");
+        JLabel passwordHintLabel = new JLabel("비밀번호는 8~20자, 특수문자(!@#$%^&*-_=+;:,.?~`) 및 숫자 포함");
+        passwordHintLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 10));
+        passwordHintLabel.setForeground(Color.GRAY);
+        passwordStatusLabel.setForeground(Color.RED);
+        pwPanel.add(passwordField);
+        pwPanel.add(passwordStatusLabel);
+        add(pwPanel, "wrap");
+        add(passwordHintLabel, "span 2, wrap");
 
-        // 비밀번호 규칙 라벨 (회색)
-        add(new JLabel("")); // 빈 공간
-        JLabel pwRuleLabel = new JLabel("영문, 숫자, 특수문자 포함 8자 이상");
-        pwRuleLabel.setForeground(Color.GRAY);
-        add(pwRuleLabel, "wrap");
-
-        // 메시지 알림 수신 동의 여부 (라디오 버튼)
-        add(new JLabel("메시지 알림 수신 여부:"));
-        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        agreeYesBtn = new JRadioButton("수신함");
-        agreeNoBtn = new JRadioButton("수신안함");
-        ButtonGroup group = new ButtonGroup();
-        group.add(agreeYesBtn);
-        group.add(agreeNoBtn);
-        radioPanel.add(agreeYesBtn);
-        radioPanel.add(agreeNoBtn);
-        add(radioPanel, "wrap");
-
-        // 콤보박스 선택에 따른 도메인 입력 필드 노출 제어
-        emailDomainCombo.addActionListener(e -> {
-            if ("직접입력".equals(emailDomainCombo.getSelectedItem())) {
-                emailDomainField.setVisible(true);
-                emailDomainField.requestFocus();
-            } else {
-                emailDomainField.setVisible(false);
-            }
-            revalidate();
-            repaint();
+        passwordField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { validatePasswordLive(); }
+            public void removeUpdate(DocumentEvent e) { validatePasswordLive(); }
+            public void changedUpdate(DocumentEvent e) { validatePasswordLive(); }
         });
+
+        // 이메일
+        add(new JLabel("이메일:"));
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        emailField = new JTextField();
+        emailField.setPreferredSize(new Dimension(180, 25));
+        emailStatusLabel = new JLabel("❌");
+        emailStatusLabel.setForeground(Color.RED);
+        emailCheckBtn = new JButton("이메일 확인");
+
+        emailPanel.add(emailField);
+        emailPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+        emailPanel.add(emailCheckBtn);
+        emailPanel.add(emailStatusLabel);
+        add(emailPanel, "wrap");
+
+        emailCheckBtn.addActionListener(e -> {
+            String email = emailField.getText();
+            if (email.contains("@") && email.contains(".")) {
+                JOptionPane.showMessageDialog(this, "유효한 이메일 형식입니다.");
+                setEmailCheck(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "이메일 형식이 잘못되었습니다.");
+                setEmailCheck(false);
+            }
+        });
+    }
+
+    private void setIdCheck(boolean valid) {
+        idChk = valid;
+        idStatusLabel.setText(valid ? "✔" : "❌");
+        idStatusLabel.setForeground(valid ? new Color(0, 128, 0) : Color.RED);
+    }
+
+    private void setPasswordCheck(boolean valid) {
+        passwordChk = valid;
+        passwordStatusLabel.setText(valid ? "✔" : "❌");
+        passwordStatusLabel.setForeground(valid ? new Color(0, 128, 0) : Color.RED);
+    }
+
+    private void setEmailCheck(boolean valid) {
+        eamilChk = valid;
+        emailStatusLabel.setText(valid ? "✔" : "❌");
+        emailStatusLabel.setForeground(valid ? new Color(0, 128, 0) : Color.RED);
+    }
+
+    private void validatePasswordLive() {
+        String pw = new String(passwordField.getPassword());
+        boolean valid = pw.length() >= 8 && pw.length() <= 20 && pw.matches(".*[0-9].*") && pw.matches(".*[!@#$%^&*\\-_=+;:,.?~`].*");
+        setPasswordCheck(valid);
     }
 }

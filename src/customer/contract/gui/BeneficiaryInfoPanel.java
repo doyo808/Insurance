@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
@@ -24,7 +25,6 @@ public class BeneficiaryInfoPanel extends JPanel {
     private JTextField bankField;
     private JTextField accountField;
 
-    private boolean confirmed = false;
     private int cardNumber = 5;
     
     public BeneficiaryInfoPanel(ContractMainPanel contractMP) {
@@ -92,64 +92,44 @@ public class BeneficiaryInfoPanel extends JPanel {
         accountField.setBounds(748, 402, 220, 30);
         this.add(accountField);
 
-        addConfirmButton(y + gap);
-        addNavigationButtons(y + gap + 50);
+        addNavigationButtons();
     }
 
-    private void addConfirmButton(int y) {
-        JButton confirmButton = new JButton("확인");
-        confirmButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        confirmButton.setBounds(734, 501, 100, 30);
-        confirmButton.setBackground(Color.DARK_GRAY);
-        confirmButton.setForeground(Color.WHITE);
-
-        confirmButton.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            String bank = bankField.getText().trim();
-            String account = accountField.getText().trim();
-
-            StringBuilder errors = new StringBuilder();
-
-            if (name.isEmpty()) errors.append("이름을 입력해주세요.\n");
-            if (bank.isEmpty()) errors.append("은행명을 입력해주세요.\n");
-            if (account.isEmpty()) errors.append("계좌번호를 입력해주세요.\n");
-
-            if (errors.length() > 0) {
-                JOptionPane.showMessageDialog(this, errors.toString(), "입력 오류", JOptionPane.ERROR_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "입력이 확인되었습니다!", "확인", JOptionPane.INFORMATION_MESSAGE);
-                confirmed = true;
-            }
-        });
-
-        this.add(confirmButton);
-    }
-
-    private void addNavigationButtons(int y) {
+    private void addNavigationButtons() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBounds(447, 565, 700, 50);
 
         JButton prevButton = new JButton("이전");
-        prevButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        prevButton.setBackground(OurColors.PREVIOUS_BUTTON);
-        prevButton.setForeground(OurColors.TITLE_TEXT);
+        prevButton.setBounds(94, 5, 232, 33);
+        ButtonPainter.stylePrimaryButtonGray(prevButton, 16);
         prevButton.setPreferredSize(new java.awt.Dimension(267, 33));
         prevButton.addActionListener(e -> {
-            confirmed = false;
             clearInputs();
             contractMP.ShowCard(contractMP.cardNames[cardNumber - 1]);
         });
 
         JButton nextButton = new JButton("다음");
-        nextButton.setFont(new Font("굴림", Font.PLAIN, 18));
-        nextButton.setBackground(OurColors.NEXT_BUTTON);
-        nextButton.setForeground(OurColors.TITLE_TEXT);
+        nextButton.setBounds(392, 5, 241, 33);
+        nextButton.setFont(new Font("Dialog", Font.PLAIN, 18));
+        ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
         nextButton.setPreferredSize(new java.awt.Dimension(288, 33));
         nextButton.addActionListener(e -> {
-            if (!confirmed) {
-                JOptionPane.showMessageDialog(this, "확인버튼을 눌러주세요.");
-                return;
-            }
+        	 String name = nameField.getText().trim();
+             String bank = bankField.getText().trim();
+             String account = accountField.getText().trim();
+
+             StringBuilder errors = new StringBuilder();
+
+             if (name.isEmpty()) errors.append("이름을 입력해주세요.\n");
+             if (bank.isEmpty()) errors.append("은행명을 입력해주세요.\n");
+             if (account.isEmpty()) errors.append("계좌번호를 입력해주세요.\n");
+
+             if (errors.length() > 0) {
+                 JOptionPane.showMessageDialog(this, errors.toString(), "입력 오류", JOptionPane.ERROR_MESSAGE);
+                 return;
+             } else {
+                 JOptionPane.showMessageDialog(this, "입력이 확인되었습니다!", "확인", JOptionPane.INFORMATION_MESSAGE);
+             }
 
             ContractInfo ci = contractMP.getContractInfo();
             ci.setBeneficiaryName(nameField.getText().trim());
@@ -157,10 +137,10 @@ public class BeneficiaryInfoPanel extends JPanel {
             ci.setBeneficiaryBank(bankField.getText().trim());
             ci.setBeneficiaryAccount(accountField.getText().trim());
 
-            confirmed = false;
             clearInputs();
             contractMP.ShowCard(contractMP.cardNames[cardNumber + 1]);
         });
+        buttonPanel.setLayout(null);
 
         buttonPanel.add(prevButton);
         buttonPanel.add(nextButton);

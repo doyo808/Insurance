@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import common.gui.OurColors;
+import common.method.ButtonPainter;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.SelectedProductName;
@@ -158,8 +159,7 @@ public class ChoosePeriodsPanel extends JPanel {
 	
 	private void addBackButton() {
 		JButton btnNewButton = new JButton("이전");
-		btnNewButton.setBackground(OurColors.PREVIOUS_BUTTON);
-		btnNewButton.setForeground(OurColors.TITLE_TEXT);
+		ButtonPainter.stylePrimaryButtonGray(btnNewButton, 16);
 		btnNewButton.setBounds(442, 543, 267, 33);
 		
 		btnNewButton.addActionListener(e -> {
@@ -170,8 +170,7 @@ public class ChoosePeriodsPanel extends JPanel {
 	
 	private void addConfirmButton() {
 		JButton btnNewButton_2 = new JButton("다음");
-		btnNewButton_2.setBackground(OurColors.NEXT_BUTTON);
-		btnNewButton_2.setForeground(OurColors.TITLE_TEXT);
+		ButtonPainter.stylePrimaryButtonCarrot(btnNewButton_2, 16);
 		btnNewButton_2.setBounds(721, 543, 288, 33);
 		
 		btnNewButton_2.addActionListener(e -> {

@@ -53,7 +53,7 @@ class LoggedInCenterPanel extends JPanel {
             JButton btn = new JButton(label);
             btn.setPreferredSize(new Dimension(200, 100)); // 버튼 크기 지정
             
-            ButtonPainter.stylePrimaryButton(btn, 16);
+            ButtonPainter.stylePrimaryButtonCarrot(btn, 16);
             
             btn.addActionListener(e -> {
             	cmp.showCard("services");

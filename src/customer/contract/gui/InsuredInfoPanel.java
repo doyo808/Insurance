@@ -15,7 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import common.gui.OurColors;
+import common.method.ButtonPainter;
+import common.method.Validators;
 import customer.contract.ContractInfo;
 import customer.contract.ContractMainPanel;
 import customer.contract.method.CalculateAge;
@@ -36,8 +37,6 @@ public class InsuredInfoPanel extends JPanel {
     private JComboBox<String> drinkCombo;
     private JComboBox<String> driveCombo;
     
-    private boolean confirmed = false;
-    
     public InsuredInfoPanel(ContractMainPanel contractMP) {
         this.contractMP = contractMP;
         initUI();
@@ -50,7 +49,7 @@ public class InsuredInfoPanel extends JPanel {
         // 상단 타이틀 (가운데 정렬, 크기 증가)
         String titleText = SelectedProductName.getProduct_name() + " [피보험자 정보 입력]";
         JLabel titleLabel = new JLabel(titleText);
-        titleLabel.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Dialog", Font.BOLD, 18));
         titleLabel.setBounds(328, 57, 900, 30);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(titleLabel);
@@ -76,7 +75,16 @@ public class InsuredInfoPanel extends JPanel {
         juminField = new JTextField();
         juminField.setBounds(748, 162, 220, 30);
         if (MainFrame.TEST) juminField.setText("901010-1234567");
-        
+        juminField.addFocusListener(new FocusAdapter() {
+        	@Override
+        	public void focusLost(FocusEvent e) {
+        		if (juminField.getText().isBlank()) juminField.setText("901010-1234567");
+        	}
+        	@Override
+        	public void focusGained(FocusEvent e) {
+        		if (juminField.getText().equals("901010-1234567")) juminField.setText("");
+        	}
+		});
         this.add(juminField);
 
         // 성별
@@ -148,7 +156,7 @@ public class InsuredInfoPanel extends JPanel {
         JLabel driveLabel = new JLabel("운전상태:");
         driveLabel.setBounds(590, 402, 100, 30);
         this.add(driveLabel);
-        String[] driveStatus = {"0: 안함", "1: 함"};
+        String[] driveStatus = {"0: 안함", "1: 소형차", "2: 이륜차", "3: 화물차"};
         driveCombo = new JComboBox<>(driveStatus);
         driveCombo.setBounds(748, 402, 220, 30);
         this.add(driveCombo);
@@ -175,14 +183,8 @@ public class InsuredInfoPanel extends JPanel {
             ageField.setText(String.valueOf(age));
         }
         
-        
-
         addNextPrevButtons();
-        addConfirmButton();
     }
-    
-
-    
     
     
     /// FIXME: 다음/이전버튼 추가
@@ -191,18 +193,15 @@ public class InsuredInfoPanel extends JPanel {
         buttonPanel.setBounds(445, 557, 700, 50);
 
         JButton prevButton = new JButton("이전");
-        prevButton.setBackground(OurColors.PREVIOUS_BUTTON);
-        prevButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonGray(prevButton, 16);
         prevButton.setPreferredSize(new java.awt.Dimension(267, 33));
         prevButton.addActionListener(e -> {
-        	confirmed = false;
         	clearInputs();
             contractMP.ShowCard(contractMP.cardNames[3]);
         });
 
         JButton nextButton = new JButton("다음");
-        nextButton.setBackground(OurColors.NEXT_BUTTON);
-        nextButton.setForeground(OurColors.TITLE_TEXT);
+        ButtonPainter.stylePrimaryButtonCarrot(nextButton, 16);
         nextButton.setPreferredSize(new java.awt.Dimension(288, 33));
         addNextAction(nextButton);
 
@@ -215,58 +214,8 @@ public class InsuredInfoPanel extends JPanel {
     void addNextAction(JButton btn) {
     	
         btn.addActionListener(e -> {
-        	if (!confirmed) {
-        		JOptionPane.showMessageDialog(this, "확인버튼을 눌러주세요");
-        		return;
-        	}
-        	ContractInfo ci = contractMP.getContractInfo();
-            ci.setInsuredName(nameField.getText().trim());
-            ci.setInsuredJumin(juminField.getText().trim());
-            ci.setInsuredGender((String) genderCombo.getSelectedItem());
-
-            try {
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate birthDate = LocalDate.parse(birthField.getText().trim(), dtf);
-                ci.setInsuredBirth(birthDate);
-            } catch (Exception ex) {
-                ci.setInsuredBirth(null);  // 혹은 기본값 처리
-            }
-
-            try {
-                int age = Integer.parseInt(ageField.getText().trim());
-                ci.setInsuredAge(age);
-            } catch (NumberFormatException ex) {
-                ci.setInsuredAge(0); // 기본값 처리
-            }
-
-            ci.setInsuredSmoke((String) smokeCombo.getSelectedItem());
-            ci.setInsuredDrink((String) drinkCombo.getSelectedItem());
-
-            // driveCombo에서 "0: 안함" 또는 "1: 함" 문자열에서 숫자만 추출
-            String driveStr = (String) driveCombo.getSelectedItem();
-            int driveStatus = 0;
-            if (driveStr != null && driveStr.startsWith("1")) {
-                driveStatus = 1;
-            }
-            ci.setInsuredDrive(driveStatus);
-            ci.setInsuredDisease(diseaseField.getText().trim());
-            
-            confirmed = false;
-            clearInputs();
-            contractMP.ShowCard(contractMP.cardNames[5]);
-        });
-    }
-
-    
-    /// FIXME: 확인버튼 추가(유효성 검증)
-    void addConfirmButton() {
-        JButton confirmButton = new JButton("확인");
-        confirmButton.setBackground(Color.DARK_GRAY);
-        confirmButton.setForeground(Color.WHITE);
-        confirmButton.setBounds(732, 495, 100, 30); // 위치는 임의로 지정, 필요시 조정
-
-        confirmButton.addActionListener(e -> {
-            String name = nameField.getText().trim();
+        		
+    		String name = nameField.getText().trim();
             String jumin = juminField.getText().trim();
             String birth = birthField.getText().trim();
             String ageStr = ageField.getText().trim();
@@ -277,7 +226,11 @@ public class InsuredInfoPanel extends JPanel {
             if (name.isEmpty()) {
                 errorMsg.append("이름을 입력해주세요.\n");
             }
-
+            
+            if (!Validators.isValidName(name)) {
+            	errorMsg.append("이름을 확인하세요.\n");
+            }
+            
             // 주민번호: 6자리-7자리 형식
             if (!jumin.matches("\\d{6}-\\d{7}")) {
                 errorMsg.append("주민번호 형식이 올바르지 않습니다. 예: 901231-1234567\n");
@@ -301,13 +254,46 @@ public class InsuredInfoPanel extends JPanel {
             // 결과 처리
             if (errorMsg.length() > 0) {
                 JOptionPane.showMessageDialog(this, errorMsg.toString(), "입력 오류", JOptionPane.ERROR_MESSAGE);
+                return;
             } else {
                 JOptionPane.showMessageDialog(this, "입력이 확인되었습니다!", "성공", JOptionPane.INFORMATION_MESSAGE);
             }
-            confirmed = true;
+     
+        	ContractInfo ci = contractMP.getContractInfo();
+            ci.setInsuredName(nameField.getText().trim());
+            ci.setInsuredJumin(juminField.getText().trim());
+            ci.setInsuredGender((String) genderCombo.getSelectedItem());
+
+            try {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate birthDate = LocalDate.parse(birthField.getText().trim(), dtf);
+                ci.setInsuredBirth(birthDate);
+            } catch (Exception ex) {
+                ci.setInsuredBirth(null);  // 혹은 기본값 처리
+            }
+
+            try {
+                int age = Integer.parseInt(ageField.getText().trim());
+                ci.setInsuredAge(age);
+            } catch (NumberFormatException ex) {
+                ci.setInsuredAge(0); // 기본값 처리
+            }
+
+            ci.setInsuredSmoke((String) smokeCombo.getSelectedItem());
+            ci.setInsuredDrink((String) drinkCombo.getSelectedItem());
+
+            // driveCombo문자열에서 숫자만 추출
+            String driveStr = (String) driveCombo.getSelectedItem();
+            int driveStatus = 0;
+            if (driveStr != null) {
+                driveStatus = Integer.parseInt(driveStr.split(":")[0].trim());
+            }
+            ci.setInsuredDrive(driveStatus);
+            ci.setInsuredDisease(diseaseField.getText().trim());
+            
+            clearInputs();
+            contractMP.ShowCard(contractMP.cardNames[5]);
         });
-        
-        this.add(confirmButton);
     }
 
     /// FIXME: 입력값 초기화

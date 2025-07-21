@@ -22,10 +22,10 @@ public class HeaderBarOfEaryPage extends JPanel {
 		ButtonMaker.addButton(1000, 1, this);
 		
 		JButton btn2 = new JButton("로그인");
-		ButtonPainter.back_front(btn2, 20, Color.black, Color.white);
+		ButtonPainter.back_front(btn2, 20, Color.gray, Color.white);
 		
 		JButton btn3 = new JButton("회원가입");
-		ButtonPainter.back_front(btn3, 20, Color.black, Color.white);
+		ButtonPainter.back_front(btn3, 20, Color.gray, Color.white);
 
 		btn2.addActionListener(e -> {
 			parentPanel.showCard("로그인");
