@@ -1,16 +1,17 @@
 package employee.crm.gui;
 
-import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.Frame;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -18,65 +19,119 @@ import javax.swing.JTextField;
 public class EmailDialog extends JDialog {
 	
 	private JTextField tfSubject;
-	private JTextArea taBody;
+	private JTextArea taContent;
 	private JButton btnSend, btnCancel, btnAttach;
-	private File attatchmentFile;
+	private JLabel lbAttach;
+	private File attachedFile = null;
+	private List<String> recipients;
+	private JList<String> recipientList;
 	
-	public EmailDialog(Frame parent, List<String> recipientEmails) {
-		super(parent, "메일 보내기", true);
-		setLayout(new BorderLayout(10, 10));
-		setSize(700, 800);
-		setLocationRelativeTo(parent);
-		
-		JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
-		
-		tfSubject = new JTextField();
-        taBody = new JTextArea(10, 40);
-        JScrollPane scroll = new JScrollPane(taBody);
+	public EmailDialog(Frame parent, List<String> recipientEmails, List<String> recipientsNames) {
+        super(parent, "메일 발송", true);
+        this.recipients = recipientEmails;
 
-        inputPanel.add(new JLabel("제목:"), BorderLayout.NORTH);
-        inputPanel.add(tfSubject, BorderLayout.CENTER);
-        inputPanel.add(scroll, BorderLayout.SOUTH);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setLayout(null);
+        setSize(700, 700);
+        setLocationRelativeTo(parent);
+        
+        // ====== 받는 사람 목록 =======
+        JLabel lbRecipients = new JLabel("받는사람\n (" + recipientEmails.size() + "명) :");
+        lbRecipients.setBounds(30, 10, 120, 30);
+        lbRecipients.setFont(new Font (lbRecipients.getFont().getName(), Font.BOLD, 14));
+        add(lbRecipients);
+        
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for(int i = 0; i < recipientEmails.size(); i++) {
+        	String name = i < recipientsNames.size() ? recipientsNames.get(i) : "";
+        	listModel.addElement(name + " [" + recipientEmails.get(i) + "]");
+        }
+        
+        recipientList = new JList<>(listModel);
+        recipientList.setEnabled(false);
+        recipientList.setFont(new Font (recipientList.getFont().getName(), Font.BOLD, 14));
+        JScrollPane scrollRecipients = new JScrollPane(recipientList);
+        scrollRecipients.setBounds(150, 10, 500, 100);
+        add(scrollRecipients);
+        
 
+        // ===== 제목 =====
+        JLabel lbSubject = new JLabel("제 목:");
+        lbSubject.setBounds(30, 120, 100, 30);
+        lbSubject.setFont(new Font (lbSubject.getFont().getName(), Font.BOLD, 14));
+        add(lbSubject);
+
+        tfSubject = new JTextField();
+        tfSubject.setBounds(80, 120, 570, 30);
+        tfSubject.setFont(new Font(tfSubject.getFont().getName(), Font.PLAIN, 14));
+        add(tfSubject);
+
+        // ===== 내용 =====
+        JLabel lbContent = new JLabel("내 용:");
+        lbContent.setBounds(30, 160, 100, 30);
+        lbContent.setFont(new Font (lbContent.getFont().getName(), Font.BOLD, 14));
+        add(lbContent);
+
+        taContent = new JTextArea();
+        JScrollPane scrollContent = new JScrollPane(taContent);
+        scrollContent.setBounds(80, 160, 570, 400);
+        taContent.setFont(new Font(taContent.getFont().getName(), Font.PLAIN, 14));
+        add(scrollContent);
+
+        // ===== 첨부파일 =====
         btnAttach = new JButton("첨부파일 선택");
-        btnAttach.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                //attachmentFile = fileChooser.getSelectedFile();
-                //btnAttach.setText("첨부됨: " + attachmentFile.getName());
-            }
-        });
+        btnAttach.setBounds(80, 570, 160, 30);
+        add(btnAttach);
 
+        lbAttach = new JLabel("선택된 파일 없음");
+        lbAttach.setBounds(270, 570, 390, 30);
+        add(lbAttach);
+
+        btnAttach.addActionListener(e -> chooseFile());
+
+        // ===== 전송 버튼 =====
         btnSend = new JButton("전송");
+        btnSend.setBounds(390, 610, 120, 40);
+        add(btnSend);
+
+        btnSend.addActionListener(e -> sendEmail());
+
+        // ===== 취소 버튼 =====
         btnCancel = new JButton("취소");
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(btnAttach);
-        buttonPanel.add(btnSend);
-        buttonPanel.add(btnCancel);
-
-        add(inputPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        btnCancel.setBounds(530, 610, 120, 40);
+        add(btnCancel);
 
         btnCancel.addActionListener(e -> dispose());
-        btnSend.addActionListener(e -> {
-            String subject = tfSubject.getText().trim();
-            String body = taBody.getText().trim();
-            if (subject.isEmpty() || body.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "제목과 내용을 모두 입력하세요.");
-                return;
-            }
 
-            try {
-                for (String email : recipientEmails) {
-                    //MailSender.sendEmail(email, subject, body, attachmentFile);
-                }
-                JOptionPane.showMessageDialog(this, "메일이 전송되었습니다.");
-                dispose();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "메일 전송 실패: " + ex.getMessage());
-            }
-        });
+    }
+
+    private void chooseFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showOpenDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION) {
+        	attachedFile = fileChooser.getSelectedFile();
+            lbAttach.setText(attachedFile.getName());
+        }
+    }
+
+    private void sendEmail() {
+        String subject = tfSubject.getText().trim();
+        String content = taContent.getText().trim();
+
+        if (subject.isEmpty() || content.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "제목과 내용을 입력하세요.", "입력 오류", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 실제 이메일 발송 로직 연결
+        boolean success = EmailSender.sendEmail(recipients, subject, content, attachedFile);
+
+        if (success) {
+            JOptionPane.showMessageDialog(this, "메일이 성공적으로 전송되었습니다.");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "메일 전송에 실패했습니다.", "오류", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
+

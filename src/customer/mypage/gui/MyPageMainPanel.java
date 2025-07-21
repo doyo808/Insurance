@@ -115,6 +115,7 @@ public class MyPageMainPanel extends JPanel {
         add(contractLabel);
 
         contractTable = new JTable();
+        contractTable.setRowHeight(23);
         JScrollPane contractScroll = new JScrollPane(contractTable);
         contractScroll.setBounds(50, 280, 1340, 150);
         add(contractScroll);
@@ -133,6 +134,7 @@ public class MyPageMainPanel extends JPanel {
         btnExcel.addActionListener(e -> exportExcel(paymentTable));
 
         paymentTable = new JTable();
+        paymentTable.setRowHeight(23);
         JScrollPane paymentScroll = new JScrollPane(paymentTable);
         paymentScroll.setBounds(50, 480, 1340, 180);
         add(paymentScroll);

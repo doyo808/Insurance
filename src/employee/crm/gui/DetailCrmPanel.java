@@ -93,6 +93,7 @@ public class DetailCrmPanel extends JPanel {
         
         //보험 계약 정보 탭
         contractTable = new JTable();
+        contractTable.setRowHeight(23);
         JScrollPane contraJScroll = new JScrollPane(contractTable);
         JPanel contractPanel = new JPanel(new BorderLayout());
         contractPanel.add(contraJScroll, BorderLayout.CENTER);
@@ -100,6 +101,7 @@ public class DetailCrmPanel extends JPanel {
         
         // 납입 내역 탭
         paymentTable = new JTable();
+        paymentTable.setRowHeight(23);
         JScrollPane paymentScroll = new JScrollPane(paymentTable);
         JPanel paymentPanel = new JPanel(new BorderLayout());
         paymentPanel.add(paymentScroll, BorderLayout.CENTER);
