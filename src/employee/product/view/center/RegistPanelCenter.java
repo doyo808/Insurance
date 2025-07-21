@@ -26,7 +26,6 @@ public class RegistPanelCenter extends JPanel {
 
 	public File termAndConditions;
 	public File productManual;
-	public File imageFile;
 	public JLabel imagePreview;
 //	public ImageIcon image;
 	
@@ -100,5 +99,24 @@ public class RegistPanelCenter extends JPanel {
         panel.add(field, gbc);
         gbc.gridx = 2;
         panel.add(button, gbc);
+    }
+    
+    public void setInitText() {
+    	
+    	divisionField.setSelectedItem("전체");
+    	productNameField.setText("");
+    	joinAgeLowField.setValue(18);
+    	joinAgeHighField.setValue(65);
+    	joinLimitLowField.setText("");
+    	joinLimitHighField.setText("");
+    	termsNameField.setText("");
+    	manualNameField.setText("");
+    	basePremiumField.setText("");
+    	premiumConstantField.setText("");
+    	imagePreview.setText("이미지 미리보기");
+    	
+    	termAndConditions = null;
+    	productManual = null;
+    	imagePreview.setIcon(null);
     }
 }

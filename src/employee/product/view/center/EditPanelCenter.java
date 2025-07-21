@@ -33,15 +33,12 @@ public class EditPanelCenter extends JPanel {
 	public JTextField termsNameField;
 	public JTextField manualNameField;
 	public JTextField divisionField;
-//	public JComboBox<String> divisionField;
     public JSpinner joinAgeLowField ,joinAgeHighField;
     public JButton termsBrowseButton, manualBrowseButton, imageUploadButton;
 
 	public File termAndConditions;
 	public File productManual;
-	public File imageFile;
 	public JLabel imagePreview;
-//	public ImageIcon image;
 	public int productId;
 	ProductModel product;
 	
@@ -59,8 +56,6 @@ public class EditPanelCenter extends JPanel {
         // 각 입력 필드 정의
         productIdField = new JTextField(20);
         divisionField = new JTextField(20);
-//        divisionField = new JComboBox<>(new String[]{"전체", "건강(종합)", "유병자(간편)", "운전자", "주택화재", "자녀(어린이)", "실손", "재물", "펫/기타"});
-        //JComboBox는 getSelectedItem() 메서드로 안에 담긴 정보를 가져올수있음
         productNameField = new JTextField(20);
         joinAgeLowField = new JSpinner(new SpinnerNumberModel(18, 0, 120, 1));
         joinAgeHighField = new JSpinner(new SpinnerNumberModel(65, 0, 120, 1));
@@ -125,34 +120,5 @@ public class EditPanelCenter extends JPanel {
         panel.add(button, gbc);
     }
     
-    public void setText() {
-    	try (Connection conn = InsuranceTeamConnector.getConnection()){
-        	product = ProductDAO.getProduct(productId, conn);
-			System.out.println("DB상품정보 불러오기성공");
-			
-			productIdField.setText(String.valueOf(product.getProductId()));
-	        divisionField.setText(product.getDivision());
-	        productNameField.setText(product.getProductName());
-	        joinAgeLowField.setValue(product.getJoinAgeLow());
-	        joinAgeHighField.setValue(product.getJoinAgeHigh());
-	        joinLimitLowField.setText(String.valueOf(product.getJoinAgeLow()));
-	        joinLimitHighField.setText(String.valueOf(product.getJoinAgeHigh()));
-	        termsNameField.setText(product.getTermAndConditionsPath());
-	        manualNameField.setText(product.getProductManualPath());
-	        basePremiumField.setText(String.valueOf(product.getBasePremium()));
-	        premiumConstantField.setText(String.valueOf(product.getPremiumConstant()));
-	        
-			try {
-				InputStream input = product.getProduct_introduce().getBinaryStream();
-				BufferedImage image = ImageIO.read(input);
-				ImageIcon icon = new ImageIcon(image);
-				imagePreview.setIcon(icon);
-			} catch (SQLException | IOException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    
 }
