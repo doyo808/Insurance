@@ -17,17 +17,21 @@ import common.method.InsuranceTeamConnector;
 
 public class ShowPanelCenter extends JPanel{
 	public JTable table;
-	private DefaultTableModel model;
+	public DefaultTableModel tableModel;
 	public JScrollPane jpane;
 
 	List<ProductModel> products = null;
 	
 	public ShowPanelCenter() {
+		init();
+	}
+	
+	public void init() {
 		// 초기 테이블 세팅
 		String[] columnNames = {"\uBC88\uD638", "\uBD84\uB958", "\uC0C1\uD488\uBA85", "\uC57D\uAD00", "\uC0C1\uD488\uC124\uBA85\uC11C"};
-		model = new DefaultTableModel(columnNames, 0);
+		tableModel = new DefaultTableModel(columnNames, 0);
 		// 일단은 빈테이블
-		table = new JTable(model) {
+		table = new JTable(tableModel) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -45,16 +49,16 @@ public class ShowPanelCenter extends JPanel{
 		add(jpane);
 		
 		setTableData();
-		
 	}
 	
 	/***
+	 * ShowPanelCenter 클래스 전용메서드
 	 * DB에서 데이터를 받아서 테이블에 추가해주는 메서드
 	 */
 	public void setTableData() {
 		// 기존에 테이블에 데이터가있다면 내용제거
-		if (model.getRowCount() != 0) {
-			model.setRowCount(0);
+		if (tableModel.getRowCount() != 0) {
+			tableModel.setRowCount(0);
 		}
 		// db에서 데이터불러오고 테이블에 추가
 		try (Connection conn = InsuranceTeamConnector.getConnection()){
@@ -69,7 +73,7 @@ public class ShowPanelCenter extends JPanel{
 					product.getProductName(),
 					product.getTermAndConditionsPath(),
 					product.getProductManualPath()};
-			model.addRow(rows);
+			tableModel.addRow(rows);
 		}
 	}
 }

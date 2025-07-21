@@ -10,24 +10,33 @@ public class ProductManageMainPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private CardLayout layout = new CardLayout();
-	public ShowPanel card1 = new ShowPanel();
-	public EditPanel card2 = new EditPanel();
-	public RegistPanel card3 = new RegistPanel();
+	private CardLayout layout;
+	public ShowPanel card1;
+	public EditPanel card2;
+	public RegistPanel card3;
 	
 	public ProductManageMainPanel() {
+		layout = new CardLayout();
 		setLayout(layout);
-		JScrollPane jspane = new JScrollPane(card3);
-		jspane.getVerticalScrollBar().setUnitIncrement(20);
+		init();
+	}
+	
+	public void init() {
+		card1 = new ShowPanel();
+		card2 = new EditPanel();
+		card3 = new RegistPanel();
+		JScrollPane regScroll = new JScrollPane(card3);
+		JScrollPane editScroll = new JScrollPane(card2);
+		regScroll.getVerticalScrollBar().setUnitIncrement(20);
+		editScroll.getVerticalScrollBar().setUnitIncrement(20);
 		
 		add(card1, "show");
-		add(card2, "edit");
-		add(jspane, "regist");
+		add(editScroll, "edit");
+		add(regScroll, "regist");
 		setPreferredSize(new Dimension(1440,700));
 	}
-
+	
 	public void showCard(String name) {
-		
 		layout.show(this, name);
 	}
 }

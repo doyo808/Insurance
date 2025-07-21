@@ -4,10 +4,14 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -29,15 +33,12 @@ public class EditPanelCenter extends JPanel {
 	public JTextField termsNameField;
 	public JTextField manualNameField;
 	public JTextField divisionField;
-//	public JComboBox<String> divisionField;
     public JSpinner joinAgeLowField ,joinAgeHighField;
     public JButton termsBrowseButton, manualBrowseButton, imageUploadButton;
 
 	public File termAndConditions;
 	public File productManual;
-	public File imageFile;
 	public JLabel imagePreview;
-//	public ImageIcon image;
 	public int productId;
 	ProductModel product;
 	
@@ -50,19 +51,11 @@ public class EditPanelCenter extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
-        try (Connection conn = InsuranceTeamConnector.getConnection()){
-        	product = ProductDAO.getProduct(productId, conn);
-//			System.out.println("DB상품정보 불러오기성공");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        
 
         // 각 입력 필드 정의
         productIdField = new JTextField(20);
         divisionField = new JTextField(20);
-//        divisionField = new JComboBox<>(new String[]{"전체", "건강(종합)", "유병자(간편)", "운전자", "주택화재", "자녀(어린이)", "실손", "재물", "펫/기타"});
-        //JComboBox는 getSelectedItem() 메서드로 안에 담긴 정보를 가져올수있음
         productNameField = new JTextField(20);
         joinAgeLowField = new JSpinner(new SpinnerNumberModel(18, 0, 120, 1));
         joinAgeHighField = new JSpinner(new SpinnerNumberModel(65, 0, 120, 1));
@@ -90,23 +83,12 @@ public class EditPanelCenter extends JPanel {
         addRow(this, gbc, row++, "기본 지급 금액:", basePremiumField);
         addRow(this, gbc, row++, "보장 상수:", premiumConstantField);
         
-        productIdField.setText("");
+
         productIdField.setFocusable(false);
         productIdField.setEditable(false);
-        
-        divisionField.setText("");
+
         divisionField.setFocusable(false);
         divisionField.setEditable(false);
-        
-        productNameField.setText("");
-        joinAgeLowField.setValue(0);
-        joinAgeHighField.setValue(0);
-        joinLimitLowField.setText("");
-        joinLimitHighField.setText("");
-        termsNameField.setText("");
-        manualNameField.setText("");
-        basePremiumField.setText("");
-        premiumConstantField.setText("");
         
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -116,8 +98,6 @@ public class EditPanelCenter extends JPanel {
         gbc.gridy++;
         gbc.gridx = 1;
         add(imagePreview, gbc);
-        
-        imagePreview.setIcon(null);
 	}
 	
 	private void addRow(JPanel panel, GridBagConstraints gbc, int row, String label, Component field) {
@@ -139,4 +119,6 @@ public class EditPanelCenter extends JPanel {
         gbc.gridx = 2;
         panel.add(button, gbc);
     }
+    
+    
 }

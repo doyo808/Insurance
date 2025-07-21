@@ -52,7 +52,88 @@ public class ProductDAO {
         }
     }
     
+    /**
+     * 특정 상품 ID로 상품 정보를 수정합니다.
+     *
+     * @param model 상품테이블DTO(ProductModel)
+     * @param conn DB 연결 객체
+     * @return 삽입 쿼리 행수
+     * @throws SQLException
+     * @throws FileNotFoundException 
+     */
+    public static int updateProductById(ProductModel model, Connection conn) throws SQLException, FileNotFoundException {
+    	
+        String query = "UPDATE PRODUCTS SET "
+        		+ "product_name = ?, "
+        		+ "join_age_low = ?, "
+        		+ "join_age_high = ?,"
+        		+ "join_limit_low = ?,"
+        		+ "join_limit_high = ?,"
+        		+ "term_and_conditions_path = ?,"
+        		+ "product_manual_path = ?,"
+        		+ "base_premium = ?,"
+        		+ "premium_constant = ?,"
+        		+ "product_introduce = ?"
+        		+ " WHERE product_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        	pstmt.setString(1, model.getProductName());
+        	pstmt.setInt(2, model.getJoinAgeLow());
+        	pstmt.setInt(3, model.getJoinAgeHigh());
+        	pstmt.setInt(4, model.getJoinLimitLow());
+        	pstmt.setInt(5, model.getJoinLimitHigh());
+        	pstmt.setString(6, model.getTermAndConditionsPath());
+        	pstmt.setString(7, model.getProductManualPath());
+        	pstmt.setDouble(8, model.getBasePremium());
+        	pstmt.setDouble(9, model.getPremiumConstant());
+        	pstmt.setBlob(10, model.getProduct_introduce());
+            pstmt.setInt(11, model.getProductId());
+        	
+            return pstmt.executeUpdate();
+        }
+    }
     
+    /**
+     * 특정 상품 ID로 상품 정보를 수정합니다.
+     *
+     * @param model 상품테이블DTO(ProductModel)
+     * @param path DB에 올릴 로컬PC의 이미지경로
+     * @param conn DB 연결 객체
+     * @return 삽입 쿼리 행수
+     * @throws SQLException
+     * @throws FileNotFoundException 
+     */
+    public static int updateProductById(ProductModel model, String path, Connection conn) throws SQLException, FileNotFoundException {
+    	
+        String query = "UPDATE PRODUCTS SET "
+        		+ "product_name = ?, "
+        		+ "join_age_low = ?, "
+        		+ "join_age_high = ?,"
+        		+ "join_limit_low = ?,"
+        		+ "join_limit_high = ?,"
+        		+ "term_and_conditions_path = ?,"
+        		+ "product_manual_path = ?,"
+        		+ "base_premium = ?,"
+        		+ "premium_constant = ?,"
+        		+ "product_introduce = ?"
+        		+ " WHERE product_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        	pstmt.setString(1, model.getProductName());
+        	pstmt.setInt(2, model.getJoinAgeLow());
+        	pstmt.setInt(3, model.getJoinAgeHigh());
+        	pstmt.setInt(4, model.getJoinLimitLow());
+        	pstmt.setInt(5, model.getJoinLimitHigh());
+        	pstmt.setString(6, model.getTermAndConditionsPath());
+        	pstmt.setString(7, model.getProductManualPath());
+        	pstmt.setDouble(8, model.getBasePremium());
+        	pstmt.setDouble(9, model.getPremiumConstant());
+        	pstmt.setBlob(10, new FileInputStream(path));
+        	pstmt.setInt(11, model.getProductId());
+        	
+        	return pstmt.executeUpdate();
+        }
+    }
 
     /**
      * 모든 상품 목록을 조회합니다.
