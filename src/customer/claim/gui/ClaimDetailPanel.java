@@ -36,18 +36,16 @@ public class ClaimDetailPanel extends JPanel {
 	private JTable employeeInfoTable;
 	private JTable processStatusTable;
 	
-	private CustomerModel cm;
-
-	public ClaimDetailPanel(JPanel parentCardPanel) {
+	DefaultTableModel claimModel;
+	DefaultTableModel empModel;
+	DefaultTableModel processModel;
+	
+	ClaimsModel claimDetail;
+	
+	public ClaimDetailPanel(JPanel parentCardPanel, int claim_id) {
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
-		
-		cm = Session.getCustomer();
-		if (cm == null) {
-			JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
-			return;
-		}
 
 		TitlePanel title = new TitlePanel("보험금 청구 상세내역");
 		add(title, BorderLayout.NORTH);
@@ -60,9 +58,7 @@ public class ClaimDetailPanel extends JPanel {
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-		centerPanel.setPreferredSize(new Dimension(1200, 700));
-
-		centerPanel.add(Box.createVerticalStrut(50));
+		
 		claimInfoTable = createTableSection(centerPanel, "보험금 청구내역",
 				new String[] { "접수번호", "사고발병일자", "보험상품명", "재해자", "청구유형" });
 		claimInfoTable.setRowHeight(30);
@@ -75,21 +71,25 @@ public class ClaimDetailPanel extends JPanel {
 		centerPanel.add(Box.createVerticalStrut(50));
 
 		processStatusTable = createTableSection(centerPanel, "처리 현황",
-				new String[] { "접수날짜", "서류심사날짜", "사고조사날짜", "보험금지급심사날짜", "결정보험금", "총 지급금액" });
+				new String[] { "접수날짜", "서류심사날짜", "사고조사날짜", "보험금 지급심사날짜", "보험금 지급날짜", "총 지급금액" });
 		processStatusTable.setRowHeight(30);
 		
-		add(centerPanel, BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(centerPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		add(scrollPane, BorderLayout.CENTER);
+		
+//		add(centerPanel, BorderLayout.CENTER);
 		add(bottomBP, BorderLayout.SOUTH);
 		
-		getEmployeeInfoTable();
-		getEmployeeInfoTable();
-		getProcessStatusTable();
+		getClaimDetailTable(claim_id); // 여기에 어떻게 claim_id를 가지고 오지...
 	}
 
 	// 수정 불가능한 테이블 생성 메서드
 	private JTable createTableSection(JPanel parent, String title, String[] columnNames) {
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createTitledBorder(title));
+		panel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder(title), 
+				BorderFactory.createEmptyBorder(10, 10, 10, 10)
+		));
 
 		DefaultTableModel model = new DefaultTableModel(new Object[1][columnNames.length], columnNames) {
 			@Override
@@ -99,53 +99,63 @@ public class ClaimDetailPanel extends JPanel {
 		};
 
 		JTable table = new JTable(model);
-		table.setPreferredScrollableViewportSize(new Dimension(1100, 35));
-		table.setFillsViewportHeight(true);
+//		table.setFillsViewportHeight(true);
+		table.setRowHeight(30);
 
-		JScrollPane scrollPane = new JScrollPane(table); // 컬럼명 보이게 하려면 반드시 JScrollPane 사용
-		panel.add(scrollPane, BorderLayout.CENTER);
-
-		panel.setMaximumSize(new Dimension(1200, 80));
+		JScrollPane tableScroll = new JScrollPane(table);
+		 tableScroll.setPreferredSize(new Dimension(1200, 120)); 
+		panel.add(tableScroll, BorderLayout.CENTER);
+		
+	    
+	    panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+	    panel.setAlignmentX(CENTER_ALIGNMENT); // 박스 레이아웃 정렬
+	    
+//		panel.add(table);
 		parent.add(panel);
 
 		return table;
 	}
 
 	// DAO를 통해 외부에서 접근할 수 있도록 getter 제공
-	private void getClaimDetailTable() {
+	public void getClaimDetailTable(int claim_id) {
 		try (Connection conn = InsuranceTeamConnector.getConnection()) {
+			CustomerModel cm = Session.getCustomer();
+			if (cm == null) {
+				JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
+				return;
+			}
+			claimDetail = ClaimDAO.getClaimDetail(cm.getLogin_id(), claim_id, conn);
 			
-			ClaimsModel claimDetail = ClaimDAO.getClaimDetail(cm.getLogin_id(), conn);
-			if (claimDetail != null) {
-				DefaultTableModel model = (DefaultTableModel) claimInfoTable.getModel();
-				model.setValueAt(claimDetail.getClaim_id(), 0, 0);
-				model.setValueAt(claimDetail.getAccident_date(), 0, 1);
-				model.setValueAt(claimDetail.getProduct_name(), 0, 2);
-				model.setValueAt(claimDetail.getInsured_name(), 0, 3);
-				model.setValueAt(claimDetail.getClaim_category(), 0, 4);
+			if (claimDetail == null) {
+				JOptionPane.showMessageDialog(this, "해당 청구 내역이 존재하지 않습니다.");
+			 	return;
 			}
+				claimModel = (DefaultTableModel) claimInfoTable.getModel();
+				claimModel.setValueAt(claimDetail.getClaim_id(), 0, 0);
+				claimModel.setValueAt(claimDetail.getAccident_date(), 0, 1);
+				claimModel.setValueAt(claimDetail.getProduct_name(), 0, 2);
+				claimModel.setValueAt(claimDetail.getInsured_name(), 0, 3);
+				claimModel.setValueAt(claimDetail.getClaim_category(), 0, 4);
+				
+				empModel = (DefaultTableModel) employeeInfoTable.getModel();
+				empModel.setValueAt(claimDetail.getInsured_name(), 0, 0); // 재해자 이름
+		        empModel.setValueAt(claimDetail.getDepartment_name(), 0, 1);
+		        empModel.setValueAt(claimDetail.getEmployee_name(), 0, 2);
+		        empModel.setValueAt(claimDetail.getEmployee_phone_number(), 0, 3);
+		        
+		        processModel = (DefaultTableModel) processStatusTable.getModel();
+		        processModel.setValueAt(claimDetail.getClaim_date(), 0, 0);
+		        processModel.setValueAt(claimDetail.getDocument_review_date(), 0, 1);
+		        processModel.setValueAt(claimDetail.getAccident_investigation_date(), 0, 2);
+		        processModel.setValueAt(claimDetail.getPayment_review_date(), 0, 3);
+		        processModel.setValueAt(claimDetail.getCompletion_date(), 0, 4);
+		        processModel.setValueAt(claimDetail.getTotal_paid_amount(), 0, 5); 
+		        
+		        System.out.println("[DEBUG] 로그인 ID: " + cm.getLogin_id());
+		        
 		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "DB 오류: " + ex.getMessage());
+			JOptionPane.showMessageDialog(this,  "청구 정보 로딩 중 오류 발생: " + ex.getMessage());
 			ex.printStackTrace();
 		}
-	}
-
-	private void getEmployeeInfoTable() {
-		try (Connection conn = InsuranceTeamConnector.getConnection()) {
-			ClaimsModel employeeInfo = ClaimDAO.getEmployeeInfo(cm.getLogin_id(), conn);
-			if (employeeInfo != null) {
-				DefaultTableModel model = (DefaultTableModel) employeeInfoTable.getModel();
-				model.setValueAt(employeeInfo.getInsured_name(), 0, 0);
-				model.setValueAt(employeeInfo.getDepartment_name(), 0, 1);
-				model.setValueAt(employeeInfo.getEmployee_name(), 0, 2);
-				model.setValueAt(employeeInfo.getEmployee_phone_number(), 0, 3);
-			}
-		} catch (Exception ex) {
-			JOptionPane.showMessageDialog(this, "DB 오류: " + ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-
-	public void getProcessStatusTable() {
 	}
 }

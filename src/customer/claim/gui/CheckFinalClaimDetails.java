@@ -17,16 +17,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.database.model.NewClaimDataModel;
+import common.method.ButtonPainter;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class CheckFinalClaimDetails extends JPanel {
 
+	private CustomerMainPanel cmp;
 	private JPanel parentCardPanel;
 	private List<JLabel> valueLabels = new ArrayList<>();
 	
-	public CheckFinalClaimDetails(JPanel parentCardPanel, NewClaimDataModel claimData) {
+	public CheckFinalClaimDetails(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
+		this.cmp = cmp;
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout)parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
@@ -77,8 +80,7 @@ public class CheckFinalClaimDetails extends JPanel {
 
 		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 		
-		
-		
+	
 
 	      bottomBP.getPreviousButton().addActionListener((e) -> {
 	         cl.show(parentCardPanel, "DocumentRegistrationPanel");
@@ -91,15 +93,19 @@ public class CheckFinalClaimDetails extends JPanel {
 	    	  
 	    	  JOptionPane.showMessageDialog(this, "보험금 청구가 완료되었습니다.", "안내", JOptionPane.INFORMATION_MESSAGE);
 	    	  
-	    	  CustomerMainPanel cmp = new CustomerMainPanel();
-	    	  ClaimMainPanel claimMainPanel = new ClaimMainPanel(cmp);
+//	    	  CustomerMainPanel cmp = new CustomerMainPanel();
+//	    	  ClaimMainPanel claimMainPanel = new ClaimMainPanel(cmp);
 	    	  
 //	    	  LoggedInCenterPanel locp = new LoggedInCenterPanel();
 	    	  
 	    	  
 	    	  parentCardPanel.removeAll(); // 기존 패널들 제거
-	    	  parentCardPanel.add(claimMainPanel, "MainPanel");
-	    	  cl.show(parentCardPanel, "MainPanel");
+//	    	  parentCardPanel.add(claimMainPanel, "MainPanel");
+	    	  
+	    	  cmp.showCard("accounts");
+	    	  cmp.getAMP().showCard("회원_메인");
+	    	  
+//	    	  cl.show(parentCardPanel, "MainPanel");
 	    	  
 	    	  parentCardPanel.revalidate();
 	    	  parentCardPanel.repaint();

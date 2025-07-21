@@ -19,6 +19,7 @@ public class ClaimsModel {
 			private String claim_category;
 			private String claim_description;
 			private String diagnosis_cd;
+			
 			private String bank_name;
 			private String bank_account;
 			private String beneficiary_name;
@@ -30,33 +31,57 @@ public class ClaimsModel {
 			private String department_name;
 			private String employee_phone_number;
 			
+			private Date document_review_date;
+			private Date accident_investigation_date;
+			private Date payment_review_date;
 			
 			// 생성자
+//			public ClaimsModel(ResultSet rs) throws SQLException {
+//				this.claim_id = rs.getInt("claim_id");
+//				this.contract_id = rs.getInt("contract_id");
+//				this.claim_date = rs.getDate("claim_date");
+//				this.accident_date = rs.getDate("accident_date");
+//				this.compensation_type = rs.getString("compensation_type"); // rs.getCharacter이 없어서 위에서 String으로 
+//				this.claim_type_cd = rs.getString("claim_type_cd");
+//				this.employee_id = rs.getInt("employee_id");
+//				this.claim_status = rs.getString("claim_status");
+//				this.completion_date = rs.getDate("completion_date");
+//				this.total_paid_amount = rs.getInt("total_paid_amount");
+//				this.claim_category = rs.getString("claim_category");
+//				this.claim_description = rs.getString("claim_description");
+//				this.diagnosis_cd = rs.getString("diagnosis_cd");
+//				this.bank_name = rs.getString("bank_name");
+//				this.bank_account = rs.getString("bank_account");
+//				this.beneficiary_name = rs.getString("beneficiary_name");
+//				
+//				this.diagnosis_name = rs.getString("diagnosis_name");
+//			    this.insured_name = rs.getString("insured_name");
+//			    this.product_name = rs.getString("product_name");
+//			    this.employee_name = rs.getString("employee_name");
+//			    this.department_name = rs.getString("department_name");
+//			    this.employee_phone_number = rs.getString("employee_phone_number"); // 이게 맞나?
+//			    
+//			    this.document_review_date = rs.getDate("document_review_date");
+//			    this.accident_investigation_date = rs.getDate("accident_investigation_date");
+//			    this.payment_review_date = rs.getDate("payment_review_date");
+//			}
+			
 			public ClaimsModel(ResultSet rs) throws SQLException {
-				this.claim_id = rs.getInt("claim_id");
-				this.contract_id = rs.getInt("contract_id");
-				this.claim_date = rs.getDate("claim_date");
-				this.accident_date = rs.getDate("accident_date");
-				this.compensation_type = rs.getString("compensation_type"); // rs.getCharacter이 없어서 위에서 String으로 
-				this.claim_type_cd = rs.getString("claim_type_cd");
-				this.employee_id = rs.getInt("employee_id");
-				this.claim_status = rs.getString("claim_status");
-				this.completion_date = rs.getDate("completion_date");
-				this.total_paid_amount = rs.getInt("total_paid_amount");
-				this.claim_category = rs.getString("claim_category");
-				this.claim_description = rs.getString("claim_description");
-				this.diagnosis_cd = rs.getString("diagnosis_cd");
-				this.bank_name = rs.getString("bank_name");
-				this.bank_account = rs.getString("bank_account");
-				this.beneficiary_name = rs.getString("beneficiary_name");
-				
-				this.diagnosis_name = rs.getString("diagnosis_name");
-			    this.insured_name = rs.getString("insured_name");
-			    this.product_name = rs.getString("product_name");
-			    this.employee_name = rs.getString("employee_name");
-			    this.department_name = rs.getString("department_name");
-			    this.employee_phone_number = rs.getString("employee_phone_number"); // 이게 맞나?
-			}
+		        this.claim_id = rs.getInt("claim_id");
+		        this.accident_date = rs.getDate("accident_date");
+		        this.product_name = rs.getString("product_name");
+		        this.insured_name = rs.getString("insured_name");
+		        this.claim_category = rs.getString("claim_category");
+		        this.department_name = rs.getString("department_name");
+		        this.employee_name = rs.getString("employee_name");
+		        this.employee_phone_number = rs.getString("phone_number");
+		        this.claim_date = rs.getDate("claim_date");
+		        this.document_review_date = rs.getDate("document_review_date");
+		        this.accident_investigation_date = rs.getDate("accident_investigation_date");
+		        this.payment_review_date = rs.getDate("payment_review_date");
+		        this.completion_date = rs.getDate("completion_date");
+		        this.total_paid_amount = rs.getInt("total_paid_amount");
+		    }
 			
 			// 보험금 청구내역조회 페이지
 			public ClaimsModel(int claim_id, Date claim_date, String diagnosis_name, String insured_name,
@@ -68,23 +93,6 @@ public class ClaimsModel {
 			    this.product_name = product_name;
 			    this.employee_name = employee_name;
 			    this.claim_status = claim_status;
-			}
-			
-			// 상세페이지에서 첫번째 (청구내역)테이블에 사용
-			public ClaimsModel(int claim_id, Date accident_date, String product_name, String insured_name, String claim_category) {
-			    this.claim_id = claim_id;
-			    this.accident_date = accident_date;
-			    this.product_name = product_name;
-			    this.insured_name = insured_name;
-			    this.claim_category = claim_category;
-			}
-
-			// 상세페이지에서 두번째 (보상담당자)테이블에 사용
-			public ClaimsModel(String insured_name, String department_name, String employee_name, String employee_phone_number) {
-				this.insured_name = insured_name;
-				this.department_name = department_name;
-				this.employee_name = employee_name;
-				this.employee_phone_number = employee_phone_number;
 			}
 
 			public Integer getClaim_id() {
@@ -261,6 +269,32 @@ public class ClaimsModel {
 
 			public void setEmployee_phone_number(String employee_phone_number) {
 				this.employee_phone_number = employee_phone_number;
+			}
+
+			
+			
+			public Date getDocument_review_date() {
+				return document_review_date;
+			}
+
+			public void setDocument_review_date(Date document_review_date) {
+				this.document_review_date = document_review_date;
+			}
+
+			public Date getAccident_investigation_date() {
+				return accident_investigation_date;
+			}
+
+			public void setAccident_investigation_date(Date accident_investigation_date) {
+				this.accident_investigation_date = accident_investigation_date;
+			}
+
+			public Date getPayment_review_date() {
+				return payment_review_date;
+			}
+
+			public void setPayment_review_date(Date payment_review_date) {
+				this.payment_review_date = payment_review_date;
 			}
 
 			@Override

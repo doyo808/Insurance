@@ -3,15 +3,15 @@ package customer.claim.gui.claimsRelatedInfo;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.border.TitledBorder;
 
 import customer.claim.gui.component.BottomButtonPanel;
@@ -33,11 +33,13 @@ public class RequiredDocumentsInfo extends JPanel {
 
 		// 가운데 패널에 스크롤 추가
 		JPanel centerPanel = createRequiredDocsPanel();
+		
 		JScrollPane scrollPane = new JScrollPane(centerPanel);
-		scrollPane.setBorder(BorderFactory.createEmptyBorder());
-		scrollPane.getVerticalScrollBar().setUnitIncrement(15);
-		add(scrollPane, BorderLayout.CENTER);
-
+//		scrollPane.setPreferredSize(new Dimension(900, 600));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 150, 20, 150)); // 바깥 여백
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15); // 스크롤 속도 조절
+        add(scrollPane, BorderLayout.CENTER);
+		
 		BottomButtonPanel bottomBP = new BottomButtonPanel(this);
 		bottomBP.getNextButton().setVisible(false);
 
@@ -49,8 +51,9 @@ public class RequiredDocumentsInfo extends JPanel {
 
 	// 상황별 필요서류 패널 구성
 	private JPanel createRequiredDocsPanel() {
-		JPanel panel = new JPanel(new GridLayout(0, 1, 20, 10)); // 0이면 자동으로 행 개수 조절
-		panel.setBorder(BorderFactory.createEmptyBorder(20, 150, 20, 150));
+		JPanel panel = new JPanel(new GridLayout(3, 2));
+//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // ✅ 내부 내용은 세로 정렬
+        panel.setOpaque(false); // 배경 투명 (옵션)
 
 		panel.add(createDocBox(" <입원 치료> ", new String[]{
 			"① 보험금 청구서",

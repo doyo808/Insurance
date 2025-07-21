@@ -30,12 +30,21 @@ import customer.claim.gui.component.TitlePanel;
 public class ClaimTargetPanel extends JPanel {
 
 	private JPanel parentCardPanel;
+	
+	private JPanel centerPanel;
+	private JPanel radioButtonPanel;
+	
+	private JRadioButton customerChButton;
+	private JRadioButton insuredChButton;
 	private JTextField nameField;
 	private JTextField phoneNumField;
 	private JTextField perNumFieldF;
 	private JTextField perNumFieldB;
 	private JPanel insuredInfoPanel;
 	private ButtonGroup chButtonGroup;
+	
+	private JPanel perNumPanel;
+	
 
 	public ClaimTargetPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
 		this.parentCardPanel = parentCardPanel;
@@ -45,18 +54,16 @@ public class ClaimTargetPanel extends JPanel {
 		TitlePanel title = new TitlePanel("청구대상 선택");
 		add(title, BorderLayout.NORTH);
 
-		// 중앙 패널: 라디오 버튼과 입력창
-		JPanel centerPanel = new JPanel(new BorderLayout());
+		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
 		add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setVisible(true);
 
-		// 라디오 버튼
-		JPanel radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-		JRadioButton customerChButton = new JRadioButton(" 계약자(본인)");
-		JRadioButton insuredChButton = new JRadioButton(" 다른사람");
+		radioButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+		customerChButton = new JRadioButton(" 계약자(본인)");
+		insuredChButton = new JRadioButton(" 다른사람");
 
-		ButtonGroup chButtonGroup = new ButtonGroup();
+		chButtonGroup = new ButtonGroup();
 		chButtonGroup.add(customerChButton);
 		chButtonGroup.add(insuredChButton);
 
@@ -65,7 +72,7 @@ public class ClaimTargetPanel extends JPanel {
 		centerPanel.add(radioButtonPanel, BorderLayout.NORTH);
 
 		// 입력 폼 (다른 사람일 경우)
-		JPanel insuredInfoPanel = new JPanel(new GridBagLayout());
+		insuredInfoPanel = new JPanel(new GridBagLayout());
 		insuredInfoPanel.setBorder(BorderFactory.createTitledBorder("다른 사람 정보 입력"));
 		insuredInfoPanel.setPreferredSize(new Dimension(400, 200));
 		insuredInfoPanel.setVisible(false);
@@ -77,7 +84,7 @@ public class ClaimTargetPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 
 		JLabel nameLabel = new JLabel("이름:");
-		JTextField nameField = new JTextField(10);
+		nameField = new JTextField(10);
 
 //		nameField.addFocusListener(new FocusAdapter() {
 //			@Override
@@ -92,8 +99,8 @@ public class ClaimTargetPanel extends JPanel {
 
 		JLabel perNumLabel = new JLabel("주민등록번호:");
 		JLabel dashLabel = new JLabel("-");
-		JTextField perNumFieldF = new JTextField(6);
-		JTextField perNumFieldB = new JTextField(7);
+		perNumFieldF = new JTextField(6);
+		perNumFieldB = new JTextField(7);
 
 //		perNumField.addFocusListener(new FocusAdapter() {
 //			@Override
@@ -107,7 +114,7 @@ public class ClaimTargetPanel extends JPanel {
 //		});
 
 		JLabel phoneNumLabel = new JLabel("휴대폰 번호:");
-		JTextField phoneNumField = new JTextField(10);
+		phoneNumField = new JTextField(10);
 
 //		phoneNumField.addFocusListener(new FocusAdapter() {
 //			@Override
@@ -132,7 +139,7 @@ public class ClaimTargetPanel extends JPanel {
 		gbc.gridx = 1;
 		insuredInfoPanel.add(phoneNumField, gbc);
 
-		JPanel perNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); // 간격 좁게
+		perNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0)); // 간격 좁게
 		perNumPanel.add(perNumFieldF);
 		perNumPanel.add(dashLabel);
 		perNumPanel.add(perNumFieldB);

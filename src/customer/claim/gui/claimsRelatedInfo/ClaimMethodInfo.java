@@ -23,6 +23,7 @@ public class ClaimMethodInfo extends JPanel {
         CardLayout cl = (CardLayout) parentCardPanel.getLayout();
 
         setLayout(new BorderLayout());
+        setMaximumSize(new Dimension(1200, 600));
         setVisible(true);
 
         TitlePanel title = new TitlePanel("보험금 청구 방법");
@@ -53,9 +54,9 @@ public class ClaimMethodInfo extends JPanel {
         // 스크롤 패널에 텍스트 영역 추가
         JScrollPane scrollPane = new JScrollPane(explanationText);
         scrollPane.setPreferredSize(new Dimension(500, 180));  // 크기 조정 가능
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(50, 200, 50, 200));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
         
-        add(scrollPane, BorderLayout.CENTER);
+        add(explanationText, BorderLayout.CENTER);
 
         BottomButtonPanel bottomBP = new BottomButtonPanel(this);
         bottomBP.getNextButton().setVisible(false);

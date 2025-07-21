@@ -27,6 +27,7 @@ import common.database.model.NewClaimDataModel;
 import customer.claim.gui.claimsRelatedInfo.RequiredDocumentsInfo;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
+import insuranceMain.customerPanel.CustomerMainPanel;
 
 public class DocumentRegistrationPanel extends JPanel {
 	private JPanel parentCardPanel;
@@ -34,7 +35,7 @@ public class DocumentRegistrationPanel extends JPanel {
 	private JPanel fileListP; // 파일 이름 목록을 담을 패널
 	private List<File> selectedFiles = new ArrayList<>();
 
-	public DocumentRegistrationPanel(JPanel parentCardPanel, String previousPanelName, NewClaimDataModel claimData) {
+	public DocumentRegistrationPanel(JPanel parentCardPanel, String previousPanelName, NewClaimDataModel claimData, CustomerMainPanel cmp) {
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
 		setLayout(new BorderLayout());
@@ -168,7 +169,7 @@ public class DocumentRegistrationPanel extends JPanel {
 			            break;
 			        }
 			    }
-			    CheckFinalClaimDetails newPanel = new CheckFinalClaimDetails(parentCardPanel, claimData);
+			    CheckFinalClaimDetails newPanel = new CheckFinalClaimDetails(parentCardPanel, claimData, cmp);
 			    parentCardPanel.add(newPanel, "CheckFinalClaimDetails");
 
 			    cl.show(parentCardPanel, "CheckFinalClaimDetails");

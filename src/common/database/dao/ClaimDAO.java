@@ -115,60 +115,67 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 		// 보험금 상세내역 조회 패널에 값 불러오기 (한 페이지당 하나의 청구 기록)
 //		// 보험금 청구내역(1)
 //		// 접수번호(청구번호)/사고발병일자/상품명/재해자=피보험자 or 재물/청구유형
-		public static ClaimsModel getClaimDetail(String login_id, Connection conn) throws SQLException {
+		public static ClaimsModel getClaimDetail(String login_id, int claim_id, Connection conn) throws SQLException {
 			ClaimsModel claimDetail = null;
-		    String query = "";
+		    String query = "SELECT \r\n"
+		    		+ "cl.claim_id, cl.accident_date, pr.product_name, i.insured_name, cl.claim_category, \r\n"
+		    		+ "d.department_name, e.employee_name, e.phone_number,\r\n"
+		    		+ "cl.claim_date,\r\n"
+		    		+ "MAX(CASE WHEN cpl.claim_process_log_name = '서류심사' THEN cpl.process_date END) AS document_review_date,\r\n"
+		    		+ "MAX(CASE WHEN cpl.claim_process_log_name = '사고조사' THEN cpl.process_date END) AS accident_investigation_date,\r\n"
+		    		+ "MAX(CASE WHEN cpl.claim_process_log_name = '보험금 지급심사' THEN cpl.process_date END) AS payment_review_date,\r\n"
+		    		+ "cl.completion_date, cl.total_paid_amount\r\n"
+		    		+ "FROM claims cl \r\n"
+		    		+ "INNER JOIN contracts ct ON cl.contract_id = ct.contract_id \r\n"
+		    		+ "INNER JOIN customers cu ON ct.customer_id = cu.customer_id\r\n"
+		    		+ "INNER JOIN products pr ON pr.product_id = ct.product_id \r\n"
+		    		+ "INNER JOIN insureds i ON ct.insured_id = i.insured_id \r\n"
+		    		+ "INNER JOIN employees e ON cl.employee_id = e.employee_id\r\n"
+		    		+ "INNER JOIN departments d ON e.department_id = d.department_id\r\n"
+		    		+ "LEFT JOIN claim_process_logs cpl ON cl.claim_id = cpl.claim_id\r\n"
+		    		+ "WHERE cu.login_id = ? AND cl.claim_id = ? "
+		    		+ "GROUP BY \r\n"
+		    		+ "cl.claim_id,\r\n"
+		    		+ "cl.accident_date,\r\n"
+		    		+ "pr.product_name,\r\n"
+		    		+ "i.insured_name,\r\n"
+		    		+ "cl.claim_category,\r\n"
+		    		+ "d.department_name,\r\n"
+		    		+ "e.employee_name,\r\n"
+		    		+ "e.phone_number,\r\n"
+		    		+ "cl.claim_date,\r\n"
+		    		+ "cl.completion_date,\r\n"
+		    		+ "cl.total_paid_amount";
 		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 		        pstmt.setString(1, login_id);
+		        pstmt.setInt(2, claim_id);
 		        
 		        try (ResultSet rs = pstmt.executeQuery()) {
 		            if (rs.next()) {
-		                ClaimsModel claim = new ClaimsModel(
-		                    rs.getInt("claim_id"),
-		                    rs.getDate("accident_date"),
-		                    rs.getString("product_name"),
-		                    rs.getString("insured_name"),
-		                    rs.getString("claim_category")
-		                );
+		                ClaimsModel claim = new ClaimsModel(rs);
+		                claim.setClaim_id(rs.getInt("claim_id"));
+		                claim.setAccident_date(rs.getDate("accident_date"));
+		                claim.setProduct_name(rs.getString("product_name"));
+		                claim.setInsured_name(rs.getString("insured_name"));
+		                claim.setClaim_category(rs.getString("claim_category"));
+		                claim.setDepartment_name(rs.getString("department_name"));
+		                claim.setEmployee_name(rs.getString("employee_name"));
+		                claim.setEmployee_phone_number(rs.getString("phone_number"));
+		                claim.setClaim_date(rs.getDate("claim_date"));
+		                claim.setDocument_review_date(rs.getDate("document_review_date"));
+		                claim.setAccident_investigation_date(rs.getDate("accident_investigation_date"));
+		                claim.setPayment_review_date(rs.getDate("payment_review_date"));
+		                claim.setCompletion_date(rs.getDate("completion_date"));
+		                claim.setTotal_paid_amount(rs.getInt("total_paid_amount"));
 		                claimDetail = claim;
 		            }
 		        }
 		    }
+		    
 			return claimDetail;
 		}
 		
 		
-		// 보험금 청구내역(2)
-		// 보상담당자 (쿼리문은 작성완료)
-		// 재해자=피보험자 or 재물 /(직원)소속(부서)/담당자명/ 담당자 전화번호
-		public static ClaimsModel getEmployeeInfo(String login_id, Connection conn) throws SQLException {
-			ClaimsModel staffInfo = null;
-			String query = "SELECT i.insured_name, d.department_name, e.employee_name, e.phone_number "
-		    		+ "FROM claims cl "
-		    		+ "INNER JOIN contracts ct ON cl.contract_id = ct.contract_id "
-		    		+ "INNER JOIN customers cu ON ct.customer_id = cu.customer_id "
-		    		+ "INNER JOIN insureds i ON ct.insured_id = i.insured_id "
-		    		+ "INNER JOIN employees e ON cl.employee_id = e.employee_id "
-		    		+ "INNER JOIN departments d ON e.department_id = d.department_id "
-		    		+ "WHERE cu.login_id = ? ";
-		    
-		    try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-		        pstmt.setString(1, login_id);
-
-		        try (ResultSet rs = pstmt.executeQuery()) {
-		            if (rs.next()) {
-		                ClaimsModel claimDetail = new ClaimsModel(
-		                    rs.getString("insured_name"),
-		                    rs.getString("department_name"),
-		                    rs.getString("employee_name"),
-		                    rs.getString("e.phone_number")
-		                );
-		                staffInfo = claimDetail;
-		            }
-		        }
-		    }
-			return staffInfo;
-		}
 		
 		// 처리현황
 		// 접수날짜/서류심사날짜/사고조사날짜/보험금지급심사 날짜/결정보험금/총지급금액
@@ -191,7 +198,7 @@ public class ClaimDAO { // 더미데이터로 테스트 해봐야함
 //		    }
 //		}
 		
-		
+		// 고객이 입력한 내용을 토대로 새로운 청구 내역을 추가하는 메서드 
 		
 //		// 새 고객을 추가하는 메서드 (CREATE) * 주민등록번호, 로그인 아이디 유니크 주의해주세요
 //		public static int addCustomer(CustomerModel c, Connection conn) {

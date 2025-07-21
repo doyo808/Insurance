@@ -36,6 +36,7 @@ public class ClaimHistoryPanel extends JPanel {
 	private DefaultTableModel model;
 	private JPanel parentCardPanel;
 	private List<ClaimsModel> currentClaims = new ArrayList<>();
+	private int claim_id;
 
 	// 버튼 누르면 상세 페이지로 가는 기능 추가하기
 	public ClaimHistoryPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
@@ -44,12 +45,12 @@ public class ClaimHistoryPanel extends JPanel {
 		CardLayout cl = (CardLayout) parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
 
-		this.addComponentListener(new java.awt.event.ComponentAdapter() {
-			@Override
-			public void componentShown(java.awt.event.ComponentEvent e) {
-				clearTable();
-			}
-		});
+//		this.addComponentListener(new java.awt.event.ComponentAdapter() {
+//			@Override
+//			public void componentShown(java.awt.event.ComponentEvent e) {
+//				clearTable();
+//			}
+//		});
 
 		// === 상단 패널 (조회 조건) ===
 		JPanel topPanel = new JPanel(new FlowLayout());
@@ -94,7 +95,7 @@ public class ClaimHistoryPanel extends JPanel {
 
 		model = new DefaultTableModel(columnNames, 0) {
 			public boolean isCellEditable(int row, int column) {
-				return false;
+				return column == 6;
 			}
 		};
 
@@ -115,7 +116,6 @@ public class ClaimHistoryPanel extends JPanel {
 		table.getColumn("처리상태").setCellRenderer(new ButtonRenderer());
 		table.getColumn("처리상태").setCellEditor(new ButtonEditor(new JCheckBox()));
 
-		add(new JScrollPane(table), BorderLayout.CENTER);
 		table.revalidate();
 		table.repaint();
 
@@ -151,11 +151,11 @@ public class ClaimHistoryPanel extends JPanel {
 			java.sql.Date startDate = java.sql.Date.valueOf(LocalDate.parse(startDateStr));
 			java.sql.Date endDate = java.sql.Date.valueOf(LocalDate.parse(endDateStr));
 
-			System.out.println("[DEBUG] 조회 시작일: " + startDate + ", 종료일: " + endDate);
+//			System.out.println("[DEBUG] 조회 시작일: " + startDate + ", 종료일: " + endDate);
 			List<ClaimsModel> claims = ClaimDAO.getClaims(cm.getLogin_id(), startDate, endDate, conn);
 
-			System.out.println("[DEBUG] 조회된 청구 건수: " + claims.size());
-			System.out.println("[DEBUG] 로그인 ID: " + cm.getLogin_id());
+//			System.out.println("[DEBUG] 조회된 청구 건수: " + claims.size());
+//			System.out.println("[DEBUG] 로그인 ID: " + cm.getLogin_id());
 			currentClaims = claims;
 			model.setRowCount(0);
 			
@@ -172,7 +172,9 @@ public class ClaimHistoryPanel extends JPanel {
 //				System.out.println("[DEBUG] 추가할 행 데이터: " + row);
 //				System.out.println("[DEBUG] 클레임 ID: " + claim.getClaim_id());
 				model.addRow(row);
+				claim_id = claim.getClaim_id();
 			}
+			
 			model.fireTableDataChanged(); // 테이블 데이터 변경 알림
 //			System.out.println("[DEBUG] 테이블 데이터 갱신 완료");
 
@@ -207,15 +209,16 @@ public class ClaimHistoryPanel extends JPanel {
 			button.setOpaque(true);
 
 			button.addActionListener(e -> {
-				fireEditingStopped(); // 편집 종료 이벤트 발생
-
-				// 버튼 클릭 시 상세 화면으로 이동하는 코드 실행
-				// 여기서 currentRow를 이용해 청구 ID 등 정보 가져올 수 있음
 				ClaimsModel selectedClaim = getClaimAtRow(currentRow);
 				if (selectedClaim != null) {
-					// 상세 패널로 이동하는 예시 코드 (필요에 맞게 구현)
-//					openClaimDetailPanel(selectedClaim);
+				ClaimDetailPanel claimDetailPanel = new ClaimDetailPanel(parentCardPanel, claim_id);
+				
+				parentCardPanel.add(claimDetailPanel, "ClaimDetailPanel");
+		        CardLayout cl = (CardLayout) parentCardPanel.getLayout();
+		        cl.show(parentCardPanel, "ClaimDetailPanel");
 				}
+				
+				fireEditingStopped(); // 편집 종료 이벤트 발생
 			});
 		}
 
@@ -252,7 +255,6 @@ public class ClaimHistoryPanel extends JPanel {
 				// claim_idObj를 String로 변환 후 Integer로 변환
 				int claim_idInt = Integer.parseInt(claim_idObj.toString());
 				
-
 				// 현재 테이블에 보이는 청구목록 중 claim_id와 같은 ClaimsModel 찾아서 리턴
 				for (ClaimsModel claim : currentClaims) {
 					if (claim.getClaim_id().equals(claim_idInt)) {

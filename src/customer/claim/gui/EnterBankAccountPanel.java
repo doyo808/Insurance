@@ -20,7 +20,8 @@ import customer.claim.gui.component.TitlePanel;
 
 public class EnterBankAccountPanel extends JPanel {
    private JPanel parentCardPanel;
-   
+   private JPanel centerPanel;
+   private JPanel radioPanel;
    private ButtonGroup ChButtonGroup;
    private JTextField bankNameF;
    private JTextField beneficiaryNameF;
@@ -36,12 +37,12 @@ public class EnterBankAccountPanel extends JPanel {
       add(title, BorderLayout.NORTH);
 
       // ⬅️ 가운데 패널 구성
-      JPanel centerPanel = new JPanel(new BorderLayout());
+      centerPanel = new JPanel(new BorderLayout());
       centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
       add(centerPanel, BorderLayout.CENTER);
       
       // 라디오 버튼 패널
-      JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+      radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
       JRadioButton AutomaticChButton = new JRadioButton(" 자동이체(계좌번호 자동입력)");
       AutomaticChButton.setFont(new Font("굴림", Font.PLAIN, 15));
       AutomaticChButton.setVisible(true);
@@ -51,7 +52,7 @@ public class EnterBankAccountPanel extends JPanel {
       accountDirectInputB.setVisible(true);
 //      accountDirectInputB
       
-      ButtonGroup ChButtonGroup = new ButtonGroup();
+      ChButtonGroup = new ButtonGroup();
       ChButtonGroup.add(AutomaticChButton);
       ChButtonGroup.add(accountDirectInputB);
       
@@ -73,15 +74,15 @@ public class EnterBankAccountPanel extends JPanel {
       gbc.anchor = GridBagConstraints.WEST;
 
       JLabel bnakNameL = new JLabel("은행명:");
-      JTextField bankNameF = new JTextField(15);
+      bankNameF = new JTextField(15);
       bankNameF.setFont(new Font("굴림", Font.PLAIN, 18));
       
       JLabel bankAccountL = new JLabel("계좌번호:");
-      JTextField bankAccountF = new JTextField(15);
+      bankAccountF = new JTextField(15);
       bankAccountF.setFont(new Font("굴림", Font.PLAIN, 18));
 
       JLabel beneficiaryNameL = new JLabel("예금주:");
-      JTextField beneficiaryNameF = new JTextField(15);
+      beneficiaryNameF = new JTextField(15);
       beneficiaryNameF.setFont(new Font("굴림", Font.PLAIN, 18));
 
       // 은행명 필드 이벤트(필요시 추가)
@@ -159,6 +160,7 @@ public class EnterBankAccountPanel extends JPanel {
             beneficiaryNameF.getText().trim().isBlank() ||
             bankAccountF.getText().trim().isBlank())) {
         	JOptionPane.showMessageDialog(this, "모든 계좌정보를 입력해주세요", "안내", JOptionPane.WARNING_MESSAGE);
+        	return;
          }
 
          // 은행명을 콤보박스로 선택하는건 이후에 선택...
