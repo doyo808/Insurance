@@ -2,6 +2,8 @@ package customer.contract.gui;
 
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -104,10 +106,14 @@ public class CalculatePremiumPanel extends JPanel {
 		textField_birth.setBounds(97, 291, 184, 21);
 		textField_birth.setColumns(8);
 		textField_birth.setText("생년월일 8자리");
-		textField_birth.addMouseListener(new MouseAdapter() {
+		textField_birth.addFocusListener(new FocusListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				textField_birth.setText("");				
+			public void focusLost(FocusEvent e) {
+				if (textField_birth.getText().isBlank()) textField_birth.setText("생년월일 8자리");
+			}
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (textField_birth.getText().equals("생년월일 8자리")) textField_birth.setText("");
 			}
 		});
 		panel_1.add(textField_birth);
@@ -138,7 +144,7 @@ public class CalculatePremiumPanel extends JPanel {
 	}
 	
 	void addVerificationButton(JPanel panel) {
-		btnNewButton_1 = new JButton("확인");
+		btnNewButton_1 = new JButton("계산!");
 		btnNewButton_1.setBounds(333, 292, 97, 23);
 		btnNewButton_1.addActionListener(e -> {
 			try {
@@ -176,7 +182,7 @@ public class CalculatePremiumPanel extends JPanel {
 	private void addBackButton(JPanel panel) {
 		JButton btnNewButton = new JButton("이전");
 		ButtonPainter.stylePrimaryButtonGray(btnNewButton, 16);
-		btnNewButton.setBounds(67, 395, 184, 59);
+		btnNewButton.setBounds(65, 395, 180, 41);
 		
 		btnNewButton.addActionListener(e -> {
 			setPanelToDefault();
@@ -188,7 +194,7 @@ public class CalculatePremiumPanel extends JPanel {
 	private void addConfirmButton(JPanel panel) {
 		JButton btnNewButton_2 = new JButton("다음");
 		ButtonPainter.stylePrimaryButtonCarrot(btnNewButton_2, 16);
-		btnNewButton_2.setBounds(273, 395, 179, 59);
+		btnNewButton_2.setBounds(271, 395, 180, 41);
 		
 		btnNewButton_2.addActionListener(e -> {
 			if (!calculated) {
