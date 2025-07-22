@@ -130,7 +130,10 @@ public class LogInCard extends JPanel {
 	    signupBtn.setFont(new Font("Dialog", Font.PLAIN, 14));
 	    signupBtn.setFocusPainted(false);
 	    signupBtn.setBorder(BorderFactory.createLineBorder(new Color(255, 140, 66)));
-	    signupBtn.addActionListener(e -> parentPanel.showCard("회원가입_메인"));
+	    signupBtn.addActionListener(e -> {
+	    	parentPanel.initSignupPanel();
+	    	parentPanel.showCard("회원가입_메인");
+	    });
 
 	    formPanel.add(textField);
 	    formPanel.add(passwordField);

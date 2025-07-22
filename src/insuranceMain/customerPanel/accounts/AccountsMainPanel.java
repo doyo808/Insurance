@@ -17,7 +17,8 @@ public class AccountsMainPanel extends JPanel {
 	private ServicesMainPanel smp;
 	private CustomerMainPanel cmp;
 	private LoggedInMainCard ac2;
-	CardLayout c = new CardLayout();
+	private SignupMainPanel signupPanel;
+	public CardLayout c = new CardLayout();
 	
 	public AccountsMainPanel(ServicesMainPanel smp, CustomerMainPanel cmp) {
 		setLayout(c);
@@ -27,7 +28,7 @@ public class AccountsMainPanel extends JPanel {
 		
 		add(new UnLoggedInMainCard(this), "비회원_메인");
 		add(ac2 = new LoggedInMainCard(this, smp, cmp), "회원_메인");
-		add(new SignupMainPanel(this), "회원가입_메인");
+		add(signupPanel = new SignupMainPanel(this), "회원가입_메인");
 		add(new LogInCard(this, smp, cmp), "로그인");
 		
 		showCard("비회원_메인");
@@ -55,6 +56,10 @@ public class AccountsMainPanel extends JPanel {
 		}
 		c.show(this, str);
 	}
-
+	
+	public void initSignupPanel() {
+		remove(signupPanel);
+		add(signupPanel = new SignupMainPanel(this), "회원가입_메인");
+	}
 
 }

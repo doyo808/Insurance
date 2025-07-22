@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.AbstractDocument;
 
+import common.database.dao.CustomerDAO;
 import common.database.model.CustomerModel;
 import common.method.DigitLimitDocumentFilter;
+import common.method.InsuranceTeamConnector;
 import common.method.KoreanNameDocumentFilter;
 import net.miginfocom.swing.MigLayout;
 
@@ -169,6 +173,7 @@ public class SignupCard1 extends JPanel {
         JTextField rrnFront = new JTextField(6);
         JTextField rrnBack = new JTextField(7);
         JComboBox<String> phonePrefix = new JComboBox<>(new String[]{"010", "011", "016", "017", "018", "019"});
+        phonePrefix.setSelectedIndex(0);
 
         ((AbstractDocument) nameField.getDocument()).setDocumentFilter(new KoreanNameDocumentFilter());
         ((AbstractDocument) phoneField1.getDocument()).setDocumentFilter(new DigitLimitDocumentFilter(4));
@@ -206,23 +211,38 @@ public class SignupCard1 extends JPanel {
 
         confirmBtn.addActionListener(e -> {
             String name = nameField.getText().trim();
-            String first = phonePrefix.getToolTipText();
+            String first = (String) phonePrefix.getSelectedItem();
             String mid = phoneField1.getText().trim();
             String end = phoneField2.getText().trim();
             String front = rrnFront.getText().trim();
             String back = rrnBack.getText().trim();
+            String phoneNum = first + "-" + mid + "-" + end;
+            String personalId = front + "-" + back;
 
             if (name.isEmpty() || mid.length() != 4 || end.length() != 4 || front.length() != 6 || back.length() != 7) {
                 JOptionPane.showMessageDialog(panel, "모든 정보를 올바르게 입력하세요.", "입력 오류", JOptionPane.WARNING_MESSAGE);
                 isVerified = false;
                 return;
             }
-
+            try (Connection conn = InsuranceTeamConnector.getConnection()) {
+            	if (CustomerDAO.getCustomerByPersonalId(personalId, conn) != null) {
+            		JOptionPane.showMessageDialog(panel, "이미 등록된 주민등록번호입니다.", "알림", JOptionPane.WARNING_MESSAGE);
+                    isVerified = false;
+                    return;
+            	} else if (CustomerDAO.getCustomerByPhone(phoneNum, conn) != null) {
+            		JOptionPane.showMessageDialog(panel, "이미 등록된 휴대폰번호입니다.", "알림", JOptionPane.WARNING_MESSAGE);
+                    isVerified = false;
+                    return;
+            	}
+            } catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+            
             isVerified = true;
             JOptionPane.showMessageDialog(panel, "실명 확인이 완료되었습니다.", "확인", JOptionPane.INFORMATION_MESSAGE);
             cm.setCustomer_name(name);
-            cm.setPhone_number(first + "-" + mid + "-" + end);
-            cm.setPersonal_id(front + "-" + back);
+            cm.setPhone_number(phoneNum);
+            cm.setPersonal_id(personalId);
         });
 
         return panel;

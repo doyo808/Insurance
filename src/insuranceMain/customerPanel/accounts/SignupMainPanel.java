@@ -10,12 +10,14 @@ import common.gui.FooterImagePanel;
 import insuranceMain.customerPanel.accounts.signup.SignupCard1;
 import insuranceMain.customerPanel.accounts.signup.SignupCard2;
 import insuranceMain.customerPanel.accounts.signup.SignupCard3;
+import insuranceMain.customerPanel.accounts.signup.SignupCard4;
 
 public class SignupMainPanel extends JPanel {
 	// 이곳은 회원가입카드들의 메인패널
 	private CustomerModel cm;
-	
+	private AccountsMainPanel amp;
 	public SignupMainPanel(AccountsMainPanel amp) {
+		this.amp = amp;
 		setLayout(new BorderLayout());
 		
 		add(new HeaderBarOfEaryPage(amp, 10, 10), BorderLayout.NORTH);
@@ -32,6 +34,7 @@ public class SignupMainPanel extends JPanel {
 		panel.add(new SignupCard1(c, panel, cm), "Signup1");
 		panel.add(new SignupCard2(c, panel, cm), "Signup2");
 		panel.add(new SignupCard3(c, panel, cm), "Signup3");
+		panel.add(new SignupCard4(amp));
 		
 		
 		c.show(panel, "Signup1");

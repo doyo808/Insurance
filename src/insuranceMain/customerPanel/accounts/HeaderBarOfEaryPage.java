@@ -31,6 +31,7 @@ public class HeaderBarOfEaryPage extends JPanel {
 			parentPanel.showCard("로그인");
 		});
 		btn3.addActionListener(e -> {
+			parentPanel.initSignupPanel();
 			parentPanel.showCard("회원가입_메인");
 		});
 		
