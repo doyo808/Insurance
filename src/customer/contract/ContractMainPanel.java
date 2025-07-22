@@ -35,20 +35,18 @@ public class ContractMainPanel extends JPanel {
 		add(new KeywordPanel(this), cardNames[0]);
 		add(choosePP = new ChooseProductPanel(this), cardNames[1]);
 		
-//			addInfoCards();
-		
-		ShowCard(cardNames[MainFrame.TEST ? testPage : 0]);
+		ShowCard(cardNames[0]);
 	}
 	
 	public void ShowCard(String name) {
-		if (name.equals("보험료계산")) {
+		if (name.equals(cardNames[1])) {
+			choosePP.updateProducts();
+		} else if (name.equals(cardNames[2])) {
 			add(new CalculatePremiumPanel(this), cardNames[2]);
 			addCard();
-		} else if (name.equals("보험선택")) {
-			choosePP.updateProducts();
-		} else if (name.equals("보험기간선택")) {
+		} else if (name.equals(cardNames[3])) {
 			addInfoCards();
-		} else if (name.equals("약관확인")) {
+		} else if (name.equals(cardNames[7])) {
 			add(new ContractCompletePanel(this), cardNames[8]);
 		}
 		c.show(this, name);

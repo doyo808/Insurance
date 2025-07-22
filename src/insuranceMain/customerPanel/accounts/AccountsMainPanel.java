@@ -38,7 +38,7 @@ public class AccountsMainPanel extends JPanel {
 	
 	void testing(ServicesMainPanel smp) {
 		if (MainFrame.TEST) {
-			CustomerModel c = TestUserProvider.getTestUser(MainFrame.LOGIN_ID);
+			CustomerModel c = TestUserProvider.getTestUser(MainFrame.TEST_LOGIN_ID);
 			if (c != null) {
 				Session.setCustomer(c);
 				smp.refreshPanels();

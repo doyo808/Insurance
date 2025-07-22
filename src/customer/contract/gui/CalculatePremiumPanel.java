@@ -182,7 +182,7 @@ public class CalculatePremiumPanel extends JPanel {
 	private void addBackButton(JPanel panel) {
 		JButton btnNewButton = new JButton("이전");
 		ButtonPainter.stylePrimaryButtonGray(btnNewButton, 16);
-		btnNewButton.setBounds(65, 395, 180, 41);
+		btnNewButton.setBounds(65, 395, 180, 40);
 		
 		btnNewButton.addActionListener(e -> {
 			setPanelToDefault();
@@ -194,7 +194,7 @@ public class CalculatePremiumPanel extends JPanel {
 	private void addConfirmButton(JPanel panel) {
 		JButton btnNewButton_2 = new JButton("다음");
 		ButtonPainter.stylePrimaryButtonCarrot(btnNewButton_2, 16);
-		btnNewButton_2.setBounds(271, 395, 180, 41);
+		btnNewButton_2.setBounds(270, 395, 180, 40);
 		
 		btnNewButton_2.addActionListener(e -> {
 			if (!calculated) {
