@@ -12,7 +12,7 @@ public class TitlePanel extends JPanel {
      
 	public TitlePanel(String title) {
 		JLabel titleLabel = new JLabel(title);
-		titleLabel.setFont(new Font("Dialog", Font.PLAIN, 30));
+		titleLabel.setFont(new Font("Dialog", Font.BOLD, 30));
 		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		titleLabel.setBorder(BorderFactory.createEmptyBorder(50, 10, 20, 10)); // 상단 간격
 		titleLabel.setVisible(true);

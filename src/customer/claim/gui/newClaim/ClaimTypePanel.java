@@ -79,7 +79,7 @@ public class ClaimTypePanel extends JPanel {
 				}
 			}
 			// 클레임 타입 리스트에서 선택된 값들을 객체에 저장
-			claimData.setClaim_type_name(selectedTypes);
+			claimData.setClaim_type_names(selectedTypes);
 
 			cl.show(parentCardPanel, "EnterBankAccountPanel");
 

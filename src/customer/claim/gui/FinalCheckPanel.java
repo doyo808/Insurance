@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import common.account.login.Session;
+import common.database.dao.ClaimDAO;
 import common.database.model.ClaimsModel;
 import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
@@ -31,14 +33,11 @@ public class FinalCheckPanel extends JPanel {
 	private List<JLabel> valueLabels = new ArrayList<>();
 	private ClaimsModel claimModel;
 	
-	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel newData, CustomerMainPanel cmp) {
+	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
 		this.cmp = cmp;
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout)parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
-		
-//		claimModel = new ClaimsModel();
-		
 		
 		TitlePanel title = new TitlePanel("보험금 청구내역 확인");
 		add(title, BorderLayout.NORTH);
@@ -49,17 +48,17 @@ public class FinalCheckPanel extends JPanel {
 		gbc.anchor = GridBagConstraints.WEST;
 
 		// 입력한 정보 가져오기(이름, 계좌는 로그인 정보 통해서)
-		String claimTarget = newData.getCustomer_name();
+		String claimTarget = claimData.getCustomer_name();
 		java.sql.Date accidentDate = null;
 		
-		if (newData.getAccident_date() != null) {
-		    accidentDate = new Date(newData.getAccident_date().getTime());
+		if (claimData.getAccident_date() != null) {
+		    accidentDate = new Date(claimData.getAccident_date().getTime());
 		}
 		
-		List<String> claimType = newData.getClaim_type_name();
-		String accidentDescription = newData.getAccident_description();
-		String bankAccount = newData.getBank_account();
-		List<String> documents = newData.getDocument_type_name();
+		String claimType = claimData.getClaim_type_name();
+		String accidentDescription = claimData.getAccident_description();
+		String bankAccount = claimData.getBank_account();
+		List<String> documents = claimData.getDocument_type_names();
 		
 		Object[][] labelValuePairs = {
 			    {"1. 청구대상: ", claimTarget},
@@ -95,32 +94,36 @@ public class FinalCheckPanel extends JPanel {
 	      bottomBP.setActionButton("보험금 청구하기");
 	      bottomBP.getNextButton().addActionListener((e) -> {
 	    	// 청구 내역이 DB에 저장
-//	    	  try (Connection conn = InsuranceTeamConnector.getConnection()) {
-//
-//	  			CustomerModel cm = Session.getCustomer();
-//	  			if (cm == null) {
-//	  				JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
-//	  				return;
-//	  			}
+	    	  try (Connection conn = InsuranceTeamConnector.getConnection()) {
+
+	  			CustomerModel cm = Session.getCustomer();
+	  			if (cm == null) {
+	  				JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
+	  				return;
+	  			}
 	  			
-//	    	  int result = insertClaim(claimModel, conn, newData);
-//
-//	    	  if (result > 0) {
-//	    	      JOptionPane.showMessageDialog(null, "청구가 정상적으로 등록되었습니다.");
-//	    	  } else {
-//	    	      JOptionPane.showMessageDialog(null, "청구 등록에 실패했습니다.");
-//	    	  }
-	    	  
+	  		  
+	  			
+	    	  int result = ClaimDAO.insertClaim(conn, claimData);
+
+	    	  if (result > 0) {
+	    	      JOptionPane.showMessageDialog(null, "청구가 정상적으로 등록되었습니다.");
+	    	  } else {
+	    	      JOptionPane.showMessageDialog(null, "청구 등록에 실패했습니다.");
+	    	      return;
+	    	  }
 	    	  
 	    	  // 메인패널로 넘어감
-	    	  JOptionPane.showMessageDialog(this, "보험금 청구가 완료되었습니다.", "안내", JOptionPane.INFORMATION_MESSAGE);
 	    	  parentCardPanel.removeAll(); // 기존 패널들 제거
 	    	  
 	    	  cmp.showCard("accounts");
 	    	  cmp.getAMP().showCard("회원_메인");
 	    	  parentCardPanel.revalidate();
 	    	  parentCardPanel.repaint();
-//	    	  }
+	    	  
+	    	  } catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 	     });
 	}
 	

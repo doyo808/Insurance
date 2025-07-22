@@ -30,6 +30,7 @@ import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
 import common.method.InsuranceTeamConnector;
 import customer.claim.gui.component.BottomButtonPanel;
+import customer.claim.gui.component.TitlePanel;
 
 public class ClaimHistoryPanel extends JPanel {
 	private JTextField startDateField;
@@ -37,25 +38,22 @@ public class ClaimHistoryPanel extends JPanel {
 	private DefaultTableModel model;
 	private JPanel parentCardPanel;
 	private List<ClaimsModel> currentClaims = new ArrayList<>();
-	private int claim_id;
 
+	private String[] columnNames = { "접수번호", "청구일자", "진단명", "재해자/물 보상구분", "상품명", "보상담당자", "처리상태" };
 	// 버튼 누르면 상세 페이지로 가는 기능 추가하기
 	public ClaimHistoryPanel(JPanel parentCardPanel, NewClaimDataModel claimData) {
-
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
 
-//		this.addComponentListener(new java.awt.event.ComponentAdapter() {
-//			@Override
-//			public void componentShown(java.awt.event.ComponentEvent e) {
-//				clearTable();
-//			}
-//		});
-
 		// === 상단 패널 (조회 조건) ===
+		JPanel top = new JPanel(new BorderLayout());
+		
+		TitlePanel title = new TitlePanel("보험금 청구내역 조회");
+		top.add(title, BorderLayout.NORTH);
+		
 		JPanel topPanel = new JPanel(new FlowLayout());
-
+		
 		startDateField = new JTextField(10);
 		endDateField = new JTextField(10);
 		startDateField.setText(LocalDate.now().minusDays(30).toString());
@@ -86,13 +84,14 @@ public class ClaimHistoryPanel extends JPanel {
 		}
 
 		JButton searchBtn = new JButton("조회");
-		searchBtn.addActionListener(e -> fetchData());
+		searchBtn.addActionListener((e) -> fetchData());
 		topPanel.add(searchBtn);
 
-		add(topPanel, BorderLayout.NORTH);
+		top.add(topPanel, BorderLayout.SOUTH);
+		add(top,BorderLayout.NORTH);
 
 		// === 테이블 ===
-		String[] columnNames = { "접수번호", "청구일자", "진단명", "재해자/물 보상구분", "상품명", "보상담당자", "처리상태" };
+		
 
 		model = new DefaultTableModel(columnNames, 0) {
 			public boolean isCellEditable(int row, int column) {
@@ -150,14 +149,10 @@ public class ClaimHistoryPanel extends JPanel {
 
 //			System.out.println("[DEBUG] 조회 시작일: " + startDate + ", 종료일: " + endDate);
 			List<ClaimsModel> claims = ClaimDAO.getClaims(cm.getLogin_id(), startDate, endDate, conn);
-
-//			System.out.println("[DEBUG] 조회된 청구 건수: " + claims.size());
-//			System.out.println("[DEBUG] 로그인 ID: " + cm.getLogin_id());
 			currentClaims = claims;
 			model.setRowCount(0);
-			
 
-			for (ClaimsModel claim : claims) {
+			for (ClaimsModel claim : currentClaims) {
 				Vector<Object> row = new Vector<>();
 				row.add(claim.getClaim_id());
 				row.add(claim.getClaim_date());
@@ -166,14 +161,13 @@ public class ClaimHistoryPanel extends JPanel {
 				row.add(claim.getProduct_name());
 				row.add(claim.getEmployee_name());
 				row.add(claim.getClaim_status());
-//				System.out.println("[DEBUG] 추가할 행 데이터: " + row);
-//				System.out.println("[DEBUG] 클레임 ID: " + claim.getClaim_id());
 				model.addRow(row);
-				claim_id = claim.getClaim_id();
 			}
 			
 			model.fireTableDataChanged(); // 테이블 데이터 변경 알림
 //			System.out.println("[DEBUG] 테이블 데이터 갱신 완료");
+//			System.out.println("조회된 청구 건수: " + currentClaims.size());
+//			System.out.println("테이블 행 개수: " + model.getRowCount());
 
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "DB 오류: " + ex.getMessage());
@@ -205,10 +199,11 @@ public class ClaimHistoryPanel extends JPanel {
 			button = new JButton();
 			button.setOpaque(true);
 
+			
 			button.addActionListener(e -> {
 				ClaimsModel selectedClaim = getClaimAtRow(currentRow);
 				if (selectedClaim != null) {
-				ClaimDetailPanel claimDetailPanel = new ClaimDetailPanel(parentCardPanel, claim_id);
+				ClaimDetailPanel claimDetailPanel = new ClaimDetailPanel(parentCardPanel, selectedClaim.getClaim_id());
 				
 				parentCardPanel.add(claimDetailPanel, "ClaimDetailPanel");
 		        CardLayout cl = (CardLayout) parentCardPanel.getLayout();

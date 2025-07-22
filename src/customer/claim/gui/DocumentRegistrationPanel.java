@@ -18,12 +18,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import common.database.model.NewClaimDataModel;
+import common.method.ButtonPainter;
 import customer.claim.gui.claimsRelatedInfo.RequiredDocumentsInfo;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
@@ -34,7 +37,9 @@ public class DocumentRegistrationPanel extends JPanel {
 	private JLabel selectedFileLabel; // 선택된 파일명을 화면에 보여주는 텍스트라벨
 	private JPanel fileListP; // 파일 이름 목록을 담을 패널
 	private List<File> selectedFiles = new ArrayList<>();
-
+	private int result; // 파일첨부여부 검사
+	
+	
 	public DocumentRegistrationPanel(JPanel parentCardPanel, String previousPanelName, NewClaimDataModel claimData, CustomerMainPanel cmp) {
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) (parentCardPanel.getLayout());
@@ -59,13 +64,17 @@ public class DocumentRegistrationPanel extends JPanel {
 		JPanel buttonWrapperP = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
 
 		JButton fileB = new JButton("이미지 파일 첨부");
-		fileB.setPreferredSize(new Dimension(150, 40));
-
-		JButton 상황별필요서류버튼 = new JButton("상황별 필요서류 안내");
-		상황별필요서류버튼.setPreferredSize(new Dimension(150, 40)); // 사진처럼
-
+		fileB.setPreferredSize(new Dimension(150, 60));
+		ButtonPainter.stylePrimaryButtonCarrot(fileB, 12);
+		
+		
+		JButton requiredDocB = new JButton("<html>상황별 <br>필요서류 안내<html>");
+		requiredDocB.setPreferredSize(new Dimension(150, 60)); // 사진처럼
+		ButtonPainter.stylePrimaryButtonCarrot(requiredDocB, 12);
+		requiredDocB.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		buttonWrapperP.add(fileB);
-		buttonWrapperP.add(상황별필요서류버튼);
+		buttonWrapperP.add(requiredDocB);
 		buttonWrapperP.setVisible(true);
 
 		centerPanel.add(buttonWrapperP);
@@ -73,12 +82,12 @@ public class DocumentRegistrationPanel extends JPanel {
 		fileListP = new JPanel();
 		fileListP.setLayout(new BoxLayout(fileListP, BoxLayout.Y_AXIS));
 		fileListP.setPreferredSize(new Dimension(300, 80));
-		fileListP.setMaximumSize(new Dimension(300, 300)); // 최대 크기
-		fileListP.setMinimumSize(new Dimension(300, 100)); // 최소 크기
+		fileListP.setMaximumSize(new Dimension(300, 300)); 
+		fileListP.setMinimumSize(new Dimension(300, 100)); 
 
 		JScrollPane scrollP = new JScrollPane(fileListP);
 		scrollP.setBorder(BorderFactory.createTitledBorder("첨부한 파일 목록"));
-		scrollP.setPreferredSize(new Dimension(300, 150)); // 스크롤 영역 크기 설정
+		scrollP.setPreferredSize(new Dimension(300, 150)); 
 		centerPanel.add(scrollP);
 
 		fileB.addActionListener((e) -> {
@@ -87,8 +96,10 @@ public class DocumentRegistrationPanel extends JPanel {
 			fc.setFileFilter(filter);
 			fc.setMultiSelectionEnabled(true);
 
-			int returnValue = fc.showOpenDialog(this.parentCardPanel); // DocumentRegistrationPanel 위에 파일 선택창을 보여줌
-			if (returnValue == JFileChooser.APPROVE_OPTION) {
+//			result = fc.showOpenDialog(null);
+			
+			result = fc.showOpenDialog(this.parentCardPanel); 
+			if (result == JFileChooser.APPROVE_OPTION) {
 				File[] Files = fc.getSelectedFiles();
 				imageLabel.setText("");
 
@@ -125,23 +136,21 @@ public class DocumentRegistrationPanel extends JPanel {
 			fileListP.setVisible(true);
 		});
 
-		// JLabel 첨부한파일목록라벨 = new JLabel("첨부한 파일 목록");
-//	      fileListP.add(첨부한파일목록라벨);
 
-		JTextArea 안내문 = new JTextArea("서류 등록시 안내사항\n\n" + "1. 이미지 파일첨부: 원본서류를 촬영하거나 컬러로 스캔하여 첨부해 주십시오. 첨부파일찾기 "
+		JTextArea guide = new JTextArea("서류 등록시 안내사항\n\n" + "1. 이미지 파일첨부: 원본서류를 촬영하거나 컬러로 스캔하여 첨부해 주십시오. 첨부파일찾기 "
 				+ "버튼을 눌러 파일을 업로드 한 후 등록 버튼을 클릭하면 접수가 완료됩니다.\n"
 				+ "2. 의료비 청구 시 영수증 상 비급여 금액이 존재하는 경우 반드시 진료비세부내역서를 제출하셔야 합니다.\n"
 				+ "3. 카드매출전표(카드내역문자), 납입확인서는 보험금 청구서류로 사용할 수 없습니다.\n"
 				+ "4. 5천만원 이상 또는 사망보험금 청구건, 보험금을 위임하시는 경우에는 우편/방문을 통한 원본 서류 제출이 필요합니다.");
-		안내문.setEditable(false); // 텍스트 수정못함
-		안내문.setLineWrap(true); // 줄이 길어지면 자동 줄빠굼
-		안내문.setWrapStyleWord(true); // 단어단위로 줄바꿈
-		안내문.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
-		안내문.setBackground(new Color(245, 245, 245)); // 배경색
-		안내문.setMargin(new Insets(10, 10, 10, 10)); // 안쪽 여백(상,하,좌,우)
-		centerPanel.add(안내문);
+		guide.setEditable(false); // 텍스트 수정못함
+		guide.setLineWrap(true); // 줄이 길어지면 자동 줄빠굼
+		guide.setWrapStyleWord(true); // 단어단위로 줄바꿈
+		guide.setFont(new Font("맑은 고딕", Font.PLAIN, 13));
+		guide.setBackground(new Color(245, 245, 245)); // 배경색
+		guide.setMargin(new Insets(10, 10, 10, 10)); // 안쪽 여백(상,하,좌,우)
+		centerPanel.add(guide);
 
-		상황별필요서류버튼.addActionListener((e) -> {
+		requiredDocB.addActionListener((e) -> {
 			RequiredDocumentsInfo infoPanel = new RequiredDocumentsInfo(parentCardPanel, "DocumentRegistrationPanel");
 			parentCardPanel.add(infoPanel, "RequiredDocumentsInfo");
 			cl.show(parentCardPanel, "RequiredDocumentsInfo");
@@ -155,17 +164,21 @@ public class DocumentRegistrationPanel extends JPanel {
 		});
 
 		bottomBP.getNextButton().addActionListener((e) -> {
+			if (selectedFiles.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "관련 서류 파일을 하나 이상 첨부해주세요", "안내", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
 			List<String> filesNames = new ArrayList<>();
 			for (File file : selectedFiles) {
 				filesNames.add(file.getName());
 			}
-			claimData.setDocument_type_name(filesNames);
-			System.out.println(claimData.toString()); // 디버깅용
+			claimData.setDocument_type_names(filesNames);
+//			System.out.println(claimData.toString()); // 디버깅용
 			
 			    // 여기서 패널 제거 & 새 패널 추가
 			    for (Component comp : parentCardPanel.getComponents()) {
 			        if (comp instanceof FinalCheckPanel) {
-			            parentCardPanel.remove(comp);  // 기존 패널 제거
+			            parentCardPanel.remove(comp);  
 			            break;
 			        }
 			    }

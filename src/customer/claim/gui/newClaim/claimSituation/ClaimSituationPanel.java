@@ -256,7 +256,10 @@ public class ClaimSituationPanel extends JPanel {
 			// 다음버튼 actionListener ===============================================================================================
 			BBP.getNextButton().addActionListener((e) -> {
 				Object selected = 상황1콤.getSelectedItem();
-	    	    if (selected == null) return; // null이면 처리하지 않음
+	    	    if (selected == null) {
+	    	    	JOptionPane.showMessageDialog(this, "상황을 선택해주세요", "안내", JOptionPane.WARNING_MESSAGE);	    	    	
+	    	    	return; // null이면 처리하지 않음
+	    	    }
 	    	    String 상황1선택 = (String) selected;
 	    	    String 다른사람선택 = (String) 다른사람콤.getSelectedItem(); 
 	    	    String 병원선택 = (String) 병원콤.getSelectedItem();
