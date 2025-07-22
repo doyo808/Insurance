@@ -12,7 +12,7 @@ public class MainFrame extends JFrame {
 	
 	// 이곳에서 TEST모드 변경(true이면 홍길동 로그인된 상태, false는 로그아웃)
 	public static boolean TEST = true;
-	public static String LOGIN_ID = "hong123";
+	public static String TEST_LOGIN_ID = "hong123";
 	
 	/**
 	 * Launch the application.

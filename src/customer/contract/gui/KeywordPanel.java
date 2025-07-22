@@ -13,7 +13,7 @@ import javax.swing.SwingConstants;
 import common.gui.OurColors;
 import common.method.ButtonPainter;
 import customer.contract.ContractMainPanel;
-import customer.contract.method.SelectedKeywords;
+import customer.contract.method.GetProductNamesFromKeyword;
 
 public class KeywordPanel extends JPanel {
 	
@@ -100,7 +100,7 @@ public class KeywordPanel extends JPanel {
 		btn.addActionListener(e -> {
 			
 			collectSelectedKeywords(btns);
-			if (SelectedKeywords.selectedKeywords.size() == 0) {
+			if (GetProductNamesFromKeyword.list.size() == 0) {
 				JOptionPane.showMessageDialog(this, "최소 하나의 키워드를 선택해주세요."
 						, "알림", JOptionPane.WARNING_MESSAGE);
 				return;
@@ -111,10 +111,10 @@ public class KeywordPanel extends JPanel {
 	}
 	
 	void collectSelectedKeywords(JButton[] btns) {
-		SelectedKeywords.selectedKeywords.clear();
+		GetProductNamesFromKeyword.list.clear();
 		for (JButton b : btns) {
 			 if (Boolean.TRUE.equals(b.getClientProperty("selected"))) {
-		            SelectedKeywords.selectedKeywords.add(b.getText());
+		            GetProductNamesFromKeyword.list.add(b.getText());
 		        }
 			
 		}

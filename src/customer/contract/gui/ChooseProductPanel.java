@@ -89,13 +89,13 @@ public class ChooseProductPanel extends JPanel {
 	    panel.setBackground(Color.WHITE);
 	    panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-	    JLabel titleLabel = new JLabel(summary.getProductName());
+	    JLabel titleLabel = new JLabel("  <" + summary.getProductName() + ">");
 	    titleLabel.setFont(new Font("Dialog", Font.BOLD, 18));
 	    titleLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 0));
 
-	    JLabel line1 = new JLabel(summary.getLine1());
-	    JLabel line2 = new JLabel(summary.getLine2());
-	    JLabel line3 = new JLabel(summary.getPremium());
+	    JLabel line1 = new JLabel("* " + summary.getLine1());
+	    JLabel line2 = new JLabel("* " + summary.getLine2());
+	    JLabel line3 = new JLabel("* " + summary.getPremium());
 
 	    JPanel textPanel = new JPanel();
 	    textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
