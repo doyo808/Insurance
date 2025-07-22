@@ -3,6 +3,9 @@ package customer.product.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -27,6 +30,7 @@ import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Cursor;
+import javax.swing.border.EmptyBorder;
 
 public class ProductIntroducePanel extends JPanel {
 
@@ -43,8 +47,8 @@ public class ProductIntroducePanel extends JPanel {
 	JLabel IntroLabel;
 	
 	JPanel searchBar;
-//	JTextField searchTextField;
-//	JButton searchBtn;
+	JTextField searchTextField;
+	JButton searchBtn;
 	JComboBox<String> searchTag;
 	
 	DefaultTableModel tableModel;
@@ -83,17 +87,25 @@ public class ProductIntroducePanel extends JPanel {
 		
 		
 		// 상품명으로 검색바 기능 일단 보류
-//		searchTextField = new JTextField(20);
-//		searchTextField.setText("아직 미구현된기능");
-//		searchBtn = new JButton("검색");
-		
-//		searchBar.add(searchTextField);
-//		searchBar.add(searchBtn);
-		
+		searchTextField = new JTextField(20);
+		searchTextField.setBorder(new EmptyBorder(5, 10, 5, 10));
+		searchTextField.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+		searchTextField.setMargin(new Insets(5, 5, 5, 5));
+		searchTextField.setText("아직 미구현된기능");
+		searchBtn = new JButton("검색");
+		searchBtn.setBorder(new EmptyBorder(5, 10, 5, 10));
+		searchBtn.setFont(new Font("맑은 고딕", Font.BOLD, 18));
+		searchBtn.setForeground(new Color(255, 255, 255));
+		searchBtn.setBackground(new Color(128, 128, 128));
+		searchBtn.setMargin(new Insets(5, 10, 5, 10));
 		// 상품태그로 테이블을 분류한다
 		searchTag = new JComboBox<String>(tagList);
+		searchTag.setBorder(new EmptyBorder(5, 10, 5, 10));
+		searchTag.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+		searchBar.add(searchTextField);
+		searchBar.add(searchBtn);
 		searchBar.add(searchTag);
-		
+
 		tableModel = new DefaultTableModel(columnNames, 0);
 		productInfoTable = new JTable(tableModel) {
 			@Override
@@ -118,12 +130,35 @@ public class ProductIntroducePanel extends JPanel {
 		
 		setInitTableData();
 		
+		//서치바의 텍스트박스에서 발생하는 이벤트
+		searchTextField.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				searchTextField.setText("");
+			}
+		});
+		
+		searchTextField.addActionListener(e -> {
+			
+		});
+		
+		//서치바의 검색버튼에서 발생하는 이벤트
+		searchBtn.addActionListener(e -> {
+			
+		});
 		
 		// 서치바의 콤보박스에서 옵션이 선택됐을때 발생하는 이벤트
 		searchTag.addActionListener(e -> {
 //			System.out.println("이벤트 발생");
 			String selected = (String) searchTag.getSelectedItem();
 //			System.out.println("선택된 값 : " + selected);
+			
 			setTable(1, selected);
 		});
 		
@@ -216,7 +251,7 @@ public class ProductIntroducePanel extends JPanel {
 	
 	public void setInitTableData() {
 		if(tableModel.getRowCount() != 0) {
-			tableModel.setColumnCount(0);
+			tableModel.setRowCount(0);
 		}
 		
 		List<ProductModel> products = null;

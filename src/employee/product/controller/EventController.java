@@ -136,53 +136,75 @@ public class EventController {
 					view.card3.center.productManual
 			};
 			
-			// TODO 여기서 저장할 파일의 절대경로(웹서버, 로컬파일경로 등등)를 지정해야함
-			try (FileOutputStream fos = new FileOutputStream("shared/files/terms/" + files[0].getName());
-					FileOutputStream fos2 = new FileOutputStream("shared/files/manuals/" + files[0].getName());
-					){
-//				FileOutputStream fos = new FileOutputStream("//192.168.0.93/shared/files/terms/" + files[0].getName());
-//				FileOutputStream fos2 = new FileOutputStream("//192.168.0.93/shared/files/manuals/" + files[0].getName());
+			String termPath = null;
+			String manualPath = null;
+			
+			if(files[0] == null ||
+					files[1] == null) {
+				JOptionPane.showMessageDialog(view.card3.center, "약관 혹은 메뉴얼이 비어있습니다.");
+			} else {
+				// TODO 여기서 저장할 파일의 절대경로(웹서버, 로컬파일경로 등등)를 지정해야함
+				try (FileOutputStream fos = new FileOutputStream("shared/files/terms/" + files[0].getName());
+						FileOutputStream fos2 = new FileOutputStream("shared/files/manuals/" + files[0].getName());
+						){
+//					FileOutputStream fos = new FileOutputStream("//192.168.0.93/shared/files/terms/" + files[0].getName());
+//					FileOutputStream fos2 = new FileOutputStream("//192.168.0.93/shared/files/manuals/" + files[0].getName());
+					
+					fos.write(Files.readAllBytes(files[0].toPath()));
+					fos2.write(Files.readAllBytes(files[1].toPath()));
+				} catch (FileNotFoundException e1) {
+					System.out.println("파일을 찾을수 없음");
+				} catch (IOException e1) {
+					System.out.println("첨부파일(약관,매뉴얼) 업로드 실패");
+				}
 				
-				fos.write(Files.readAllBytes(files[0].toPath()));
-				fos2.write(Files.readAllBytes(files[1].toPath()));
-			} catch (FileNotFoundException e1) {
-				System.out.println("파일을 찾을수 없음");
-			} catch (IOException e1) {
-				System.out.println("첨부파일(약관,매뉴얼) 업로드 실패");
+				termPath = "/files/terms/"+view.card3.center.termAndConditions.getName();
+				manualPath = "/files/manuals/"+view.card3.center.productManual.getName();
 			}
 			
 			String division = (String)view.card3.center.divisionField.getSelectedItem();
 			String name = view.card3.center.productNameField.getText();
 			int ageLow = (int)view.card3.center.joinAgeLowField.getValue();
 			int ageHigh = (int)view.card3.center.joinAgeHighField.getValue();
-			int limitLow = Integer.parseInt(view.card3.center.joinLimitLowField.getText());
-			int limitHigh = Integer.parseInt(view.card3.center.joinLimitHighField.getText());
+			String limitLow = view.card3.center.joinLimitLowField.getText();
+			String limitHigh = view.card3.center.joinLimitHighField.getText();
 
-//			String termPath = view.card3.center.productManual.getAbsolutePath();
-//			String manualPath = view.card3.center.termAndConditions.getAbsolutePath();
-			String termPath = "/files/terms/"+view.card3.center.termAndConditions.getName();
-			String manualPath = "/files/manuals/"+view.card3.center.productManual.getName();
 			
-			double basic = Double.parseDouble(view.card3.center.basePremiumField.getText());
-			double constant = Double.parseDouble(view.card3.center.premiumConstantField.getText());
-			
-			try (Connection conn = InsuranceTeamConnector.getConnection()){
-				ProductDAO.addProduct(
-						new ProductModel(null, division, name, ageLow, ageHigh, limitLow, limitHigh, 
-								termPath, manualPath, basic, constant, null)
-						, model.getImageFile().getAbsolutePath()
-						, conn);
-//				System.out.println("상품등록성공!");
-				JOptionPane.showMessageDialog(view.card3.center, "상품등록 성공");
-				view.card1.center.setTableData();
-				view.showCard("show");
-			} catch (Exception e1) {
-				System.out.println("DB에 상품등록 하는중에 에러남");
-				e1.printStackTrace();
+			String basic = view.card3.center.basePremiumField.getText();
+			String constant = view.card3.center.premiumConstantField.getText();
+			if (termPath == null ||
+				manualPath == null ||
+				model.getImageFile() == null ||
+				name == null ||
+				limitLow == null ||
+				limitHigh == null ||
+				basic == null ||
+				constant == null) 
+			{
+				JOptionPane.showMessageDialog(view.card3.center, "비어있는 항목이 있습니다");
+			} else {
+				try (Connection conn = InsuranceTeamConnector.getConnection()){
+					ProductDAO.addProduct(
+							new ProductModel(null, division, name, ageLow, ageHigh, Integer.parseInt(limitLow), Integer.parseInt(limitHigh), 
+									termPath, manualPath, 
+									Double.parseDouble(basic), 
+									Double.parseDouble(constant),
+									null)
+							, model.getImageFile().getAbsolutePath()
+							, conn);
+//					System.out.println("상품등록성공!");
+					JOptionPane.showMessageDialog(view.card3.center, "상품등록 성공");
+					view.card1.center.setTableData();
+					view.showCard("show");
+				} catch (Exception e1) {
+					System.out.println("DB에 상품등록 하는중에 에러남");
+					e1.printStackTrace();
+				}
+				
+				model.setImageFile(null);
+				view.card3.center.setInitText();
 			}
 			
-			model.setImageFile(null);
-			view.card3.center.setInitText();
 		});
 		// end
 		//################################################################
@@ -239,8 +261,8 @@ public class EventController {
 			// card2.center패널에 있는 정보들을 DB에 보낸다
 			
 			File[] files = {
-					view.card3.center.termAndConditions,
-					view.card3.center.productManual
+					view.card2.center.termAndConditions,
+					view.card2.center.productManual
 			};
 			if (view.card2.center.termAndConditions != null) {
 				try (FileOutputStream fos = new FileOutputStream("shared/files/terms/" + files[0].getName())){
@@ -248,7 +270,7 @@ public class EventController {
 				} catch (FileNotFoundException e1) {
 					System.out.println("파일을 찾을수 없음");
 				} catch (IOException e1) {
-					System.out.println("첨부파일(약관,매뉴얼) 업로드 실패");
+					System.out.println("첨부파일(약관) 업로드 실패");
 				}
 			}
 			
@@ -258,7 +280,7 @@ public class EventController {
 				} catch (FileNotFoundException e1) {
 					System.out.println("파일을 찾을수 없음");
 				} catch (IOException e1) {
-					System.out.println("첨부파일(약관,매뉴얼) 업로드 실패");
+					System.out.println("첨부파일(매뉴얼) 업로드 실패");
 				}
 			}
 			
@@ -299,7 +321,7 @@ public class EventController {
 				
 				if (model.getImageFile() != null) {
 					imagePath = model.getImageFile().getAbsolutePath();
-					// DB에 수정된 데이터를 보낸다.
+					// DB에 새로운 이미지랑 나머지 수정된 데이터를 보낸다.
 					ProductDAO.updateProductById(model.getProduct(), imagePath, conn);
 					JOptionPane.showMessageDialog(view.card2.center, "상품수정 완료");
 				} else {
@@ -343,7 +365,7 @@ public class EventController {
 	public void editPanelSetText() {
     	try (Connection conn = InsuranceTeamConnector.getConnection()){
         	model.setProduct(ProductDAO.getProduct(model.getProductId(), conn));
-			System.out.println("DB상품정보 불러오기성공");
+//			System.out.println("DB상품정보 불러오기성공");
 			
 			view.card2.center.productIdField.setText(String.valueOf(model.getProduct().getProductId()));
 	        view.card2.center.divisionField.setText(model.getProduct().getDivision());
