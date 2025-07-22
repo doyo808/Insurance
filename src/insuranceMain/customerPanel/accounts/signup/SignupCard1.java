@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +27,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.AbstractDocument;
 
+import common.database.dao.CustomerDAO;
 import common.database.model.CustomerModel;
 import common.method.DigitLimitDocumentFilter;
+import common.method.InsuranceTeamConnector;
 import common.method.KoreanNameDocumentFilter;
 import net.miginfocom.swing.MigLayout;
 
@@ -52,10 +56,10 @@ public class SignupCard1 extends JPanel {
         scrollPane.getViewport().setBackground(Color.WHITE);
 
         // 약관 패널들
-        mainPanel.add(createAgreementPanel("전자금융거래 이용약관", "signup/전자금융거래이용약관.txt"), "growx");
-        mainPanel.add(createAgreementPanel("홈페이지 이용약관", "signup/홈페이지이용약관.txt"), "growx, gaptop 10");
-        mainPanel.add(createAgreementPanel("개인(신용)정보 수집 및 이용", "signup/개인정보수집및이용동의서.txt"), "growx, gaptop 10");
-        mainPanel.add(createAgreementPanel("고유식별정보 처리에 관한 사항", "signup/고유식별정보처리동의서.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("전자금융거래 이용약관", "/signup/전자금융거래이용약관.txt"), "growx");
+        mainPanel.add(createAgreementPanel("홈페이지 이용약관", "/signup/홈페이지이용약관.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("개인(신용)정보 수집 및 이용", "/signup/개인정보수집및이용동의서.txt"), "growx, gaptop 10");
+        mainPanel.add(createAgreementPanel("고유식별정보 처리에 관한 사항", "/signup/고유식별정보처리동의서.txt"), "growx, gaptop 10");
 
         // 실명확인 영역
         mainPanel.add(createIdentityPanel(), "growx, gaptop 20");
@@ -139,7 +143,7 @@ public class SignupCard1 extends JPanel {
     private String readTextFromFile(String filename) {
         StringBuilder sb = new StringBuilder();
 
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream(filename)) {
+        try (InputStream is = getClass().getResourceAsStream(filename)) {
             if (is == null) {
                 return "약관 파일을 찾을 수 없습니다: " + filename;
             }
@@ -169,6 +173,7 @@ public class SignupCard1 extends JPanel {
         JTextField rrnFront = new JTextField(6);
         JTextField rrnBack = new JTextField(7);
         JComboBox<String> phonePrefix = new JComboBox<>(new String[]{"010", "011", "016", "017", "018", "019"});
+        phonePrefix.setSelectedIndex(0);
 
         ((AbstractDocument) nameField.getDocument()).setDocumentFilter(new KoreanNameDocumentFilter());
         ((AbstractDocument) phoneField1.getDocument()).setDocumentFilter(new DigitLimitDocumentFilter(4));
@@ -206,23 +211,38 @@ public class SignupCard1 extends JPanel {
 
         confirmBtn.addActionListener(e -> {
             String name = nameField.getText().trim();
-            String first = phonePrefix.getToolTipText();
+            String first = (String) phonePrefix.getSelectedItem();
             String mid = phoneField1.getText().trim();
             String end = phoneField2.getText().trim();
             String front = rrnFront.getText().trim();
             String back = rrnBack.getText().trim();
+            String phoneNum = first + "-" + mid + "-" + end;
+            String personalId = front + "-" + back;
 
             if (name.isEmpty() || mid.length() != 4 || end.length() != 4 || front.length() != 6 || back.length() != 7) {
                 JOptionPane.showMessageDialog(panel, "모든 정보를 올바르게 입력하세요.", "입력 오류", JOptionPane.WARNING_MESSAGE);
                 isVerified = false;
                 return;
             }
-
+            try (Connection conn = InsuranceTeamConnector.getConnection()) {
+            	if (CustomerDAO.getCustomerByPersonalId(personalId, conn) != null) {
+            		JOptionPane.showMessageDialog(panel, "이미 등록된 주민등록번호입니다.", "알림", JOptionPane.WARNING_MESSAGE);
+                    isVerified = false;
+                    return;
+            	} else if (CustomerDAO.getCustomerByPhone(phoneNum, conn) != null) {
+            		JOptionPane.showMessageDialog(panel, "이미 등록된 휴대폰번호입니다.", "알림", JOptionPane.WARNING_MESSAGE);
+                    isVerified = false;
+                    return;
+            	}
+            } catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+            
             isVerified = true;
             JOptionPane.showMessageDialog(panel, "실명 확인이 완료되었습니다.", "확인", JOptionPane.INFORMATION_MESSAGE);
             cm.setCustomer_name(name);
-            cm.setPhone_number(first + "-" + mid + "-" + end);
-            cm.setPersonal_id(front + "-" + back);
+            cm.setPhone_number(phoneNum);
+            cm.setPersonal_id(personalId);
         });
 
         return panel;

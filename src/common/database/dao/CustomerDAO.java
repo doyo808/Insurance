@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import common.database.model.CustomerModel;
+import common.method.InsuranceTeamConnector;
 
 
 
 public class CustomerDAO {
 	
-	// 주민등록번호로 아이디로 고객 조회
+	// 주민등록번호로 고객 조회
 		public static CustomerModel getCustomerByPersonalId(String personal_id, Connection conn) throws SQLException {
 			String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -26,7 +27,18 @@ public class CustomerDAO {
 			} 
 		}
 		
-	
+	// 휴대폰번호로 고객 조회
+		public static CustomerModel getCustomerByPhone(String phone_number, Connection conn) throws SQLException {
+			String query = "SELECT * FROM CUSTOMERS WHERE phone_number = ?";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				pstmt.setString(1, phone_number);
+				
+				try (ResultSet rs = pstmt.executeQuery()) {
+					return rs.next() ? new CustomerModel(rs) : null;
+				}
+			} 
+		}
+		
 	// 로그인 아이디로 고객 조회
 	public static CustomerModel getCustomerByLoginId(String login_id, Connection conn) throws SQLException {
 		String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
@@ -37,6 +49,24 @@ public class CustomerDAO {
 				return rs.next() ? new CustomerModel(rs) : null;
 			}
 		} 
+	}
+	
+	// 이메일로 고객조회
+	public static CustomerModel getCustomerByEmail(String email)  {
+		try (Connection conn = InsuranceTeamConnector.getConnection()) {
+			String query = "SELECT * FROM CUSTOMERS WHERE email = ?";
+			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+				pstmt.setString(1, email);
+				
+				try (ResultSet rs = pstmt.executeQuery()) {
+					return rs.next() ? new CustomerModel(rs) : null;
+				}
+			} 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	// 모든 고객 조회

@@ -28,14 +28,15 @@ public class AutoPaymentInquire {
 			int count = 1;
 			for (ContractModel model : models) {
 				String[] data = new String[7];
-				data[0] = String.valueOf(count);
+				data[0] = String.valueOf(count++);
 				data[1] = ProductDAO.getProductName(model.getProduct_id(), conn);
 				data[2] = String.valueOf(model.getContract_id());
-				data[3] = String.valueOf(model.getSignup_date());
+				data[3] = model.getSignup_date() == null ? "가입심사중": String.valueOf(model.getSignup_date());
 				data[4] = String.valueOf(model.getCoverage_end_date());
 				data[5] = String.valueOf(
 						AutoPaymentDAO.getAutoPaymentsByContId(model.getContract_id(), conn) == null ? "수동이체" : "자동이체");
 				data[6] = String.valueOf((int) Math.round(model.getPremium()));
+				
 				datas.add(data);
 			}
 			
