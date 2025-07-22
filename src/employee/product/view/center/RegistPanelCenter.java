@@ -34,6 +34,7 @@ public class RegistPanelCenter extends JPanel {
     public JButton termsBrowseButton, manualBrowseButton, imageUploadButton, addCoverButton, delCoverButton;
     
     public JScrollPane tableScroll;
+    public JScrollPane coverTextScroll;
     public JTable coverageTable;
     
 	public File termAndConditions;
@@ -78,6 +79,7 @@ public class RegistPanelCenter extends JPanel {
         delCoverButton = new JButton("선택한 항목 지우기");
         coverNameField = new JTextField(8);
         coverDeatailField = new JTextArea(15,8);
+        coverTextScroll = new JScrollPane(coverDeatailField);
 
         // 레이블과 필드를 행으로 추가
         text.setFont(new Font("맑은 고딕", Font.BOLD, 15));
@@ -110,7 +112,7 @@ public class RegistPanelCenter extends JPanel {
         gbc.gridy = ++row;
         add(coverNameField, gbc);
         gbc.gridy = ++row;
-        add(coverDeatailField, gbc);
+        add(coverTextScroll, gbc);
         gbc.gridy = ++row;
         add(delCoverButton, gbc);
         
@@ -122,7 +124,6 @@ public class RegistPanelCenter extends JPanel {
         gbc.gridy++;
         gbc.gridx = 1;
         add(imagePreview, gbc);
-        
         
         termsNameField.setEditable(false);
         termsNameField.setFocusable(false);
@@ -149,7 +150,7 @@ public class RegistPanelCenter extends JPanel {
     }
     
     public void setTable() {
-    	
+    	// 테이블에 행 추가할때마다 바로갱신되게 기능구현해줘야함
     	tableModel.addRow(new Object[] {});
     }
     
@@ -166,6 +167,9 @@ public class RegistPanelCenter extends JPanel {
     	basePremiumField.setText("");
     	premiumConstantField.setText("");
     	imagePreview.setText("이미지 미리보기");
+    	tableModel.setRowCount(0);
+    	coverNameField.setText("");
+    	coverDeatailField.setText("");
     	
     	termAndConditions = null;
     	productManual = null;

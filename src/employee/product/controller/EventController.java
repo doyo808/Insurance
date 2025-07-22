@@ -83,6 +83,17 @@ public class EventController {
 		//################################################################
 		//RegistPanel의 이벤트들
 		// center 버튼들
+		
+		view.card3.center.addCoverButton.addActionListener(e -> {
+			// 보장목록 입력폼테이블에 추가해줌
+			
+		});
+		
+		view.card3.center.delCoverButton.addActionListener(e -> {
+			// 보장목록 입력폼 테이블에 추가된열을 지울수있음
+			
+		});
+		
 		view.card3.center.termsBrowseButton.addActionListener(e -> {
 			// 파일 탐색기에서 파일을 찾아 임시변수 file에 담아둔다
 			File file = fileExplore(view.card3.center);
@@ -128,8 +139,6 @@ public class EventController {
 		
 		view.card3.bottom.regist.addActionListener(e -> {
 			// card3.center패널에 있는 정보들을 DB에 보낸다
-			
-			// TODO 단 하나라도 빠진 정보가 있는지, 입력한 정보가 제대로 된건지 체크 후에 넘어간다
 			
 			File[] files = {
 					view.card3.center.termAndConditions,
