@@ -13,10 +13,12 @@ import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import common.account.login.Session;
@@ -35,13 +37,13 @@ public class ClaimDetailPanel extends JPanel {
 	private JTable claimInfoTable;
 	private JTable employeeInfoTable;
 	private JTable processStatusTable;
-	
+
 	DefaultTableModel claimModel;
 	DefaultTableModel empModel;
 	DefaultTableModel processModel;
-	
+
 	ClaimsModel claimDetail;
-	
+
 	public ClaimDetailPanel(JPanel parentCardPanel, int claim_id) {
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout) parentCardPanel.getLayout();
@@ -58,7 +60,7 @@ public class ClaimDetailPanel extends JPanel {
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-		
+
 		claimInfoTable = createTableSection(centerPanel, "보험금 청구내역",
 				new String[] { "접수번호", "사고발병일자", "보험상품명", "재해자", "청구유형" });
 		claimInfoTable.setRowHeight(30);
@@ -67,20 +69,42 @@ public class ClaimDetailPanel extends JPanel {
 		employeeInfoTable = createTableSection(centerPanel, "보상 담당자",
 				new String[] { "재해자", "소속부서", "담당자명", "담당자 전화번호" });
 		employeeInfoTable.setRowHeight(30);
-		
+
 		centerPanel.add(Box.createVerticalStrut(50));
 
 		processStatusTable = createTableSection(centerPanel, "처리 현황",
 				new String[] { "접수날짜", "서류심사날짜", "사고조사날짜", "보험금 지급심사날짜", "보험금 지급날짜", "총 지급금액" });
 		processStatusTable.setRowHeight(30);
-		
-		JScrollPane scrollPane = new JScrollPane(centerPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		JScrollPane scrollPane = new JScrollPane(centerPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.CENTER);
-		
+
 //		add(centerPanel, BorderLayout.CENTER);
 		add(bottomBP, BorderLayout.SOUTH);
-		
-		getClaimDetailTable(claim_id); // 여기에 어떻게 claim_id를 가지고 오지...
+
+		getClaimDetailTable(claim_id);
+
+		// 가운데 정렬 렌더러
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		// 모든 열에 가운데 정렬 적용
+		for (int i = 0; i < claimInfoTable.getColumnCount(); i++) {
+			claimInfoTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			claimInfoTable.getColumnModel().getColumn(i).setResizable(false);
+		}
+
+		for (int i = 0; i < employeeInfoTable.getColumnCount(); i++) {
+			employeeInfoTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			employeeInfoTable.getColumnModel().getColumn(i).setResizable(false);
+		}
+
+		for (int i = 0; i < processStatusTable.getColumnCount(); i++) {
+			processStatusTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+			processStatusTable.getColumnModel().getColumn(i).setResizable(false);
+		}
+
 	}
 
 	// 수정 불가능한 테이블 생성 메서드
@@ -138,7 +162,7 @@ public class ClaimDetailPanel extends JPanel {
 				claimModel.setValueAt(claimDetail.getClaim_category(), 0, 4);
 				
 				empModel = (DefaultTableModel) employeeInfoTable.getModel();
-				empModel.setValueAt(claimDetail.getInsured_name(), 0, 0); // 재해자 이름
+				empModel.setValueAt(claimDetail.getInsured_name(), 0, 0); 
 		        empModel.setValueAt(claimDetail.getDepartment_name(), 0, 1);
 		        empModel.setValueAt(claimDetail.getEmployee_name(), 0, 2);
 		        empModel.setValueAt(claimDetail.getEmployee_phone_number(), 0, 3);

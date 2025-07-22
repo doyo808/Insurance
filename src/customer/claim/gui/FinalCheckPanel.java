@@ -3,11 +3,12 @@ package customer.claim.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import common.account.login.Session;
+import common.database.dao.ClaimDAO;
+import common.database.model.ClaimsModel;
+import common.database.model.CustomerModel;
 import common.database.model.NewClaimDataModel;
+import common.method.InsuranceTeamConnector;
 import customer.claim.gui.component.BottomButtonPanel;
 import customer.claim.gui.component.TitlePanel;
 import insuranceMain.customerPanel.CustomerMainPanel;
@@ -25,13 +31,13 @@ public class FinalCheckPanel extends JPanel {
 	private CustomerMainPanel cmp;
 	private JPanel parentCardPanel;
 	private List<JLabel> valueLabels = new ArrayList<>();
+	private ClaimsModel claimModel;
 	
 	public FinalCheckPanel(JPanel parentCardPanel, NewClaimDataModel claimData, CustomerMainPanel cmp) {
 		this.cmp = cmp;
 		this.parentCardPanel = parentCardPanel;
 		CardLayout cl = (CardLayout)parentCardPanel.getLayout();
 		setLayout(new BorderLayout());
-		
 		
 		TitlePanel title = new TitlePanel("보험금 청구내역 확인");
 		add(title, BorderLayout.NORTH);
@@ -49,10 +55,10 @@ public class FinalCheckPanel extends JPanel {
 		    accidentDate = new Date(claimData.getAccident_date().getTime());
 		}
 		
-		List<String> claimType = claimData.getClaim_type_name();
+		String claimType = claimData.getClaim_type_name();
 		String accidentDescription = claimData.getAccident_description();
 		String bankAccount = claimData.getBank_account();
-		List<String> documents = claimData.getDocument_type_name();
+		List<String> documents = claimData.getDocument_type_names();
 		
 		Object[][] labelValuePairs = {
 			    {"1. 청구대상: ", claimTarget},
@@ -87,27 +93,38 @@ public class FinalCheckPanel extends JPanel {
 
 	      bottomBP.setActionButton("보험금 청구하기");
 	      bottomBP.getNextButton().addActionListener((e) -> {
-	    	// 청구 내역이 DB에 저장되면서 청구 첫페이지로 넘어감
+	    	// 청구 내역이 DB에 저장
+	    	  try (Connection conn = InsuranceTeamConnector.getConnection()) {
+
+	  			CustomerModel cm = Session.getCustomer();
+	  			if (cm == null) {
+	  				JOptionPane.showMessageDialog(this, "로그인 정보가 없습니다.");
+	  				return;
+	  			}
+	  			
+	  		  
+	  			
+	    	  int result = ClaimDAO.insertClaim(conn, claimData);
+
+	    	  if (result > 0) {
+	    	      JOptionPane.showMessageDialog(null, "청구가 정상적으로 등록되었습니다.");
+	    	  } else {
+	    	      JOptionPane.showMessageDialog(null, "청구 등록에 실패했습니다.");
+	    	      return;
+	    	  }
 	    	  
-	    	  JOptionPane.showMessageDialog(this, "보험금 청구가 완료되었습니다.", "안내", JOptionPane.INFORMATION_MESSAGE);
-	    	  
-//	    	  CustomerMainPanel cmp = new CustomerMainPanel();
-//	    	  ClaimMainPanel claimMainPanel = new ClaimMainPanel(cmp);
-	    	  
-//	    	  LoggedInCenterPanel locp = new LoggedInCenterPanel();
-	    	  
-	    	  
+	    	  // 메인패널로 넘어감
 	    	  parentCardPanel.removeAll(); // 기존 패널들 제거
-//	    	  parentCardPanel.add(claimMainPanel, "MainPanel");
 	    	  
 	    	  cmp.showCard("accounts");
 	    	  cmp.getAMP().showCard("회원_메인");
-	    	  
-//	    	  cl.show(parentCardPanel, "MainPanel");
-	    	  
 	    	  parentCardPanel.revalidate();
 	    	  parentCardPanel.repaint();
-	      });
+	    	  
+	    	  } catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+	     });
 	}
 	
 	 public void resetPanel() {

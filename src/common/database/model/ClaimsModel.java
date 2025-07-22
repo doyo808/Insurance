@@ -35,6 +35,8 @@ public class ClaimsModel {
 			private Date accident_investigation_date;
 			private Date payment_review_date;
 			
+			private String customer_id;
+			
 			// 생성자
 //			public ClaimsModel(ResultSet rs) throws SQLException {
 //				this.claim_id = rs.getInt("claim_id");
@@ -113,6 +115,14 @@ public class ClaimsModel {
 
 			public Date getClaim_date() {
 				return claim_date;
+			}
+			
+			public String getCustomer_id() {
+				return customer_id;
+			}
+
+			public void setCustomer_id(String customer_id) {
+				this.customer_id = customer_id;
 			}
 
 			public void setClaim_date(Date claim_date) {
@@ -308,15 +318,8 @@ public class ClaimsModel {
 						+ ", bank_account=" + bank_account + ", beneficiary_name=" + beneficiary_name
 						+ ", diagnosis_name=" + diagnosis_name + ", insured_name=" + insured_name + ", product_name="
 						+ product_name + ", employee_name=" + employee_name + ", department_name=" + department_name
-						+ ", employee_phone_number=" + employee_phone_number + "]";
+						+ ", employee_phone_number=" + employee_phone_number + ", document_review_date="
+						+ document_review_date + ", accident_investigation_date=" + accident_investigation_date
+						+ ", payment_review_date=" + payment_review_date + ", customer_id=" + customer_id + "]";
 			}
-
-			
-
-			
-			
-			
-		
-			
-			
 }

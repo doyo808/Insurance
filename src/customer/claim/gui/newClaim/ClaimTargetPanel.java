@@ -199,6 +199,7 @@ public class ClaimTargetPanel extends JPanel {
 						claimData.setCustomer_name(customerInfo.getCustomer_name());
 						claimData.setPersonal_id(customerInfo.getPersonal_id());
 						claimData.setPhone_number(customerInfo.getPhone_number());
+						claimData.setCustomer_id(cm.getCustomer_id());
 					} else {
 						JOptionPane.showMessageDialog(this, "고객 정보를 찾을 수 없습니다.");
 						return;

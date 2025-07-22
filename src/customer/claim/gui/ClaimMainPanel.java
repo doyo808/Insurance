@@ -60,7 +60,6 @@ public class ClaimMainPanel extends JPanel {
       methodInfoP = new ClaimMethodInfo(claimCardP);
       claimHistoryP = new ClaimHistoryPanel(claimCardP, newClaimData);
       
-//      전체적인 연결 확인하려면 주석 해제! / 하나씩 볼거면 메인패널과 내가 수정중인 패널 제외 주석처리
       claimCardP.add(firstP, "ClaimFirstPanel");
       claimCardP.add(targetP, "ClaimTargetPanel");
       claimCardP.add(accidentDateP, "AccidentDatePanel");
@@ -75,16 +74,15 @@ public class ClaimMainPanel extends JPanel {
       claimCardP.add(methodInfoP, "ClaimMethodInfo");
       claimCardP.add(claimHistoryP, "ClaimHistoryPanel");
       
-//      // 첫페이지에 보여지기 위함
 		CardLayout cl = (CardLayout) claimCardP.getLayout();
 		cl.show(claimCardP, "ClaimFirstPanel");
-//		cl.show(카드패널, "ClaimTargetPanel");
-//		cl.show(카드패널, "AccidentDatePanel");
-//		cl.show(카드패널, "ClaimSituationPanel");
-//		cl.show(카드패널, "ClaimTypePanel");
-//		cl.show(카드패널, "EnterBankAccountPanel");
-//		cl.show(카드패널, "DocumentRegistrationPanel");
-//		cl.show(카드패널, "CheckFinalClaimDetails");
+//		cl.show(claimCardP, "ClaimTargetPanel");
+//		cl.show(claimCardP, "AccidentDatePanel");
+//		cl.show(claimCardP, "ClaimSituationPanel");
+//		cl.show(claimCardP, "ClaimTypePanel");
+//		cl.show(claimCardP, "EnterBankAccountPanel");
+//		cl.show(claimCardP, "DocumentRegistrationPanel");
+//		cl.show(claimCardP, "CheckFinalClaimDetails");
 		
       setVisible(true);
 

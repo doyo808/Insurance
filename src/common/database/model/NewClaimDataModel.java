@@ -12,6 +12,7 @@ public class NewClaimDataModel {
 	// 청구 대상 관련
     private boolean isSelf;
     private String customer_name;
+    private int customer_id;
     private String personal_id;
     private String phone_number;
     
@@ -34,7 +35,9 @@ public class NewClaimDataModel {
     private Character compensation_type;
     
     // 청구 항목
-    private List<String> claim_type_name;
+    private String claim_type_name;
+    private List<String> claim_type_names;
+    private String claim_type_cd;
 
     // 청구 유형 (질병/일반상해/교통사고)
     private String claim_category;
@@ -42,12 +45,14 @@ public class NewClaimDataModel {
     // 진단코드, 진단명
     private String diagnosis_cd;
     private String diagnosis_name;
+    private List<String> diagnosis_names;
     
     // 사고 내용
     private String accident_description;
     
     // 직원누구하지
-    private String employee_name = "이철수";
+    private String employee_name = "장기용";
+    private int employee_id = 8;
     
     // 청구상태 - 처음 접수할때는 다 RECEIVED
     private String claim_status = "RECEIVED"; 
@@ -60,7 +65,11 @@ public class NewClaimDataModel {
     private String beneficiary_name; // 예금주
     
     // 제출 서류 목록
-    private List<String> document_type_name = new ArrayList<>();
+    private List<String> document_type_names = new ArrayList<>();
+    private String document_type_name;
+    private String document_type_cd;
+    
+    private int contract; 
 	
     public NewClaimDataModel() {
     	
@@ -73,16 +82,36 @@ public class NewClaimDataModel {
         phone_number = null;
         accident_date = null;
         compensation_type = null;
-        claim_type_name = new ArrayList<String>();
+        claim_type_name = null;
+        claim_type_cd = null;
+        claim_type_names = new ArrayList<String>();
         claim_category = null;
         diagnosis_name = null;
         accident_description = null;
-        claim_type_name = new ArrayList<>();
+        claim_type_cd = null;
         bank_account = null;
         bank_name = null;
         beneficiary_name = null;
-        document_type_name = new ArrayList<String>();
+        document_type_names = new ArrayList<String>();
+        document_type_name = null;
+        document_type_cd = null;
     }
+
+	public int getCustomer_id() {
+		return customer_id;
+	}
+
+	public void setCustomer_id(int customer_id) {
+		this.customer_id = customer_id;
+	}
+
+	public int getContract() {
+		return contract;
+	}
+
+	public void setContract(int contract) {
+		this.contract = contract;
+	}
 
 	public boolean isSelf() {
 		return isSelf;
@@ -110,6 +139,16 @@ public class NewClaimDataModel {
 
 	public String getPhone_number() {
 		return phone_number;
+	}
+	
+	
+
+	public List<String> getClaim_type_names() {
+		return claim_type_names;
+	}
+
+	public void setClaim_type_names(List<String> claim_type_names) {
+		this.claim_type_names = claim_type_names;
 	}
 
 	public void setPhone_number(String phone_number) {
@@ -140,12 +179,21 @@ public class NewClaimDataModel {
 		this.compensation_type = compensation_type;
 	}
 
-	public List<String> getClaim_type_name() {
+
+	public String getClaim_type_name() {
 		return claim_type_name;
 	}
 
-	public void setClaim_type_name(List<String> claim_type_name) {
+	public void setClaim_type_name(String claim_type_name) {
 		this.claim_type_name = claim_type_name;
+	}
+
+	public String getClaim_type_cd() {
+		return claim_type_cd;
+	}
+
+	public void setClaim_type_cd(String claim_type_cd) {
+		this.claim_type_cd = claim_type_cd;
 	}
 
 	public String getClaim_category() {
@@ -212,16 +260,39 @@ public class NewClaimDataModel {
 		this.beneficiary_name = beneficiary_name;
 	}
 
-	public List<String> getDocument_type_name() {
+
+	public List<String> getDiagnosis_names() {
+		return diagnosis_names;
+	}
+
+	public void setDiagnosis_names(List<String> diagnosis_names) {
+		this.diagnosis_names = diagnosis_names;
+	}
+
+	public List<String> getDocument_type_names() {
+		return document_type_names;
+	}
+
+	public void setDocument_type_names(List<String> document_type_names) {
+		this.document_type_names = document_type_names;
+	}
+
+	public String getDocument_type_name() {
 		return document_type_name;
 	}
 
-	public void setDocument_type_name(List<String> document_type_name) {
+	public void setDocument_type_name(String document_type_name) {
 		this.document_type_name = document_type_name;
 	}
 
-	
-	
+	public String getDocument_type_cd() {
+		return document_type_cd;
+	}
+
+	public void setDocument_type_cd(String document_type_cd) {
+		this.document_type_cd = document_type_cd;
+	}
+
 	public String getDiagnosis_cd() {
 		return diagnosis_cd;
 	}
@@ -230,17 +301,27 @@ public class NewClaimDataModel {
 		this.diagnosis_cd = diagnosis_cd;
 	}
 
-	@Override
-	public String toString() {
-		return "NewClaimDataModel [isSelf=" + isSelf + ", customer_name=" + customer_name + ", personal_id="
-				+ personal_id + ", phone_number=" + phone_number + ", claim_date=" + claim_date + ", accident_date="
-				+ accident_date + ", compensation_type=" + compensation_type + ", claim_type_name=" + claim_type_name
-				+ ", claim_category=" + claim_category + ", diagnosis_cd=" + diagnosis_cd + ", diagnosis_name="
-				+ diagnosis_name + ", accident_description=" + accident_description + ", employee_name=" + employee_name
-				+ ", claim_status=" + claim_status + ", bank_account=" + bank_account + ", bank_name=" + bank_name
-				+ ", beneficiary_name=" + beneficiary_name + ", document_type_name=" + document_type_name + "]";
+	
+	public int getEmployee_id() {
+		return employee_id;
 	}
 
-	
-	
+	public void setEmployee_id(int employee_id) {
+		this.employee_id = employee_id;
+	}
+
+	@Override
+	public String toString() {
+		return "NewClaimDataModel [isSelf=" + isSelf + ", customer_name=" + customer_name + ", customer_id="
+				+ customer_id + ", personal_id=" + personal_id + ", phone_number=" + phone_number + ", claim_date="
+				+ claim_date + ", accident_date=" + accident_date + ", compensation_type=" + compensation_type
+				+ ", claim_type_name=" + claim_type_name + ", claim_type_names=" + claim_type_names + ", claim_type_cd="
+				+ claim_type_cd + ", claim_category=" + claim_category + ", diagnosis_cd=" + diagnosis_cd
+				+ ", diagnosis_name=" + diagnosis_name + ", diagnosis_names=" + diagnosis_names
+				+ ", accident_description=" + accident_description + ", employee_name=" + employee_name
+				+ ", employee_id=" + employee_id + ", claim_status=" + claim_status + ", bank_account=" + bank_account
+				+ ", bank_name=" + bank_name + ", beneficiary_name=" + beneficiary_name + ", document_type_names="
+				+ document_type_names + ", document_type_name=" + document_type_name + ", document_type_cd="
+				+ document_type_cd + ", contract=" + contract + "]";
+	}
 }
