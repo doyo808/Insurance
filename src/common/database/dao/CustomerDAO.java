@@ -17,7 +17,7 @@ public class CustomerDAO {
 	
 	// 주민등록번호로 고객 조회
 		public static CustomerModel getCustomerByPersonalId(String personal_id, Connection conn) throws SQLException {
-			String query = "SELECT * FROM CUSTOMERS WHERE login_id = ?";
+			String query = "SELECT * FROM CUSTOMERS WHERE personal_id = ?";
 			try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 				pstmt.setString(1, personal_id);
 				
