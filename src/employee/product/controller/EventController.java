@@ -270,7 +270,7 @@ public class EventController {
 			int limitHigh = Integer.parseInt(view.card2.center.joinLimitHighField.getText());
 			double basic = Double.parseDouble(view.card2.center.basePremiumField.getText());
 			double constant = Double.parseDouble(view.card2.center.premiumConstantField.getText());
-			String imagePath = "";
+			String imagePath;
 			
 			try (Connection conn = InsuranceTeamConnector.getConnection()){
 				model.getProduct().setDivision(division);

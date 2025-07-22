@@ -51,6 +51,7 @@ public class ShowPanelCenter extends JPanel{
 		setTableData();
 	}
 	
+	// 이벤트 컨트롤러로 분리하기에는 초기에 패널들 구성할때 테이블 띄우기가 힘들거같아서 그대로 두기로함
 	/***
 	 * ShowPanelCenter 클래스 전용메서드
 	 * DB에서 데이터를 받아서 테이블에 추가해주는 메서드
