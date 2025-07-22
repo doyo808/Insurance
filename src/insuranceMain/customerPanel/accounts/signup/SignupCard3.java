@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -17,6 +18,7 @@ import java.util.Base64;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +34,7 @@ import common.account.signup.customer.PasswordValidator;
 import common.database.dao.CustomerDAO;
 import common.database.model.CustomerModel;
 import common.method.InsuranceTeamConnector;
+import employee.crm.gui.EmailSender;
 
 public class SignupCard3 extends JPanel {
     private JTextField nameField, personalField, phoneField, zipField, addressField, detailAddressField;
@@ -291,7 +294,7 @@ public class SignupCard3 extends JPanel {
         y += FIELD_GAP;  // emailFrontField 아래로 이동
 
         // 이메일 확인 버튼 (emailFrontField 바로 아래에 배치)
-        emailCheckBtn = new JButton("이메일 확인");
+        emailCheckBtn = new JButton("이메일 인증");
         emailCheckBtn.setBounds(startX + LABEL_WIDTH + H_MARGIN, y, 100, FIELD_HEIGHT);
         add(emailCheckBtn);
 
@@ -324,7 +327,8 @@ public class SignupCard3 extends JPanel {
             if (!front.isEmpty() && domain.contains(".") && email.contains("@")) {
                 if (CustomerDAO.getCustomerByEmail(email) == null) {
                     JOptionPane.showMessageDialog(this, "유효한 이메일입니다.");
-                    setEmailCheck(true);
+                    showEmailVerificationDialog(email);
+                    
                 } else {
                     JOptionPane.showMessageDialog(this, "중복된 이메일이 있습니다.");
                     setEmailCheck(false);
@@ -495,5 +499,64 @@ public class SignupCard3 extends JPanel {
     	jobAddress2Field.setEnabled(valid);
     	jobAddress2Field.setText("");
     	
+    }
+    
+    private void showEmailVerificationDialog(String email) {
+        JDialog dialog = new JDialog((Frame) null, "이메일 인증", true);
+        dialog.setSize(300, 200);
+        dialog.setLayout(null);
+        dialog.setLocationRelativeTo(this);
+
+        JLabel label = new JLabel("인증번호를 이메일로 전송합니다.");
+        label.setBounds(40, 20, 220, 20);
+        dialog.add(label);
+
+        JButton sendBtn = new JButton("인증번호 전송");
+        sendBtn.setBounds(80, 50, 140, 30);
+        dialog.add(sendBtn);
+
+        JTextField codeField = new JTextField();
+        codeField.setBounds(40, 100, 100, 25);
+        codeField.setVisible(false);
+        dialog.add(codeField);
+
+        JButton confirmBtn = new JButton("확인");
+        confirmBtn.setBounds(150, 100, 80, 25);
+        confirmBtn.setVisible(false);
+        dialog.add(confirmBtn);
+
+        // 인증번호를 저장할 변수
+        final String[] verificationCode = {null};
+
+        sendBtn.addActionListener(ev -> {
+            // 실제 인증번호 전송 로직 실행
+            verificationCode[0] = sendVerificationCode(email); // 예: "123456"
+            JOptionPane.showMessageDialog(dialog, "인증번호가 전송되었습니다.");
+            codeField.setVisible(true);
+            confirmBtn.setVisible(true);
+        });
+
+        confirmBtn.addActionListener(ev -> {
+            String entered = codeField.getText().trim();
+            if (entered.equals(verificationCode[0])) {
+                JOptionPane.showMessageDialog(dialog, "이메일 인증 성공!");
+                setEmailCheck(true);
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "인증번호가 일치하지 않습니다.");
+                setEmailCheck(false);
+            }
+        });
+
+        dialog.setVisible(true);
+    }
+    private String sendVerificationCode(String email) {
+        // 랜덤 코드 생성
+        String code = String.valueOf((int)(Math.random() * 900000) + 100000);
+
+        // TODO: 실제 이메일 전송 로직 추가 (이메일 API 등)
+        EmailSender.sendAuthenticationMail(email, code, null);
+        System.out.println("[" + email + "]에게 전송된 인증번호: " + code);
+        return code;
     }
 }

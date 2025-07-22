@@ -18,6 +18,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.swing.JOptionPane;
 
 public class EmailSender {
 
@@ -87,6 +88,75 @@ public class EmailSender {
                 allSent = false;
             }
         }
+        
+        return allSent;        
+        
+    }
+    
+    public static boolean sendAuthenticationMail(String recipient, String code, File attachment) {
+    	String subject = "(KD손해보험)이메일 인증을위해 인증코드를 확인해주세요.";
+    	String htmlTemplate = "안녕하세요. 언제나 고객님들의 건강을 위해 최선을 다하는 KD손해보험 입니다.\n"
+    			+ "회원가입을 위한 이메일 인증번호는\n"
+    			+ "%s 입니다.";
+    	String content = String.format(htmlTemplate, code);
+        Properties props = new Properties();
+
+        // SMTP 설정
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // 인증 정보
+        Session session = Session.getInstance(props, new Authenticator() {
+        	
+        	@Override
+        	protected PasswordAuthentication getPasswordAuthentication() {
+        		return new PasswordAuthentication(USERNAME, PASSWORD);
+        	}
+		});
+        
+        boolean allSent = true;
+        
+    	try {
+        	// 메시지 구성
+        	Message message = new MimeMessage(session);
+        	message.setFrom(new InternetAddress(USERNAME));            	
+        	message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+        	message.setSubject(subject);
+        	
+        	 // 본문 + 첨부파일 포함을 위한 multipart
+            Multipart multipart = new MimeMultipart();
+
+            // 1. 본문 파트
+            MimeBodyPart textPart = new MimeBodyPart();
+            textPart.setText(content, "utf-8");
+            multipart.addBodyPart(textPart);
+
+            
+            // 2. 첨부파일 파트
+            if (attachment != null) {
+            	
+            	MimeBodyPart filePart = new MimeBodyPart();
+                DataSource source = new FileDataSource(attachment);
+                filePart.setDataHandler(new DataHandler(source));                
+                filePart.setFileName(attachment.getName());
+                multipart.addBodyPart(filePart);
+            }
+            
+            // 메시지에 multipart 설정
+            message.setContent(multipart);
+
+            // 전송
+            Transport.send(message);
+            JOptionPane.showMessageDialog(null, "✅ 메일 전송 완료");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "❌ 메일 전송 실패");
+            allSent = false;
+        }
+        
         
         return allSent;        
         
