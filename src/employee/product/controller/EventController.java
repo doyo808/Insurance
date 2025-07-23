@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -22,7 +24,9 @@ import javax.swing.JOptionPane;
 import employee.product.model.ProductInfoModel;
 import employee.product.view.ProductManageMainPanel;
 import common.method.InsuranceTeamConnector;
+import common.database.dao.ProductCoverageDetailDAO;
 import common.database.dao.ProductDAO;
+import common.database.model.ProductCoverageDetailModel;
 import common.database.model.ProductModel;
 
 public class EventController {
@@ -36,6 +40,12 @@ public class EventController {
 		
 		//##########################################################
 		// ShowPanel의 이벤트들
+		
+		// ShowPanel 테이블의 이벤트
+//		view.card1.center.coverTable.getSelectionModel().addListSelectionListener(e -> {
+//			System.out.println("test");
+//			view.card1.center.setCoverTableData();
+//		});
 		
 		// ShowPanel의 아래쪽 버튼들
 		view.card1.bottom.productRegistPage.addActionListener(e -> {
@@ -63,15 +73,28 @@ public class EventController {
 		
 		// ShowPanel의 테이블 클릭시
 		view.card1.center.table.addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				int row = view.card1.center.table.getSelectedRow();
+				
+				if(e.getClickCount() == 1) {
+					Object value = view.card1.center.table.getValueAt(row, 0);
+					System.out.println("ShowPanel 상품테이블 행 선택됨");
+					model.setProductId((int)value);
+					setCoverTableData();
+				}
 				// 행을 두번 클릭했을때 발생하는 이벤트
 				if(e.getClickCount() == 2) {
 					// 여기서 선택된 행의 상품번호를 기반으로 상품수정 페이지로 넘어갈 수 있어야함
-					int row = view.card1.center.table.getSelectedRow();
 					Object value = view.card1.center.table.getValueAt(row, 0);
-					System.out.println(value);
-					
+//					System.out.println(value);
+					model.setProductId((int)value);
+					view.card2.center.productId = model.getProductId();
+					if (model.getProductId() != 0) {
+						editPanelSetText();
+						view.showCard("edit");					
+					}
 				}
 			}
 		});
@@ -381,8 +404,8 @@ public class EventController {
 	        view.card2.center.productNameField.setText(model.getProduct().getProductName());
 	        view.card2.center.joinAgeLowField.setValue(model.getProduct().getJoinAgeLow());
 	        view.card2.center.joinAgeHighField.setValue(model.getProduct().getJoinAgeHigh());
-	        view.card2.center.joinLimitLowField.setText(String.valueOf(model.getProduct().getJoinAgeLow()));
-	        view.card2.center.joinLimitHighField.setText(String.valueOf(model.getProduct().getJoinAgeHigh()));
+	        view.card2.center.joinLimitLowField.setText(String.valueOf(model.getProduct().getJoinLimitLow()));
+	        view.card2.center.joinLimitHighField.setText(String.valueOf(model.getProduct().getJoinLimitHigh()));
 	        view.card2.center.termsNameField.setText(model.getProduct().getTermAndConditionsPath());
 	        view.card2.center.manualNameField.setText(model.getProduct().getProductManualPath());
 	        view.card2.center.basePremiumField.setText(String.valueOf(model.getProduct().getBasePremium()));
@@ -398,4 +421,26 @@ public class EventController {
 		}
     }
 	
+	public void setCoverTableData() {
+		// 기존에 테이블에 데이터가있다면 내용제거
+		if (view.card1.center.coverTableModel.getRowCount() != 0) {
+			view.card1.center.coverTableModel.setRowCount(0);
+		}
+		// db에서 데이터불러오고 테이블에 추가
+		try (Connection conn = InsuranceTeamConnector.getConnection()){
+			model.setCovers(ProductCoverageDetailDAO.getProductDetails(model.getProductId(), conn));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		List<ProductCoverageDetailModel> test = model.getCovers();
+		System.out.println(test.toString());
+		
+		for (ProductCoverageDetailModel cover : test) {
+			Object[] rows = {cover.getProductCoverName(),
+					cover.getProductCoverDetail()};
+			System.out.println(Arrays.toString(rows));
+			view.card1.center.coverTableModel.addRow(rows);
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package employee.product.view.center;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,18 +12,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import common.database.dao.ProductCoverageDetailDAO;
 import common.database.dao.ProductDAO;
+import common.database.model.ProductCoverageDetailModel;
 import common.database.model.ProductModel;
 import common.method.InsuranceTeamConnector;
 
 public class ShowPanelCenter extends JPanel{
-	public JTable table;
-	public DefaultTableModel tableModel;
-	public JScrollPane jpane;
+	public JTable table, coverTable;
+	public DefaultTableModel tableModel, coverTableModel;
+	public JScrollPane jpane, coverScroll;
 
 	List<ProductModel> products = null;
+	List<ProductCoverageDetailModel> covers = null;
 	
 	public ShowPanelCenter() {
+		setLayout(new FlowLayout());
 		init();
 	}
 	
@@ -43,10 +48,23 @@ public class ShowPanelCenter extends JPanel{
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		jpane = new JScrollPane(table);
-		jpane.setPreferredSize(new Dimension(1000, 400));
+		jpane.setPreferredSize(new Dimension(900, 400));
 		jpane.setAutoscrolls(true);
-		jpane.setFont(new Font("맑은 고딕", Font.BOLD, 18));
 		add(jpane);
+		
+		coverTableModel = new DefaultTableModel(new String[]{"담보명","보장내용"}, 0);
+		coverTable = new JTable(coverTableModel) {
+			public boolean isCellEditable(int row, int column) {return false;};
+		};
+		coverTable.setShowVerticalLines(false);
+		coverTable.setFont(new Font("맑은 고딕 Semilight", Font.PLAIN, 15));
+		coverTable.setRowHeight(30);
+		coverTable.getTableHeader().setReorderingAllowed(false);
+		
+		coverScroll = new JScrollPane(coverTable);
+		coverScroll.setPreferredSize(new Dimension(200, 400));
+		coverScroll.setAutoscrolls(true);
+		add(coverScroll);
 		
 		setTableData();
 	}
