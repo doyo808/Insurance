@@ -9,12 +9,14 @@ import javax.swing.JPanel;
 public class ShowPanelButtons extends JPanel{
 	
 	public JButton productRegistPage = new JButton("새상품등록");
+	public JButton addProductCoverBtn = new JButton("보장내용추가");
 	public JButton editProductPage = new JButton("상품수정");
 	
 	public ShowPanelButtons() {
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
 		add(productRegistPage);
+		add(addProductCoverBtn);
 		add(editProductPage);
 	}
 }
