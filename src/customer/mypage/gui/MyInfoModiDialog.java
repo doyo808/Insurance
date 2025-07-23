@@ -127,21 +127,17 @@ public class MyInfoModiDialog extends JDialog {
         
 
         // 기존 정보 설정
-        tfName.setText(cm.getCustomer_name().trim());
-        tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()).trim());        
-        //tfEmail.setText(cm.getEmail());
-        MyPageUtil.splitEmailToFields(cm.getEmail(), tfEmailId, cbEmailDomain);
-        //tfPhone.setText(cm.getPhone_number());
+        tfName.setText(cm.getCustomer_name() != null ? cm.getCustomer_name().trim() : "");
+        tfBirth.setText(MyPageUtil.convertJuminToBirth(cm.getPersonal_id()).trim());
+        MyPageUtil.splitEmailToFields(cm.getEmail(), tfEmailId, cbEmailDomain);        
         MyPageUtil.splitPhoneToFields(cm.getPhone_number(), cbPhoneLocal, tfPhoneMid, tfPhoneLast);        
-        tfAddress1.setText(cm.getAddress_1().trim());
-        tfAddress2.setText(cm.getAddress_2().trim());        
-        //tfJob.setText(cm.getJob());
+        tfAddress1.setText(cm.getAddress_1() != null ? cm.getAddress_1().trim() : "");
+        tfAddress2.setText(cm.getAddress_2() != null ? cm.getAddress_2().trim() : "");
         cbJob.setSelectedItem(cm.getJob().trim());
-        tfCompany.setText(cm.getCompany_name().trim());
-        //tfCompanyPhone.setText(cm.getJob_phone_number().trim());
+        tfCompany.setText(cm.getCompany_name() != null ? cm.getCompany_name().trim() : "");        
         MyPageUtil.splitPhoneToFields(cm.getJob_phone_number(), cbCompanyPhoneLocal, tfCompanyPhoneMid, tfCompanyPhoneLast);
-        tfWorkAddress1.setText(cm.getJob_address1().trim());
-        tfWorkAddress2.setText(cm.getJob_address2().trim());
+        tfWorkAddress1.setText(cm.getJob_address1() != null ? cm.getJob_address1().trim() : "");
+        tfWorkAddress2.setText(cm.getJob_address2() != null ? cm.getJob_address2().trim() : "");
         
 
         // 이름, 생년월일은 수정 불가
