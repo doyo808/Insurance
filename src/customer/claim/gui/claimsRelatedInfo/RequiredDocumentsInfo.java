@@ -27,15 +27,12 @@ public class RequiredDocumentsInfo extends JPanel {
 		setLayout(new BorderLayout());
 		setVisible(true);
 
-		// 제목
 		TitlePanel title = new TitlePanel("상황별 필요서류 안내");
 		add(title, BorderLayout.NORTH);
 
-		// 가운데 패널에 스크롤 추가
 		JPanel centerPanel = createRequiredDocsPanel();
 		
 		JScrollPane scrollPane = new JScrollPane(centerPanel);
-//		scrollPane.setPreferredSize(new Dimension(900, 600));
         scrollPane.setBorder(BorderFactory.createEmptyBorder(20, 150, 20, 150)); // 바깥 여백
         scrollPane.getVerticalScrollBar().setUnitIncrement(15); // 스크롤 속도 조절
         add(scrollPane, BorderLayout.CENTER);
@@ -52,7 +49,6 @@ public class RequiredDocumentsInfo extends JPanel {
 	// 상황별 필요서류 패널 구성
 	private JPanel createRequiredDocsPanel() {
 		JPanel panel = new JPanel(new GridLayout(3, 2));
-//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // ✅ 내부 내용은 세로 정렬
         panel.setOpaque(false); // 배경 투명 (옵션)
 
 		panel.add(createDocBox(" <입원 치료> ", new String[]{
@@ -100,7 +96,6 @@ public class RequiredDocumentsInfo extends JPanel {
 		return panel;
 	}
 
-	// 각 상황별 문서 박스를 생성
 	private JPanel createDocBox(String title, String[] items) {
 		JPanel box = new JPanel(new BorderLayout());
 		box.setBorder(BorderFactory.createTitledBorder(

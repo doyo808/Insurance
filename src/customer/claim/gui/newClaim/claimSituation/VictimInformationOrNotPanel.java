@@ -10,60 +10,61 @@ import javax.swing.JRadioButton;
 
 public class VictimInformationOrNotPanel extends JPanel {
 	
-	private JLabel 피해자정보여부라벨;
-	private JRadioButton 피해자정보yesButton;
-	private JRadioButton 피해자정보noButton;
-	private ButtonGroup chButtonGroup;
+	private JLabel victimInfoL;
+	private JRadioButton yesB;
+	private JRadioButton noB;
+	private ButtonGroup chButtonG;
 	
 	public VictimInformationOrNotPanel() { // 피해자정보묻는라디오버튼패널
 			setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 			
 	       setPreferredSize(new Dimension(400, 40));
-	       피해자정보여부라벨 = new JLabel();
-	       피해자정보yesButton = new JRadioButton(" 예");
-	       피해자정보noButton = new JRadioButton(" 아니오");
+	       victimInfoL = new JLabel();
+	       yesB = new JRadioButton(" 예");
+	       noB = new JRadioButton(" 아니오");
 	       
-	       // 나중에 선택안한거 있으면 다음으로 못넘어가게 하는 그룹묶음
-	       chButtonGroup = new ButtonGroup();
-	       chButtonGroup.add(피해자정보yesButton);
-	       chButtonGroup.add(피해자정보noButton);
+	       chButtonG = new ButtonGroup();
+	       chButtonG.add(yesB);
+	       chButtonG.add(noB);
 	       
-	       add(피해자정보여부라벨);
-	       add(피해자정보yesButton);
-	       add(피해자정보noButton);
+	       add(victimInfoL);
+	       add(yesB);
+	       add(noB);
 	}
 
-	public JLabel get피해자정보여부라벨() {
-		return 피해자정보여부라벨;
+	public JLabel getVictimInfoL() {
+		return victimInfoL;
 	}
 
-	public void set피해자정보여부라벨(String 정보여부질문) {
-		this.피해자정보여부라벨.setText(정보여부질문);
+	public void setVictimInfoL(String str) {
+		this.victimInfoL.setText(str);
 	}
 
-	public JRadioButton get피해자정보yesButton() {
-		return 피해자정보yesButton;
+	public JRadioButton getYesB() {
+		return yesB;
 	}
 
-	public void set피해자정보yesButton(JRadioButton 피해자정보yesButton) {
-		this.피해자정보yesButton = 피해자정보yesButton;
+	public void setYesB(JRadioButton yesB) {
+		this.yesB = yesB;
 	}
 
-	public JRadioButton get피해자정보noButton() {
-		return 피해자정보noButton;
+	public JRadioButton getNoB() {
+		return noB;
 	}
 
-	public void set피해자정보noButton(JRadioButton 피해자정보noButton) {
-		this.피해자정보noButton = 피해자정보noButton;
+	public void setNoB(JRadioButton noB) {
+		this.noB = noB;
 	}
 
-	public ButtonGroup getChButtonGroup() {
-		return chButtonGroup;
+	public ButtonGroup getChButtonG() {
+		return chButtonG;
 	}
 
-	public void setChButtonGroup(ButtonGroup chButtonGroup) {
-		this.chButtonGroup = chButtonGroup;
+	public void setChButtonG(ButtonGroup chButtonG) {
+		this.chButtonG = chButtonG;
 	}
+
+	
 	
 	
 }

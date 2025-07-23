@@ -36,12 +36,10 @@ public class EnterBankAccountPanel extends JPanel {
       TitlePanel title = new TitlePanel("보험금 수령계좌 입력");
       add(title, BorderLayout.NORTH);
 
-      // ⬅️ 가운데 패널 구성
       centerPanel = new JPanel(new BorderLayout());
       centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 100, 10, 100));
       add(centerPanel, BorderLayout.CENTER);
       
-      // 라디오 버튼 패널
       radioPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
       JRadioButton AutomaticChButton = new JRadioButton(" 자동이체(계좌번호 자동입력)");
       AutomaticChButton.setFont(new Font("굴림", Font.PLAIN, 15));
@@ -85,14 +83,13 @@ public class EnterBankAccountPanel extends JPanel {
       beneficiaryNameF = new JTextField(15);
       beneficiaryNameF.setFont(new Font("굴림", Font.PLAIN, 18));
 
-      // 은행명 필드 이벤트(필요시 추가)
-      bankNameF.addFocusListener(new FocusAdapter() {
-         @Override
-         public void focusLost(FocusEvent e) {
-            String inputBankName = bankNameF.getText();
-            // 유효성 검사 추가 가능
-         }
-      });
+//      // 은행명 필드 이벤트(필요시 추가)
+//      bankNameF.addFocusListener(new FocusAdapter() {
+//         @Override
+//         public void focusLost(FocusEvent e) {
+//            String inputBankName = bankNameF.getText();
+//         }
+//      });
 
       // 계좌 입력 배치
       gbc.gridx = 0; gbc.gridy = 0;
@@ -163,7 +160,6 @@ public class EnterBankAccountPanel extends JPanel {
         	return;
          }
 
-         // 은행명을 콤보박스로 선택하는건 이후에 선택...
          if (accountDirectInputB.isSelected() &&
         		 bankNameF.isValid() && 
         		 bankAccountF.isValid() && 
