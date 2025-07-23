@@ -310,6 +310,7 @@ public class ClaimSituationPanel extends JPanel {
 					claimData.setCompensation_type('H');
 				}
 
+				
 				switch (상황1선택) {
 					case "병원에 다녀왔어요(실손 등)":
 						if ("아팠어요(질병)".equals(병원선택)) {
@@ -338,26 +339,28 @@ public class ClaimSituationPanel extends JPanel {
 				
 				// 진단코드 입력하기 
 				
-				switch (병원질병선택) {
-				case "감기":
-					claimData.setDiagnosis_name("급성 비인두염 (감기)");
-					claimData.setDiagnosis_cd("J00");
-					break;
-				case "허리통증":
-					claimData.setDiagnosis_name("요통");
-					claimData.setDiagnosis_cd("M54.5");
-					break;
-				case "장염":
-					claimData.setDiagnosis_name("감염성 장염");
-					claimData.setDiagnosis_cd("A09");
-					break;
-				case "복통":
-					claimData.setDiagnosis_name("배의 통증, 미만성");
-					claimData.setDiagnosis_cd("R10.4");
-					break;
-				default:
-					break;
-			}
+				if (병원질병선택 != null) {
+					switch (병원질병선택) {
+					case "감기":
+						claimData.setDiagnosis_name("급성 비인두염 (감기)");
+						claimData.setDiagnosis_cd("J00");
+						break;
+					case "허리통증":
+						claimData.setDiagnosis_name("요통");
+						claimData.setDiagnosis_cd("M54.5");
+						break;
+					case "장염":
+						claimData.setDiagnosis_name("감염성 장염");
+						claimData.setDiagnosis_cd("A09");
+						break;
+					case "복통":
+						claimData.setDiagnosis_name("배의 통증, 미만성");
+						claimData.setDiagnosis_cd("R10.4");
+						break;
+					default:
+						break;
+					}
+				}
 
 //				 String 상황1선택 = (String) selected;
 //		    	    String 다른사람선택 = (String) 다른사람콤.getSelectedItem(); 
