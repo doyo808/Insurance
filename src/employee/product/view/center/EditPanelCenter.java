@@ -17,9 +17,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.table.DefaultTableModel;
 
 import common.database.dao.ProductDAO;
 import common.database.model.ProductModel;
@@ -27,15 +31,24 @@ import common.method.InsuranceTeamConnector;
 import employee.product.model.ProductInfoModel;
 
 public class EditPanelCenter extends JPanel {
+	private DefaultTableModel tableModel;
 	
 	public JTextField productNameField, joinLimitLowField, joinLimitHighField, basePremiumField, premiumConstantField;
 	public JTextField productIdField;
 	public JTextField termsNameField;
 	public JTextField manualNameField;
+	
+	public JTextField coverNameField;
+	public JTextArea coverDeatailField;
+	
 	public JTextField divisionField;
     public JSpinner joinAgeLowField ,joinAgeHighField;
-    public JButton termsBrowseButton, manualBrowseButton, imageUploadButton;
+    public JButton termsBrowseButton, manualBrowseButton, imageUploadButton, addCoverButton, delCoverButton;
 
+    public JScrollPane tableScroll;
+    public JScrollPane coverTextScroll;
+    public JTable coverageTable;
+    
 	public File termAndConditions;
 	public File productManual;
 	public JLabel imagePreview;
@@ -50,8 +63,10 @@ public class EditPanelCenter extends JPanel {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        int row = 0;
+        // 테이블 헤더 미리 정의
+        tableModel = new DefaultTableModel(new Object[]{"담보명","보장내용"}, 0);
         
+        int row = 0;
 
         // 각 입력 필드 정의
         productIdField = new JTextField(20);
@@ -69,6 +84,13 @@ public class EditPanelCenter extends JPanel {
     	premiumConstantField = new JTextField(20);
     	imageUploadButton = new JButton("이미지 업로드");
         imagePreview = new JLabel("");
+        addCoverButton = new JButton("보장내역 추가");
+        delCoverButton = new JButton("선택한 항목 지우기");
+        coverageTable = new JTable(tableModel);
+        tableScroll = new JScrollPane(coverageTable);
+        coverNameField = new JTextField(8);
+        coverDeatailField = new JTextArea(15,8);
+        coverTextScroll = new JScrollPane(coverDeatailField);
 
         // 레이블과 필드를 행으로 추가
         addRow(this, gbc, row++, "상품 ID:", productIdField);
@@ -84,14 +106,34 @@ public class EditPanelCenter extends JPanel {
         addRow(this, gbc, row++, "보장 상수:", premiumConstantField);
         
 
+        
+        
         productIdField.setFocusable(false);
         productIdField.setEditable(false);
 
         divisionField.setFocusable(false);
         divisionField.setEditable(false);
         
+     // 테이블을 UI에 추가함
         gbc.gridx = 0;
         gbc.gridy = row;
+        gbc.gridheight = 4;
+        add(new JLabel("보장 내용:"), gbc);
+        gbc.gridx = 1;
+        add(tableScroll, gbc);
+        gbc.gridx = 2;
+        gbc.gridy = row;
+        gbc.gridheight = 1;	// 병합한 열 초기화
+        add(addCoverButton, gbc);
+        gbc.gridy = ++row;
+        add(coverNameField, gbc);
+        gbc.gridy = ++row;
+        add(coverTextScroll, gbc);
+        gbc.gridy = ++row;
+        add(delCoverButton, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = row + 1;
         add(new JLabel("상품 소개 이미지:"), gbc);
         gbc.gridx = 1;
         add(imageUploadButton, gbc);

@@ -3,6 +3,7 @@ package employee.product.model;
 import java.io.File;
 import java.util.List;
 
+import common.database.model.ProductCoverageDetailModel;
 import common.database.model.ProductModel;
 
 /***
@@ -12,6 +13,7 @@ public class ProductInfoModel {
 	private int productId = 0;
 	private File imageFile;
 	private ProductModel product;
+	private List<ProductCoverageDetailModel> covers;
 
 	public int getProductId() {
 		return productId;
@@ -35,6 +37,14 @@ public class ProductInfoModel {
 
 	public void setProduct(ProductModel product) {
 		this.product = product;
+	}
+
+	public List<ProductCoverageDetailModel> getCovers() {
+		return covers;
+	}
+
+	public void setCovers(List<ProductCoverageDetailModel> covers) {
+		this.covers = covers;
 	}
 
 	
