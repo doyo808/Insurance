@@ -15,15 +15,15 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 public class DamagedPropertyInfoPanel extends JPanel {
-	private JLabel 소유자이름라벨;
-	private JLabel 소유자연락처라벨;
-	private JTextField 소유자이름필드;
-	private JTextField 소유자연락처필드;
-	private JPanel 소유자정보_신체피해여부패널;
-	private JLabel 소유자신체피해여부라벨;
-	private JRadioButton 소유자정보_신체피해yesButton;
-	private JRadioButton 소유자정보_신체피해noButton;
-	private ButtonGroup 라디오버튼그룹;
+	private JLabel ownerNameL;
+	private JLabel ownerPhoneL;
+	private JTextField ownNameF;
+	private JTextField ownerPhoneF;
+	private JPanel ownerInfoDPP;
+	private JLabel ownerInfoDPL;
+	private JRadioButton ownerInfoDPyesButton;
+	private JRadioButton ownerInfoDPnoButton;
+	private ButtonGroup raidoButtonG;
 	
 	// 재물피해입으신 분의 정보를 아시나요? 했을 때 나타나는 패널 - 다른사람_다쳤어요_피해정보패널(재물)
 	 /*
@@ -47,119 +47,120 @@ public class DamagedPropertyInfoPanel extends JPanel {
 	       GridBagConstraints gbc = new GridBagConstraints();
 
 	    // ★ 필드 초기화 (객체 생성)
-	       소유자이름라벨 = new JLabel("소유자명 : ");
-	       소유자연락처라벨 = new JLabel("휴대폰번호 : ");
-	       소유자이름필드 = new JTextField(9);
-	       소유자연락처필드 = new JTextField(11);
+	       ownerNameL = new JLabel("소유자명 : ");
+	       ownerPhoneL = new JLabel("휴대폰번호 : ");
+	       ownNameF = new JTextField(9);
+	       ownerPhoneF = new JTextField(11);
 	     
-	       소유자정보_신체피해여부패널 = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-	       소유자신체피해여부라벨 = new JLabel("타인의 신체피해도 발생했나요? : ");
+	       ownerInfoDPP = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+	       ownerInfoDPL = new JLabel("타인의 신체피해도 발생했나요? : ");
 	       
-	       라디오버튼그룹 = new ButtonGroup();
-	       소유자정보_신체피해yesButton = new JRadioButton(" 예");
-	       소유자정보_신체피해noButton = new JRadioButton(" 아니오");
+	       raidoButtonG = new ButtonGroup();
+	       ownerInfoDPyesButton = new JRadioButton(" 예");
+	       ownerInfoDPnoButton = new JRadioButton(" 아니오");
 
-	       라디오버튼그룹.add(소유자정보_신체피해yesButton);
-	       라디오버튼그룹.add(소유자정보_신체피해noButton);
+	       raidoButtonG.add(ownerInfoDPyesButton);
+	       raidoButtonG.add(ownerInfoDPnoButton);
 	       
-	       소유자정보_신체피해여부패널.add(소유자정보_신체피해yesButton);
-	       소유자정보_신체피해여부패널.add(소유자정보_신체피해noButton);
+	       ownerInfoDPP.add(ownerInfoDPyesButton);
+	       ownerInfoDPP.add(ownerInfoDPnoButton);
 
 	       gbc.insets = new Insets(30, 30, 30, 30);
 	       gbc.anchor = GridBagConstraints.CENTER;
 	       gbc.gridx = 0; gbc.gridy = 0;
-	       add(소유자이름라벨, gbc);
+	       add(ownerNameL, gbc);
 	       gbc.gridx = 1; gbc.gridy = 0;
-	       add(소유자이름필드, gbc);
+	       add(ownNameF, gbc);
 	       gbc.gridx = 0; gbc.gridy = 1;
-	       add(소유자연락처라벨, gbc);
+	       add(ownerPhoneL, gbc);
 	       gbc.gridx = 1; gbc.gridy = 1;
-	       add(소유자연락처필드, gbc);
+	       add(ownerPhoneF, gbc);
 	       gbc.gridx = 0; gbc.gridy = 2;
-	       add(소유자신체피해여부라벨, gbc);
+	       add(ownerInfoDPL, gbc);
 	       gbc.gridx = 1; gbc.gridy = 2;
-	       add(소유자정보_신체피해여부패널, gbc);
+	       add(ownerInfoDPP, gbc);
 	       
 	}
 	
 	public void reset() {
-		라디오버튼그룹.clearSelection();
-		소유자이름필드.setText("");
-		소유자연락처필드.setText("");
+		raidoButtonG.clearSelection();
+		ownNameF.setText("");
+		ownerPhoneF.setText("");
 	}
 
-	public JLabel get소유자이름라벨() {
-		return 소유자이름라벨;
+	public JLabel getOwnerNameL() {
+		return ownerNameL;
 	}
 
-	public void set소유자이름라벨(JLabel 소유자이름라벨) {
-		this.소유자이름라벨 = 소유자이름라벨;
+	public void setOwnerNameL(JLabel ownerNameL) {
+		this.ownerNameL = ownerNameL;
 	}
 
-	public JLabel get소유자연락처라벨() {
-		return 소유자연락처라벨;
+	public JLabel getOwnerPhoneL() {
+		return ownerPhoneL;
 	}
 
-	public void set소유자연락처라벨(JLabel 소유자연락처라벨) {
-		this.소유자연락처라벨 = 소유자연락처라벨;
+	public void setOwnerPhoneL(JLabel ownerPhoneL) {
+		this.ownerPhoneL = ownerPhoneL;
 	}
 
-	public JTextField get소유자이름필드() {
-		return 소유자이름필드;
+	public JTextField getOwnNameF() {
+		return ownNameF;
 	}
 
-	public void set소유자이름필드(JTextField 소유자이름필드) {
-		this.소유자이름필드 = 소유자이름필드;
+	public void setOwnNameF(JTextField ownNameF) {
+		this.ownNameF = ownNameF;
 	}
 
-	public JTextField get소유자연락처필드() {
-		return 소유자연락처필드;
+	public JTextField getOwnerPhoneF() {
+		return ownerPhoneF;
 	}
 
-	public void set소유자연락처필드(JTextField 소유자연락처필드) {
-		this.소유자연락처필드 = 소유자연락처필드;
+	public void setOwnerPhoneF(JTextField ownerPhoneF) {
+		this.ownerPhoneF = ownerPhoneF;
 	}
 
-	public JPanel get소유자정보_신체피해여부패널() {
-		return 소유자정보_신체피해여부패널;
+	public JPanel getOwnerInfoDPP() {
+		return ownerInfoDPP;
 	}
 
-	public void set소유자정보_신체피해여부패널(JPanel 소유자정보_신체피해여부패널) {
-		this.소유자정보_신체피해여부패널 = 소유자정보_신체피해여부패널;
+	public void setOwnerInfoDPP(JPanel ownerInfoDPP) {
+		this.ownerInfoDPP = ownerInfoDPP;
 	}
 
-	public JLabel get소유자신체피해여부라벨() {
-		return 소유자신체피해여부라벨;
+	public JLabel getOwnerInfoDPL() {
+		return ownerInfoDPL;
 	}
 
-	public void set소유자신체피해여부라벨(JLabel 소유자신체피해여부라벨) {
-		this.소유자신체피해여부라벨 = 소유자신체피해여부라벨;
+	public void setOwnerInfoDPL(JLabel ownerInfoDPL) {
+		this.ownerInfoDPL = ownerInfoDPL;
 	}
 
-	public JRadioButton get소유자정보_신체피해yesButton() {
-		return 소유자정보_신체피해yesButton;
+	public JRadioButton getOwnerInfoDPyesButton() {
+		return ownerInfoDPyesButton;
 	}
 
-	public void set소유자정보_신체피해yesButton(JRadioButton 소유자정보_신체피해yesButton) {
-		this.소유자정보_신체피해yesButton = 소유자정보_신체피해yesButton;
+	public void setOwnerInfoDPyesButton(JRadioButton ownerInfoDPyesButton) {
+		this.ownerInfoDPyesButton = ownerInfoDPyesButton;
 	}
 
-	public JRadioButton get소유자정보_신체피해noButton() {
-		return 소유자정보_신체피해noButton;
+	public JRadioButton getOwnerInfoDPnoButton() {
+		return ownerInfoDPnoButton;
 	}
 
-	public void set소유자정보_신체피해noButton(JRadioButton 소유자정보_신체피해noButton) {
-		this.소유자정보_신체피해noButton = 소유자정보_신체피해noButton;
+	public void setOwnerInfoDPnoButton(JRadioButton ownerInfoDPnoButton) {
+		this.ownerInfoDPnoButton = ownerInfoDPnoButton;
 	}
 
-	public ButtonGroup get라디오버튼그룹() {
-		return 라디오버튼그룹;
+	public ButtonGroup getRaidoButtonG() {
+		return raidoButtonG;
 	}
 
-	public void set라디오버튼그룹(ButtonGroup 라디오버튼그룹) {
-		this.라디오버튼그룹 = 라디오버튼그룹;
+	public void setRaidoButtonG(ButtonGroup raidoButtonG) {
+		raidoButtonG = raidoButtonG;
 	}
 
+	
 	
 	
 }

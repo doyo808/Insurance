@@ -34,25 +34,25 @@ public class ClaimTypePanel extends JPanel {
 		JPanel chckPanel = new JPanel();
 		add(chckPanel, BorderLayout.CENTER);
 
-		JLabel 입원비 = new JLabel("질병이나 상해로 인한 입원비 보상을 청구하는 경우");
-		JLabel 통원비 = new JLabel("병원 외래 진료로 발생한 비용을 청구하는 경우");
-		JLabel 수술비 = new JLabel("수술에 대한 비용을 청구하는 경우");
-		JLabel 진단비 = new JLabel("질병 또는 특정 조건 진단 시 지급되는 보험금 청구");
-		JLabel 사망보험금 = new JLabel("피보험자의 사망에 따라 수익자가 청구하는 보험금");
-		JLabel 후유장해 = new JLabel("상해나 질병으로 인해 장해(장기적 장애)가 발생한 경우");
+		JLabel hospitalL = new JLabel("질병이나 상해로 인한 입원비 보상을 청구하는 경우");
+		JLabel outpatientL = new JLabel("병원 외래 진료로 발생한 비용을 청구하는 경우");
+		JLabel surgeryL = new JLabel("수술에 대한 비용을 청구하는 경우");
+		JLabel diagnosticL = new JLabel("질병 또는 특정 조건 진단 시 지급되는 보험금 청구");
+		JLabel deathL = new JLabel("피보험자의 사망에 따라 수익자가 청구하는 보험금");
+		JLabel disorderL = new JLabel("상해나 질병으로 인해 장해(장기적 장애)가 발생한 경우");
 
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "입원비"));
-		chckPanel.add(입원비);
+		chckPanel.add(hospitalL);
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "통원비"));
-		chckPanel.add(통원비);
+		chckPanel.add(outpatientL);
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "수술비"));
-		chckPanel.add(수술비);
+		chckPanel.add(surgeryL);
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "진단비"));
-		chckPanel.add(진단비);
+		chckPanel.add(diagnosticL);
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "사망보험금"));
-		chckPanel.add(사망보험금);
+		chckPanel.add(deathL);
 		claimTypeList.add(new ClaimTypeCheckBox(chckPanel, "후유장해"));
-		chckPanel.add(후유장해);
+		chckPanel.add(disorderL);
 
 		chckPanel.setLayout(new GridLayout(6, 2, 0, 0)); // 수직 간격 10px 추가
 		chckPanel.setBorder(BorderFactory.createEmptyBorder(30, 500, 30, 450)); // 상좌하우 여백 추가
