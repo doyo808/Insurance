@@ -49,6 +49,7 @@ public class ProductMainPanel extends JPanel {
 			
 			@Override
 			public void onChildPanelClicked(MouseEvent e) {
+				intro.setInitTableData();
 				cl.show(ProductMainPanel.this, "intro");
 			}
 		});

@@ -18,6 +18,7 @@ public class ServicesMainCenterPanel extends JPanel {
 	private ContractMainPanel contractMP;
 	private ClaimMainPanel claimMP;
 	private PaymentMainPanel paymentMP;
+	private MyPageMainPanel mypageMP;
 	
 	
 	public ServicesMainCenterPanel(CustomerMainPanel cmp) {
@@ -28,7 +29,7 @@ public class ServicesMainCenterPanel extends JPanel {
 		add(contractMP = new ContractMainPanel(cmp), "보험상품가입");
 		add(claimMP = new ClaimMainPanel(cmp), "보험금청구");
 		add(paymentMP = new PaymentMainPanel(cmp), "보험료납부");
-		add(new MyPageMainPanel(cmp), "마이페이지");
+		add(mypageMP =  new MyPageMainPanel(cmp), "마이페이지");
 	}
 	
 	public void showCard(String name) {
@@ -52,6 +53,11 @@ public class ServicesMainCenterPanel extends JPanel {
             remove(paymentMP);
             paymentMP = new PaymentMainPanel(cmp);
             add(paymentMP, name);
+        } else if (name.equals("마이페이지")) {
+        	
+        	remove(mypageMP);
+        	mypageMP = new MyPageMainPanel(cmp);
+        	add(mypageMP, name);
         }
         
 		c.show(this, name);
