@@ -4,17 +4,9 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,13 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
-import common.database.dao.ProductDAO;
-import common.database.model.ProductModel;
-import common.method.InsuranceTeamConnector;
-import employee.product.model.ProductInfoModel;
-
 public class EditPanelCenter extends JPanel {
 	private DefaultTableModel tableModel;
+	public int productId;
 	
 	public JTextField productNameField, joinLimitLowField, joinLimitHighField, basePremiumField, premiumConstantField;
 	public JTextField productIdField;
@@ -52,8 +40,6 @@ public class EditPanelCenter extends JPanel {
 	public File termAndConditions;
 	public File productManual;
 	public JLabel imagePreview;
-	public int productId;
-	ProductModel product;
 	
 	public EditPanelCenter() {
 		setLayout(new GridBagLayout());
@@ -105,12 +91,8 @@ public class EditPanelCenter extends JPanel {
         addRow(this, gbc, row++, "기본 지급 금액:", basePremiumField);
         addRow(this, gbc, row++, "보장 상수:", premiumConstantField);
         
-
-        
-        
         productIdField.setFocusable(false);
         productIdField.setEditable(false);
-
         divisionField.setFocusable(false);
         divisionField.setEditable(false);
         

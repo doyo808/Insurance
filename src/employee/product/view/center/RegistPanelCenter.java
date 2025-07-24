@@ -149,10 +149,10 @@ public class RegistPanelCenter extends JPanel {
         panel.add(button, gbc);
     }
     
-    public void setTable() {
-    	// 테이블에 행 추가할때마다 바로갱신되게 기능구현해줘야함
-    	tableModel.addRow(new Object[] {});
-    }
+//    public void setTable() {
+//    	// 테이블에 행 추가할때마다 바로갱신되게 기능구현해줘야함
+//    	tableModel.addRow(new Object[] {});
+//    }
     
     public void setInitText() {
     	

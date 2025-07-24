@@ -13,6 +13,7 @@ public class ProductInfoModel {
 	private int productId = 0;
 	private File imageFile;
 	private ProductModel product;
+	private List<ProductModel> products;
 	private List<ProductCoverageDetailModel> covers;
 
 	public int getProductId() {
@@ -45,6 +46,14 @@ public class ProductInfoModel {
 
 	public void setCovers(List<ProductCoverageDetailModel> covers) {
 		this.covers = covers;
+	}
+
+	public List<ProductModel> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductModel> products) {
+		this.products = products;
 	}
 
 	

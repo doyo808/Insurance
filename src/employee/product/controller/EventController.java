@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -37,6 +36,8 @@ public class EventController {
 	public EventController(ProductInfoModel model, ProductManageMainPanel view) {
 		this.model = model;
 		this.view = view;
+		
+		setTableData();
 		
 		//##########################################################
 		// ShowPanel의 이벤트들
@@ -226,7 +227,7 @@ public class EventController {
 							, conn);
 //					System.out.println("상품등록성공!");
 					JOptionPane.showMessageDialog(view.card3.center, "상품등록 성공");
-					view.card1.center.setTableData();
+					setTableData();
 					view.showCard("show");
 				} catch (Exception e1) {
 					System.out.println("DB에 상품등록 하는중에 에러남");
@@ -284,7 +285,6 @@ public class EventController {
 		
 		//bottom 버튼들
 		view.card2.bottom.prev.addActionListener(e -> {
-//			repaintTable();
 			model.setProduct(null);
 			view.showCard("show");
 		});
@@ -364,7 +364,7 @@ public class EventController {
 				
 				model.setProduct(null);
 				model.setImageFile(null);
-				view.card1.center.setTableData();
+				setTableData();
 				view.showCard("show");
 			} catch (Exception e1) {
 				System.out.println("DB에 상품등록 하는중에 에러남");
@@ -441,6 +441,31 @@ public class EventController {
 					cover.getProductCoverDetail()};
 			System.out.println(Arrays.toString(rows));
 			view.card1.center.coverTableModel.addRow(rows);
+		}
+	}
+	/***
+	 * ShowPanelCenter 클래스 전용메서드
+	 * DB에서 데이터를 받아서 테이블에 추가해주는 메서드
+	 */
+	public void setTableData() {
+		// 기존에 테이블에 데이터가있다면 내용제거
+		if (view.card1.center.tableModel.getRowCount() != 0) {
+			view.card1.center.tableModel.setRowCount(0);
+		}
+		// db에서 데이터불러오고 테이블에 추가
+		try (Connection conn = InsuranceTeamConnector.getConnection()){
+			model.setProducts(ProductDAO.getAllProducts(conn));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for (ProductModel product : model.getProducts()) {
+			Object[] rows = {product.getProductId(),
+					product.getDivision(),
+					product.getProductName(),
+					product.getTermAndConditionsPath(),
+					product.getProductManualPath()};
+			view.card1.center.tableModel.addRow(rows);
 		}
 	}
 }
